@@ -1,0 +1,151 @@
+/* Navbar Styles */
+
+@import "tailwindcss";
+
+@theme {
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-hanken: "Hanken Grotesk", sans-serif;
+  --font-pinyon: "Pinyon Script", cursive;
+}
+
+.navbar {
+  position: fixed;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 253, 247, 0.2);
+  color: #FFFDF7;
+  transition: all 0.5s ease;
+}
+
+.navbar-scrolled {
+  background-color: rgba(53, 0, 8, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom-color: rgba(255, 253, 247, 0.1);
+}
+
+.navbar-container {
+  max-width: 1920px;
+  margin: 0 auto;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 24px;
+}
+
+/* Left Links */
+.nav-links-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-left: 10%;
+}
+
+@media (min-width: 1280px) {
+  .nav-links-left {
+    gap: 40px;
+    padding-left: 22%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .nav-links-left {
+    padding-left: 500px;
+  }
+}
+
+.nav-tab {
+  font-family: 'Hanken Grotesk';
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.nav-tab:hover {
+  opacity: 0.6;
+}
+
+/* Brand */
+.brand-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-name {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 100;
+  font-size: 22px;
+  line-height: 44px;
+  letter-spacing: 0.23px;
+  color: #FFFDF7;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.brand-name:hover {
+  opacity: 0.75;
+}
+
+/* Right Actions */
+.nav-actions-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-right: 10%;
+}
+
+@media (min-width: 1280px) {
+  .nav-actions-right {
+    gap: 24px;
+    padding-right: 22%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .nav-actions-right {
+    padding-right: 500px;
+  }
+}
+
+.icon-link {
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  color: inherit;
+  text-decoration: none;
+}
+
+.icon-link:hover {
+  opacity: 0.5;
+}
+
+.order-now-btn {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: inherit;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.order-now-btn:hover {
+  opacity: 0.6;
+}

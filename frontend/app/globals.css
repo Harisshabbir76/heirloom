@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-hanken: "Hanken Grotesk", sans-serif;
+  --font-pinyon: "Pinyon Script", cursive;
+
+  --color-bg: #ffffff;
+  --color-text: #fffdf7;
+  --color-deep: #350008;
+  --color-ivory: #fffdf7;
+  --color-gold: #b8975a;
+  --color-border: rgba(255, 253, 247, 0.2);
+}
+
+:root {
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-hanken: "Hanken Grotesk", sans-serif;
+  --font-pinyon: "Pinyon Script", cursive;
+
+  --color-bg: #ffffff;
+  --color-text: #fffdf7;
+  --color-deep: #350008;
+  --color-ivory: #fffdf7;
+  --color-gold: #b8975a;
+  --color-border: rgba(255, 253, 247, 0.2);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #350008;
+  color: var(--color-text);
+  font-family: var(--font-hanken);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
