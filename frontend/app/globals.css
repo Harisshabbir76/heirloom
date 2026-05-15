@@ -35,8 +35,8 @@
 }
 
 body {
-  background: #350008;
-  color: var(--color-text);
+  background: #FFFDF7;
+  color: #350008;
   font-family: var(--font-hanken);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

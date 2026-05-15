@@ -1,15 +1,17 @@
 .hero-section {
     background: #350008;
     width: 100%;
-    /* Accounting for 70px navbar height */
-    min-height: calc(100vh - 70px);
-    margin-top: 30px;
+    min-height: 100vh;
+    padding-top: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     box-sizing: border-box;
-    padding: 40px 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 40px;
+    color: #FFFDF7;
 }
 
 .hero-content {
@@ -95,7 +97,7 @@
     text-transform: uppercase;
     padding: 5px 35px;
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease;
     text-decoration: none;
     display: inline-block;
     opacity: 1;
@@ -104,7 +106,8 @@
 }
 
 .hero-cta:hover {
-    opacity: 0.8;
+    background: #000000;
+    border-color: transparent;
 }
 
 

@@ -140,7 +140,8 @@
   letter-spacing: 0px;
   text-transform: uppercase;
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-decoration-thickness: 0.01px;
+  text-underline-offset: 5px;
   color: inherit;
   opacity: 1;
   transition: opacity 0.3s ease;

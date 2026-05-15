@@ -1,0 +1,198 @@
+.story-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.story-top {
+  background-color: #E6E2D8;
+  padding: 100px 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100px;
+
+}
+
+.story-top-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-box-img {
+  max-width: 450px;
+  width: 85%;
+  height: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  margin-left: -60px;
+  margin-top: -40px;
+}
+
+.story-top-right {
+  flex: 1;
+  padding-left: 5%;
+}
+
+.story-top-right h2 {
+  font: normal normal normal 42px/42px var(--font-cormorant);
+  text-align: left;
+  letter-spacing: 0px;
+  color: #350008;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  max-width: 400px;
+  font-size: 27px;
+  line-height: 27px;
+  margin-left: 55px;
+  opacity: 1;
+  margin-top: -90px;
+}
+
+.story-top-right p {
+  font-family: var(--font-hanken);
+  font-weight: 300;
+  font-size: 10px;
+  color: var(--color-deep);
+  margin-bottom: 30px;
+  max-width: 220px;
+  line-height: 1.6;
+  margin-left: 55px;
+}
+
+.learn-more-btn {
+  background-color: var(--color-deep);
+  color: #FFFDF7;
+  border: none;
+  padding: 1px 25px;
+  font: normal normal 300 15px/20px var(--font-hanken);
+  font-size: 10px;
+  font-weight: 250;
+  text-align: center;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 1;
+  transition: transform 0.2s ease;
+  margin-left: 55px;
+}
+
+.learn-more-btn:hover {
+  transform: scale(0.95);
+}
+
+.story-bottom {
+  position: relative;
+  background-image: url('../images/Stripes with paper.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 400px;
+  padding: 0px 10%;
+  margin-top: -40px;
+  /* Pull the stripe background up */
+  z-index: 1;
+}
+
+/* Polaroid image overlapping */
+.polaroid-container {
+  position: absolute;
+  top: -160px;
+  /* Adjusted from -250px to stay in the same spot as section moves up */
+  left: 40%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: white;
+  padding: 10px 10px 35px 10px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.polaroid-img {
+  width: 160px;
+  height: 180px;
+  display: block;
+}
+
+.image-key {
+  position: absolute;
+  top: 0px;
+  /* Compounded with margin-top to stay in place */
+  left: 10.2%;
+  width: 120px;
+  height: 150px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.image-woman {
+  position: absolute;
+  top: 70px;
+  /* Compounded with margin-top to stay in place */
+  right: 8%;
+  width: 110px;
+  height: 150;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.image-purse {
+  position: absolute;
+  bottom: 30px;
+  /* Compounded with margin-top to stay in place */
+  left: 14%;
+  width: 100px;
+  height: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.center-content-box {
+  background: transparent;
+  width: 65%;
+  max-width: 650px;
+  margin: 140px auto 100px;
+  /* Adjusted margin to account for section pull-up */
+  padding: 30px 30px;
+  text-align: center;
+  position: relative;
+}
+
+
+
+.center-content-box h3 {
+  font-family: var(--font-cormorant);
+  font-size: 30px;
+  color: var(--color-deep);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.center-content-box p {
+  font-family: var(--font-pinyon);
+  font-size: 15px;
+  color: var(--color-deep);
+}
+
+@media (max-width: 1024px) {
+  .story-top {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 5%;
+  }
+
+  .story-top-right {
+    padding-left: 0;
+    margin-top: 40px;
+  }
+
+  .story-top-right h2,
+  .story-top-right p {
+    max-width: 100%;
+  }
+
+  .center-content-box {
+    width: 95%;
+    margin-top: 200px;
+  }
+}

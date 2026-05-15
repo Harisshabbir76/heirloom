@@ -1,0 +1,102 @@
+:root {
+    --primary-luxury: #1a1a1a;
+    --secondary-luxury: #c5a059; /* Gold accent */
+    --bg-luxury: #fffdf7;
+    --text-dark: #333;
+    --text-light: #777;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-container {
+    min-height: 100vh;
+    background-color: var(--bg-luxury);
+    padding: 60px 10%;
+    font-family: 'Inter', sans-serif;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 20px;
+}
+
+.dashboard-title {
+    font-family: var(--font-cormorant), serif;
+    font-size: 42px;
+    color: var(--primary-luxury);
+    margin: 0;
+}
+
+.add-btn {
+    background-color: var(--primary-luxury);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.add-btn:hover {
+    background-color: var(--secondary-luxury);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.stat-label {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--primary-luxury);
+}
+
+.product-list-section {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 30px;
+    color: var(--primary-luxury);
+}
+
+.no-products {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-light);
+    font-style: italic;
+}
