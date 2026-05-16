@@ -10,23 +10,12 @@ interface NavbarProps {
 }
 
 export default function Navbar({}: NavbarProps = {}) {
-  const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const { scrollY } = useScroll();
-
-  useEffect(() => {
-    const unsubscribe = scrollY.onChange((latest: number) => {
-      setIsScrolled(latest > 50);
-    });
-    
-    return unsubscribe;
-  }, [scrollY]);
-
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}
+      className="navbar"
     >
       <div className="navbar-container">
         {/* Left Nav Links */}

@@ -11,12 +11,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-main">
-        {/* Wax Seal Overlay */}
-        <div className="wax-seal wax-seal-placeholder">
-          H
-        </div>
-
-        {/* CTA Card */}
+        {/* CTA Card with integrated image */}
         <div className="cta-card">
           <h2>I know you want to...</h2>
           <p>KEEP WHAT MATTERS, BEAUTIFULLY.</p>

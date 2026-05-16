@@ -1,8 +1,8 @@
 .footer {
-  background-color: var(--color-deep);
+  background-color: #350008;
   color: #FFFDF7;
   padding: 100px 0 20px;
-  height: 400px;
+  height: 450px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -19,63 +19,47 @@
 }
 
 .cta-card {
-  background-color: #F9F5F0;
-  /* Cream color */
-  padding: 60px 40px;
-  width: 50%;
-  height: 200px;
-  max-width: 400px;
+  background: url('../images/footerimg.png') no-repeat center center;
+  background-size: contain;
+  padding: 40px;
+  width: 100%;
+  height: 300px;
+  max-width: 570px;
   text-align: center;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-}
-
-.wax-seal {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 60px;
-  z-index: 5;
-}
-
-/* Wax seal fallback if image is missing */
-.wax-seal-placeholder {
-  background: radial-gradient(circle at 30% 30%, #5C0505, #350008);
-  border-radius: 50%;
-  border: 4px solid #4A0404;
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.4),
-    inset 0 0 10px rgba(0, 0, 0, 0.5);
-  display: flex;
   justify-content: center;
-  align-items: center;
-  font-family: var(--font-cormorant);
-  font-size: 32px;
-  color: rgba(255, 253, 247, 0.4);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
+  gap: 10px;
+  margin: -40px auto 0;
+  /* Centered with negative top margin to account for the wax seal part of the image */
 }
+
+/* Wax seal styles removed as it's now part of the background image */
 
 .cta-card h2 {
   font-family: var(--font-pinyon);
   font-size: 35px;
   color: var(--color-deep);
   font-weight: 400;
-  margin-top: -20px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  margin-left: -20px;
 }
 
 .cta-card p {
   font-family: var(--font-hanken);
-  font-size: 8px;
+  font-weight: 300;
+  font-size: 10px;
   letter-spacing: 0.15em;
   color: var(--color-deep);
-  margin-top: -20px;
-  margin-bottom: 10px;
+  margin: 5px 0 15px;
+  text-align: center;
+  width: 100%;
+  margin-left: -20px;
+  margin-top: -10px;
 }
 
 .buy-now-btn {
@@ -89,6 +73,7 @@
   cursor: pointer;
   text-transform: uppercase;
   transition: transform 0.2s ease;
+  margin-left: -20px;
 }
 
 .buy-now-btn:hover {
@@ -105,6 +90,7 @@
   cursor: pointer;
   opacity: 0.8;
   transition: opacity 0.3s;
+  margin-bottom: 10px;
 }
 
 .back-to-top:hover {
@@ -113,8 +99,10 @@
 
 .back-to-top span {
   font-family: var(--font-hanken);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.9px;
   text-transform: uppercase;
 }
 
@@ -129,15 +117,17 @@
 
 .footer-bottom {
   width: 100%;
+  background-color: #240005;
   border-top: 1px solid rgba(255, 253, 247, 0.1);
-  padding: 30px 10%;
+  padding: 20px 10%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: var(--font-hanken);
+  font-weight: 100;
   font-size: 10px;
-  letter-spacing: 1px;
-  font-weight: normal;
+  line-height: 20px;
+  letter-spacing: 0.9px;
 }
 
 .footer-links {
@@ -149,6 +139,10 @@
   color: #FFFDF7;
   text-decoration: none;
   text-transform: uppercase;
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.9px;
   opacity: 0.7;
   transition: opacity 0.3s;
 }
@@ -162,6 +156,10 @@
   align-items: center;
   gap: 5px;
   cursor: pointer;
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.9px;
 }
 
 .footer-info {
@@ -169,17 +167,21 @@
   align-items: center;
   gap: 20px;
   opacity: 0.7;
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.9px;
 }
 
 .social-links {
   display: flex;
-  gap: 15px;
+  gap: 7px;
   align-items: center;
 }
 
 .social-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   cursor: pointer;
   transition: opacity 0.3s;
 }

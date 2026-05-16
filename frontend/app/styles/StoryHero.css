@@ -1,0 +1,118 @@
+.story-hero-section {
+    position: relative;
+    width: 100%;
+    height: 110vh;
+    background: url('../images/story-hero.jpeg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.story-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.story-hero-image-dim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+    pointer-events: none;
+}
+
+
+.story-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #FFFDF7;
+    max-width: 800px;
+    padding: 0 20px;
+    margin-top: 70px;
+    /* Slight push down to visually center with navbar present */
+}
+
+.story-hero-heading {
+    font-family: var(--font-cormorant), serif;
+    font-weight: 300;
+    font-size: 36px;
+    font-style: normal;
+    letter-spacing: -0.66px;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+
+.story-hero-script {
+    font-family: var(--font-pinyon), cursive;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1;
+    margin-top: 0px;
+    margin-bottom: 40px;
+}
+
+.story-hero-text {
+    font-family: var(--font-hanken), sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    line-height: 22px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    max-width: 580px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    opacity: 0.9;
+}
+
+.story-hero-cta {
+    display: inline-block;
+    border: 1px solid #FFFDF7;
+    background: transparent;
+    color: #FFFDF7;
+    font-family: var(--font-hanken), sans-serif;
+    font-weight: 200;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 45px;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 0 0 1px rgba(255, 253, 247, 0.2);
+}
+
+.story-hero-cta:hover {
+    transform: scale(0.96);
+    
+}
+
+.story-hero-cta:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .story-hero-heading {
+        font-size: 40px;
+    }
+
+    .story-hero-script {
+        font-size: 30px;
+    }
+
+    .story-hero-text {
+        font-size: 9px;
+        line-height: 18px;
+    }
+}
