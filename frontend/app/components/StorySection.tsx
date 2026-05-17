@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import '../styles/StorySection.css';
 
 // Import images
@@ -26,8 +27,8 @@ const StorySection = () => {
         </div>
         <div className="story-top-right">
           <h2>FROM THE SOFTNESS OF THE VELVET LINING TO THE PRECISION OF EVERY DETAIL,</h2>
-          <p>WE FOCUS ON CREATING TIMELESS PIECES THAT FEEL AS SPECIAL AS WHAT THEY CARRY.</p>
-          <button className="learn-more-btn">LEARN MORE ABOUT US</button>
+          <p >WE FOCUS ON CREATING TIMELESS PIECES THAT FEEL AS SPECIAL AS WHAT THEY CARRY.</p>
+          <Link href="/our-story"> <button className="learn-more-btn">LEARN MORE ABOUT US</button> </Link>
         </div>
       </div>
 

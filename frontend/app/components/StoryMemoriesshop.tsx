@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import "../styles/StoryMemories.css";
+import "../styles/StoryMemoriesshop.css";
 
 import memoryOne from "../images/memories1.png";
 import memoryTwo from "../images/memories2.png";
@@ -25,7 +25,7 @@ const StoryMemories: React.FC = () => {
             <Image
                 src={stripeImage}
                 alt=""
-                className="story-details__stripe"
+                className="story-details__stripe_shop"
                 aria-hidden="true"
             />
             <div className="story-memories__inner">

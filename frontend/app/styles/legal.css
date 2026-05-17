@@ -1,0 +1,178 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Hanken+Grotesk:wght@300&display=swap');
+
+/* ─── Root Variables ─────────────────────────────────────────── */
+:root {
+  --color-bg: #fffdf7;
+  --color-heading: #350008;
+  --color-text: #000000;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+}
+
+/* ─── Base ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  font-family: var(--font-body);
+  color: var(--color-text);
+}
+
+/* ─── Page Layout ────────────────────────────────────────────── */
+.policies-page {
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  padding: 60px 0 100px;
+}
+
+.policies-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ─── Main Heading ───────────────────────────────────────────── */
+.main-heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 35px;
+  color: var(--color-heading);
+  margin-bottom: 56px;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+
+
+
+
+/* ─── Accordion Header ───────────────────────────────────────── */
+.accordion-header {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 0;
+  text-align: left;
+  color: var(--color-heading);
+  transition: opacity 0.2s ease;
+}
+
+.accordion-header:hover {
+  opacity: 0.75;
+}
+
+.accordion-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--color-heading);
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.accordion-icon {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--color-heading);
+  line-height: 1;
+  flex-shrink: 0;
+  margin-left: 20px;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+
+/* ─── Accordion Content ──────────────────────────────────────── */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.accordion-item.open .accordion-content {
+  max-height: 2000px;
+}
+
+/* ─── Accordion Body ─────────────────────────────────────────── */
+.accordion-body {
+  padding-bottom: 36px;
+}
+
+.accordion-intro {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 10px;
+  color: var(--color-text);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* ─── Policy Sections ────────────────────────────────────────── */
+.policy-section {
+  margin-bottom: 24px;
+}
+
+.policy-section:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Sub Headings ───────────────────────────────────────────── */
+.sub-heading {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  color: var(--color-text);
+  letter-spacing: 0;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.sub-heading.underline {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ─── Paragraphs ─────────────────────────────────────────────── */
+.paragraph {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  color: var(--color-text);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .policies-container {
+    padding: 0 20px;
+  }
+
+  .main-heading {
+    font-size: 38px;
+    margin-bottom: 36px;
+  }
+
+  .accordion-title {
+    font-size: 22px;
+  }
+
+  .accordion-header {
+    padding: 20px 0;
+  }
+}

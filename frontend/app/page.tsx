@@ -3,6 +3,7 @@ import Marquee from "./components/Marquee";
 import ProductShowcase from "./components/ProductShowcase";
 import StorySection from "./components/StorySection";
 
+
 export default function Home() {
   return (
     <main>
@@ -10,6 +11,7 @@ export default function Home() {
       <Marquee />
       <ProductShowcase />
       <StorySection />
+
     </main>
   );
 }

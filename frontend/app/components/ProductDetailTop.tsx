@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import type { Product, ProductVariantOption } from '../shop/[id]/page';
 import '../styles/ProductDetailTop.css';
 
+
 type ProductDetailTopProps = {
     product: Product;
 };
@@ -168,7 +169,40 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
                             </div>
                         </div>
 
-                        <button className="product-detail-top__add" type="button">
+                        <button
+                            className="product-detail-top__add"
+                            type="button"
+                            onClick={() => {
+                                // Build variant selection list from current chosen options.
+                                const variantSelections = product.variantGroups
+                                    ?.map((group) => {
+                                        if (selectedOptions[group.name]) {
+                                            return {
+                                                groupName: group.name,
+                                                optionName: selectedOptions[group.name].name,
+                                            };
+                                        }
+                                        return null;
+                                    })
+                                    .filter(Boolean) as { groupName: string; optionName: string }[];
+
+                                const imageUrl = mainImage || galleryImages[0]?.url || undefined;
+
+                                // Lazy import to avoid affecting bundle for users who never open a product.
+                                // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                                import('./cart/cartStore').then(({ addToCart }) => {
+                                    addToCart({
+                                        productId: product._id,
+                                        productName: product.name,
+                                        imageUrl,
+                                        unitPrice: product.basePrice,
+                                        currency: product.currency ?? 'AED',
+                                        quantity,
+                                        variantSelections,
+                                    });
+                                });
+                            }}
+                        >
                             ADD TO BAG
                         </button>
                     </div>

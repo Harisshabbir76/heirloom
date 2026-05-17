@@ -4,17 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import "../styles/Navbar.css";
+import CartIcon from "./cart/CartIcon";
+
 
 export default function Navbar() {
   const pathname = usePathname();
-  const isShopPage = pathname === "/shop" || pathname.startsWith("/shop/");
+  const isDefaultNavbarPage =
+    pathname === "/" ||
+    pathname === "/our-story" ||
+    pathname === "/contact" ||
+    pathname === "/faq";
+
+  // Light navbar on all other pages
+  const isLightNavbarPage = !isDefaultNavbarPage;
 
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`navbar ${isShopPage ? "navbar--light" : ""}`}
+      className={`navbar ${isLightNavbarPage ? "navbar--light" : ""}`}
     >
       <div className="navbar-container">
         {/* Left Nav Links */}
@@ -65,26 +74,12 @@ export default function Navbar() {
           </a>
 
           {/* Cart Icon */}
-          <a href="/cart" className="icon-link" aria-label="Cart">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="17"
-              height="17"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-          </a>
+          <CartIcon />
+
+
 
           {/* Order Now CTA */}
-          <Link href="/order" className="order-now-btn">
+          <Link href="/shop" className="order-now-btn">
             Order Now
           </Link>
         </div>
