@@ -3,9 +3,21 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import '../styles/Shop.css';
+import ProductFaqs from '../components/ProductFaqs';
+import StoryMemoriesshop from '../components/StoryMemoriesshop';
+
+
+type ShopProduct = {
+    _id: string;
+    name: string;
+    basePrice: number;
+    images?: {
+        url: string;
+    }[];
+};
 
 export default function ShopPage() {
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<ShopProduct[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -27,21 +39,21 @@ export default function ShopPage() {
     }, []);
 
     return (
+        <div>
         <div className="shop-container">
             <header className="shop-header">
-                <h1 className="shop-title">The Collection</h1>
+                <h1 className="shop-title">SHOP</h1>
                 <p className="shop-subtitle">
-                    Discover our carefully curated pieces, each designed to hold your most treasured memories 
-                    and tell a story that lasts forever.
+                    Where timeless pieces are chosen, gifted, and remembered.
                 </p>
             </header>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '100px', color: '#777' }}>
+                <div className="shop-state">
                     Curating our collection...
                 </div>
             ) : products.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '100px', color: '#777' }}>
+                <div className="shop-state">
                     Our collection is currently being updated. Please check back soon.
                 </div>
             ) : (
@@ -59,11 +71,17 @@ export default function ShopPage() {
                                 />
                             </div>
                             <h3 className="shop-product-name">{product.name}</h3>
-                            <p className="shop-product-price">AED {product.basePrice}</p>
+                            <p className="shop-product-price">{product.basePrice} AED</p>
                         </Link>
                     ))}
                 </div>
             )}
+            
         </div>
+        <ProductFaqs />
+        <StoryMemoriesshop />
+        </div>
+
+        
     );
 }

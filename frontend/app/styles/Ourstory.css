@@ -78,17 +78,6 @@
     margin: 52px 0 0;
 }
 
-.our-story__stripe {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 34px;
-    display: block;
-    object-fit: cover;
-}
-
 .our-story__heading-block {
     max-width: 720px;
     margin: 10px auto;

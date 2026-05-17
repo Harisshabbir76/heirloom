@@ -85,7 +85,7 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.product-card:hover .view-product-overlay {
+.product-image-wrapper:hover .view-product-overlay {
     opacity: 1;
     visibility: visible;
 }
@@ -97,6 +97,11 @@
     line-height: 18px;
     letter-spacing: 1.2px;
     text-transform: uppercase;
+}
+
+.product-name:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
 .product-price {

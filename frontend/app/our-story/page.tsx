@@ -5,8 +5,6 @@ import OurStory from '../components/Ourstory';
 import StoryDetails from '../components/StoryDetails';
 import StoryMemories from '../components/StoryMemories';
 
-import Footer from '../components/Footer';
-
 export default function OurStoryPage() {
   return (
     <main>
@@ -15,7 +13,6 @@ export default function OurStoryPage() {
       <OurStory />
       <StoryDetails />
       <StoryMemories />
-      <Footer />
     </main>
   );
 }

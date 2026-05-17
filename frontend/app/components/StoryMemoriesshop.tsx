@@ -1,9 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import "../styles/StoryMemories.css";
-import "../styles/StoryDetails.css";
-
-
 
 import memoryOne from "../images/memories1.png";
 import memoryTwo from "../images/memories2.png";
@@ -11,6 +8,7 @@ import memoryThree from "../images/memories3.png";
 import memoryFour from "../images/memories4.png";
 import memoryFive from "../images/memories5.png";
 import memorySix from "../images/memories6.png";
+import stripeImage from "../images/Stripe.jpg";
 
 const memories = [
     { src: memoryOne, alt: "Jewelry and keepsakes on fabric" },
@@ -24,10 +22,13 @@ const memories = [
 const StoryMemories: React.FC = () => {
     return (
         <section className="story-memories">
-            
+            <Image
+                src={stripeImage}
+                alt=""
+                className="story-details__stripe"
+                aria-hidden="true"
+            />
             <div className="story-memories__inner">
-
-
                 <p className="story-memories__script">A Place for Your Memories</p>
 
                 <h2 className="story-memories__title">
@@ -60,4 +61,3 @@ const StoryMemories: React.FC = () => {
 };
 
 export default StoryMemories;
-

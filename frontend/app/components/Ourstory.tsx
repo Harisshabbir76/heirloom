@@ -8,7 +8,6 @@ import box1Image from "../images/story-box1.png";
 import box2Image from "../images/story-box2.png";
 import keychainImage from "../images/keychain.png";
 import ringsImage from "../images/rings.jpg";
-import stripeImage from "../images/Stripe.jpg";
 
 const OurStory: React.FC = () => {
     return (
@@ -124,12 +123,6 @@ const OurStory: React.FC = () => {
                     />
                 </div>
 
-                <Image
-                    src={stripeImage}
-                    alt=""
-                    className="our-story__stripe"
-                    aria-hidden="true"
-                />
             </div>
         </section>
     );

@@ -3,20 +3,26 @@
     background: #fffdf7;
     color: var(--color-deep);
     overflow: hidden;
-    padding-top: 20px;
+}
+
+.story-details__stripe {
+    width: 100%;
+    height: 34px;
+    display: block;
+    object-fit: cover;
 }
 
 .story-details__inner {
     position: relative;
     max-width: 920px;
     margin: 0 auto;
-    padding: 56px 24px 58px;
+    padding: 76px 24px 58px;
     text-align: center;
 }
 
 .story-details__script {
     position: absolute;
-    top: 24px;
+    top: 45px;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;

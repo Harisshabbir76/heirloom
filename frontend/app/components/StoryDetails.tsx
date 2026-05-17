@@ -5,10 +5,18 @@ import "../styles/StoryDetails.css";
 import glovesImage from "../images/gloves.jpg";
 import bellImage from "../images/bell.jpg";
 import necklaceImage from "../images/necklace.jpg";
+import stripeImage from "../images/Stripe.jpg";
 
 const StoryDetails: React.FC = () => {
     return (
         <section className="story-details">
+            <Image
+                src={stripeImage}
+                alt=""
+                className="story-details__stripe"
+                aria-hidden="true"
+            />
+
             <div className="story-details__inner">
                 <p className="story-details__script" aria-hidden="true">
                     Crafted with Intention

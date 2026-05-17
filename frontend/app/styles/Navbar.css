@@ -20,6 +20,29 @@
   transition: all 0.5s ease;
 }
 
+.navbar--light {
+  position: relative;
+  color: #350008;
+  background: #fffdf7;
+  border-bottom: 1px solid rgba(53, 0, 8, 0.32);
+}
+
+.navbar--light .nav-tab,
+.navbar--light .brand-name,
+.navbar--light .icon-link,
+.navbar--light .order-now-btn {
+  color: #350008;
+}
+
+.navbar--light .nav-tab,
+.navbar--light .order-now-btn {
+  font-weight: 500;
+}
+
+.navbar--light .brand-name {
+  font-weight: 600;
+}
+
 .navbar-container {
   max-width: 1920px;
   margin: 0 auto;
@@ -78,7 +101,7 @@
 .brand-name {
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
-  font-weight: 100;
+  font-weight: 600;
   font-size: 22px;
   line-height: 44px;
   letter-spacing: 0.23px;

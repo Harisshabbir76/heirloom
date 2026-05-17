@@ -1,21 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { motion, useScroll } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import "../styles/Navbar.css";
 
-interface NavbarProps {
-  // Add any props if needed in the future
-}
+export default function Navbar() {
+  const pathname = usePathname();
+  const isShopPage = pathname === "/shop" || pathname.startsWith("/shop/");
 
-export default function Navbar({}: NavbarProps = {}) {
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="navbar"
+      className={`navbar ${isShopPage ? "navbar--light" : ""}`}
     >
       <div className="navbar-container">
         {/* Left Nav Links */}
