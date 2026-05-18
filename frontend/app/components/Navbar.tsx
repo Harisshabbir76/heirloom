@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import "../styles/Navbar.css";
 import CartIcon from "./cart/CartIcon";
 
@@ -19,12 +18,7 @@ export default function Navbar() {
   const isLightNavbarPage = !isDefaultNavbarPage;
 
   return (
-    <motion.nav
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`navbar ${isLightNavbarPage ? "navbar--light" : ""}`}
-    >
+    <nav className={`navbar ${isLightNavbarPage ? "navbar--light" : ""}`}>
       <div className="navbar-container">
         {/* Left Nav Links */}
         <div className="nav-links-left">
@@ -48,35 +42,35 @@ export default function Navbar() {
 
         {/* Right Actions */}
         <div className="nav-actions-right">
-          {/* Instagram Icon */}
-          <a
-            href="https://www.instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="icon-link"
-            aria-label="Instagram"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="19"
-              height="19"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className="nav-icons">
+            {/* Instagram Icon */}
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="icon-link"
+              aria-label="Instagram"
             >
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-            </svg>
-          </a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
 
-          {/* Cart Icon */}
-          <CartIcon />
-
-
+            {/* Cart Icon */}
+            <CartIcon />
+          </div>
 
           {/* Order Now CTA */}
           <Link href="/shop" className="order-now-btn">
@@ -84,6 +78,6 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }

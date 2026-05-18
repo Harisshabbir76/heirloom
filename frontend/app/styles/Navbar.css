@@ -119,13 +119,13 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
   padding-right: 10%;
+  gap: 12px;
 }
 
 @media (min-width: 1280px) {
   .nav-actions-right {
-    gap: 24px;
+    gap: 16px;
     padding-right: 22%;
   }
 }
@@ -134,6 +134,12 @@
   .nav-actions-right {
     padding-right: 500px;
   }
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .icon-link {

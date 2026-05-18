@@ -6,126 +6,128 @@ import { motion } from "framer-motion";
 import contactBg from "../images/contact-us.png";
 import stripeBg from "../images/Stripe.jpg";
 import flowerImg from "../images/contact-us-flower.png";
+import "../styles/contact.css";
+import Marquee from "../components/Marquee";
+import StoryMemories from '../components/StoryMemories';
 
 const ContactSection: React.FC = () => {
     return (
-        <section className="relative w-full min-h-[1150px] flex flex-col items-center justify-center overflow-hidden pt-32 pb-24 md:py-0">
-            {/* Background Layer - Top Dark Image */}
-            <div className="absolute top-0 left-0 w-full h-[60%] md:h-[65%] z-0">
-                <Image
-                    src={contactBg}
-                    alt="Contact background"
-                    fill
-                    className="object-cover"
-                    priority
-                />
-                {/* Dark overlay for readability */}
-                <div className="absolute inset-0 bg-black/50 z-10"></div>
-            </div>
+        <div>
+            <section className="contact-section">
 
-            {/* Background Layer - Bottom Striped Pattern */}
-            <div
-                className="absolute bottom-0 left-0 w-full h-[40%] md:h-[35%] z-0"
-                style={{
-                    backgroundImage: `url(${stripeBg.src})`,
-                    backgroundRepeat: "repeat",
-                    backgroundSize: "auto",
-                }}
-            ></div>
-
-            {/* Content Layer */}
-            <div className="relative z-20 w-full flex flex-col items-center px-4">
-                {/* Headings */}
-                <motion.div
-                    className="text-center mb-6 md:mb-8 mt-12 md:mt-24"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                    <h2
-                        className="font-[family-name:var(--font-cormorant)] text-[38px] md:text-[55px] text-[#E6DDD7] mb-0"
-                        style={{ letterSpacing: "0.08em" }}
-                    >
-                        GET IN TOUCH
-                    </h2>
-                    <p className="font-[family-name:var(--font-pinyon)] text-[32px] md:text-[46px] text-[#E6DDD7] -mt-2 md:-mt-4">
-                        We’d love to hear from you.
-                    </p>
-                </motion.div>
-
-                {/* Decorative Flower Frame */}
-                <motion.div
-                    className="z-30 relative -mb-[75px] drop-shadow-md"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                >
+                {/* Background Layer - Top Dark Image */}
+                <div className="contact-bg-top">
                     <Image
-                        src={flowerImg}
-                        alt="Decorative flower frame"
-                        width={130}
-                        className="w-[110px] md:w-[130px]"
+                        src={contactBg}
+                        alt="Contact background"
+                        fill
+                        className="contact-image"
+                        priority
                     />
-                </motion.div>
+                    {/* Dark overlay for readability */}
+                    <div className="absolute inset-0 bg-black/60 z-10"></div>
+                </div>
 
-                {/* Contact Form Card */}
-                <motion.div
-                    className="bg-[#E8E1DB] w-full max-w-[650px] px-6 py-12 md:px-14 md:py-16 flex flex-col items-center shadow-md relative z-20 pt-24 md:pt-28"
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                >
-                    {/* Intro Text */}
-                    <p
-                        className="font-[family-name:var(--font-cormorant)] text-[#826060] text-center text-[13px] md:text-[15px] leading-[1.8] mb-10 max-w-[480px] uppercase"
-                        style={{ letterSpacing: "0.1em" }}
+                {/* Background Layer - Bottom Striped Pattern */}
+                <div
+                    className="contact-bg-bottom"
+                    style={{
+                        backgroundImage: `url(${stripeBg.src})`,
+                    }}
+                ></div>
+
+                {/* Content Layer */}
+                <div className="contact-content">
+                    {/* Headings */}
+                    <motion.div
+                        className="contact-headings-container"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
                     >
-                        WHETHER YOU HAVE A QUESTION, NEED ASSISTANCE,
-                        <br className="hidden md:block" />
-                        OR SIMPLY WANT TO CONNECT — WE’RE HERE.
-                    </p>
+                        <h2 className="contact-heading-main ">
+                            GET IN TOUCH
+                        </h2>
+                        <p className="contact-heading-sub ">
+                            We’d love to hear from you.
+                        </p>
+                    </motion.div>
 
-                    {/* Form Fields */}
-                    <form className="w-full flex flex-col gap-5">
-                        <input
-                            type="text"
-                            placeholder="FIRST NAME"
-                            className="w-full h-[42px] bg-transparent border border-[#B89C9C] px-4 font-[family-name:var(--font-hanken)] font-light text-[14px] md:text-[15px] text-[#5A3D3D] placeholder:text-[#A88C8C] placeholder:uppercase focus:outline-none focus:border-[#826060] focus:ring-0 transition-colors rounded-none"
+                    {/* Decorative Flower Frame */}
+                    <motion.div
+                        className="contact-flower-container"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                    >
+                        <Image
+                            src={flowerImg}
+                            alt="Decorative flower frame"
+                            width={130}
+                            className="contact-flower-img"
                         />
-                        <input
-                            type="text"
-                            placeholder="LAST NAME"
-                            className="w-full h-[42px] bg-transparent border border-[#B89C9C] px-4 font-[family-name:var(--font-hanken)] font-light text-[14px] md:text-[15px] text-[#5A3D3D] placeholder:text-[#A88C8C] placeholder:uppercase focus:outline-none focus:border-[#826060] focus:ring-0 transition-colors rounded-none"
-                        />
-                        <input
-                            type="email"
-                            placeholder="EMAIL ADDRESS"
-                            className="w-full h-[42px] bg-transparent border border-[#B89C9C] px-4 font-[family-name:var(--font-hanken)] font-light text-[14px] md:text-[15px] text-[#5A3D3D] placeholder:text-[#A88C8C] placeholder:uppercase focus:outline-none focus:border-[#826060] focus:ring-0 transition-colors rounded-none"
-                        />
-                        <input
-                            type="tel"
-                            placeholder="CONTACT NO."
-                            className="w-full h-[42px] bg-transparent border border-[#B89C9C] px-4 font-[family-name:var(--font-hanken)] font-light text-[14px] md:text-[15px] text-[#5A3D3D] placeholder:text-[#A88C8C] placeholder:uppercase focus:outline-none focus:border-[#826060] focus:ring-0 transition-colors rounded-none"
-                        />
-                        <textarea
-                            placeholder="MESSAGE"
-                            className="w-full h-[150px] bg-transparent border border-[#B89C9C] px-4 py-3 font-[family-name:var(--font-hanken)] font-light text-[14px] md:text-[15px] text-[#5A3D3D] placeholder:text-[#A88C8C] placeholder:uppercase focus:outline-none focus:border-[#826060] focus:ring-0 transition-colors rounded-none resize-none"
-                        />
+                    </motion.div>
 
-                        <button
-                            type="submit"
-                            className="w-full bg-[#4A0008] text-[#fffdf7] font-[family-name:var(--font-hanken)] font-light text-[14px] md:text-[15px] h-[46px] mt-4 hover:bg-[#6A0A16] transition-colors duration-500 ease-in-out rounded-none uppercase flex items-center justify-center"
-                            style={{ letterSpacing: "0.15em" }}
-                        >
-                            SEND MESSAGE
-                        </button>
-                    </form>
-                </motion.div>
-            </div>
-        </section>
+                    {/* Contact Form Card */}
+                    <motion.div
+                        className="contact-form-card"
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                    >
+                        {/* Intro Text */}
+                        <p className="contact-form-intro">
+                            WHETHER YOU HAVE A QUESTION, NEED ASSISTANCE,
+                            <br className="contact-form-intro-br" />
+                            OR SIMPLY WANT TO CONNECT — WE’RE HERE.
+                        </p>
+
+                        {/* Form Fields */}
+                        <form className="contact-form">
+                            <input
+                                type="text"
+                                placeholder="FIRST NAME"
+                                className="contact-input !border-[2px]"
+                            />
+                            <input
+                                type="text"
+                                placeholder="LAST NAME"
+                                className="contact-input !border-[2px]"
+                            />
+                            <input
+                                type="email"
+                                placeholder="EMAIL ADDRESS"
+                                className="contact-input !border-[2px]"
+                            />
+                            <input
+                                type="tel"
+                                placeholder="CONTACT NO."
+                                className="contact-input !border-[2px]"
+                            />
+                            <textarea
+                                placeholder="MESSAGE"
+                                className="contact-input !border-[2px] contact-textarea"
+                            />
+
+                            <button
+                                type="submit"
+                                className="contact-submit-btn"
+                            >
+                                SEND MESSAGE
+                            </button>
+                        </form>
+                    </motion.div>
+
+                </div>
+            </section>
+
+            <Marquee />
+            <StoryMemories />
+        </div>
+
     );
 };
 

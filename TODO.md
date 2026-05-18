@@ -1,7 +1,9 @@
 # TODO
 
-## Cart -> Sidebar -> Checkout flow
-- [x] Inspect existing cart store + sidebar + checkout page implementation.
-- [ ] Implement UX improvements if required (auto-open sidebar after adding to bag, ensure checkout navigation behavior, button label tweak if desired).
-- [ ] Run dev server and manually test: add product -> sidebar shows item details -> proceed to checkout -> form visible.
+- [ ] Replace FAQ page CSS-generated stripe backgrounds with `frontend/app/images/Stripe.jpg`.
+- [x] Edit `frontend/app/styles/faq.css` to replace repeating-linear-gradient stripe backgrounds with `background-image: url("/images/Stripe.jpg")` for:
+  - [x] .faq-contact-left
+  - [x] .faq-contact-stripe-bg
+  - [x] Keep existing layout/padding rules.
+- [ ] Verify visually by running the frontend dev server and checking `/faq`.
 
