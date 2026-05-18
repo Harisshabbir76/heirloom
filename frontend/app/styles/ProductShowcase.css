@@ -153,15 +153,15 @@
 
 .showcase-bottom-text {
     font-family: var(--font-hanken), sans-serif;
-    font-weight: 300;
-    font-size: 8px;
+    font-weight: 200;
+    font-size: 10px;
     line-height: 15px;
-    letter-spacing: 1px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
     margin-top: 51.93px;
     /* Precise gap as requested */
     margin-bottom: 60px;
-    max-width: 350px;
+    max-width: 400px;
 }
 
 .showcase-cta {

@@ -41,10 +41,11 @@
 
 .story-memories__note {
     font-family: var(--font-hanken), sans-serif;
+    font-weight: 300;
     font-size: 10px;
-    font-weight: 500;
-    line-height: 11px;
-    letter-spacing: 0.35px;
+    color: black;
+    line-height: 15px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
     margin: 0 0 68px;
 }

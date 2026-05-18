@@ -42,7 +42,7 @@
 .faq-hero {
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 400px;
   overflow: visible;
 }
 
@@ -55,6 +55,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 70%;  /* <-- CHANGED: shifts image up so more is visible */
+  transform: scale(1);       /* <-- CHANGED: zooms out the image */
+  transform-origin: center top; /* <-- CHANGED: anchors zoom from top-center */
 }
 
 .faq-hero-overlay {
@@ -62,7 +65,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* 60% black overlay */
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1;
 }
 
@@ -92,10 +95,11 @@
 .faq-key-emblem {
   position: absolute;
   left: 50%;
-  bottom: -35px;
+  right: 50%;
+  bottom: -50px;
   transform: translateX(-50%);
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   z-index: 20;
 }
 
@@ -149,11 +153,12 @@
 }
 
 .faq-accordion-question {
+  font-weight: 350;
   font-size: 10px;
-  font-weight: 300px;
-  letter-spacing: 0.14em;
+  line-height: 20px;
+  letter-spacing: 0.75px;
+  color: #350008;
   text-transform: uppercase;
-  color: var(--text);
 }
 
 .faq-accordion-icon {
@@ -167,12 +172,12 @@
 
 .faq-accordion-answer {
   max-width: 90%;
+  font-weight: 350;
   font-size: 10px;
-  font-weight: 300px;
-  line-height: 2;
-  letter-spacing: 0.11em;
+  line-height: 20px;
+  letter-spacing: 0.75px;
+  color: #350008;
   text-transform: uppercase;
-  color: #64554b;
 }
 
 /* =========================================
@@ -248,11 +253,12 @@
 }
 
 .faq-contact-body {
-  font-size: 8px;
-  line-height: 2;
-  letter-spacing: 1px;
+  font-weight: 350;
+  font-size: 10px;
+  line-height: 13px;
+  letter-spacing: 0px;
   text-transform: uppercase;
-  color: #6d6159;
+  color: black;
   margin-bottom: 42px;
   max-width: 350px;
 }

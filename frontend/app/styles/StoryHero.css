@@ -59,18 +59,18 @@
     font-weight: 400;
     font-size: 30px;
     line-height: 1;
-    margin-top: 0px;
+    margin-top: 3px;
     margin-bottom: 40px;
 }
 
 .story-hero-text {
     font-family: var(--font-hanken), sans-serif;
-    font-weight: 300;
+    font-weight: 200;
     font-size: 10px;
-    line-height: 22px;
-    letter-spacing: 0.8px;
+    line-height: 15px;
+    letter-spacing: 0px;
     text-transform: uppercase;
-    max-width: 580px;
+    max-width: 420px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;

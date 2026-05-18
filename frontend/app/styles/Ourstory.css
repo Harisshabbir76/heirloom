@@ -177,10 +177,11 @@
 
 .our-story__body-text p {
     font-family: var(--font-hanken), sans-serif;
+    font-weight: 300;
     font-size: 10px;
-    font-weight: 400;
-    line-height: 13px;
-    letter-spacing: 0.4px;
+    line-height: 15px;
+    letter-spacing: 0.3px;
+    color: black;
     text-transform: uppercase;
     margin: 0;
     max-width: 355px;
@@ -199,7 +200,7 @@
     text-align: center;
     text-transform: uppercase;
     text-decoration: none;
-    padding: 5px 18px;
+    padding: 4px 18px;
     transition: background 0.2s ease, transform 0.2s ease;
 }
 

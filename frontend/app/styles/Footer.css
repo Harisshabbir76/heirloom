@@ -74,6 +74,7 @@
   text-transform: uppercase;
   transition: transform 0.2s ease;
   margin-left: -20px;
+  top: 50%;
 }
 
 .buy-now-btn:hover {

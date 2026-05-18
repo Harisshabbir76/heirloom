@@ -19,7 +19,7 @@ const StoryDetails: React.FC = () => {
 
             <div className="story-details__inner">
                 <p className="story-details__script" aria-hidden="true">
-                    Crafted with Intention
+                    Rooted in Elegance
                 </p>
 
                 <h2 className="story-details__title">
