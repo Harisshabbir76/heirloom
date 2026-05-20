@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '../../../styles/AddProduct.css';
 import '../../../styles/Dashboard.css';
+import { hasDashboardAccess } from '../../../lib/dashboardAuth';
+import DashboardSidebar from '../../../components/DashboardSidebar';
+
 
 interface VariantOption {
     name: string;
-    image?: any; 
+    image?: File | ExistingImage | null;
     previewUrl?: string;
     dimensions: {
         length: string;
@@ -16,6 +19,11 @@ interface VariantOption {
         height: string;
         description: string;
     };
+}
+
+interface ExistingImage {
+    url: string;
+    cloudinaryId?: string;
 }
 
 interface VariantGroup {
@@ -27,6 +35,17 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const { id } = use(params);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
+    const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        hasDashboardAccess().then((allowed) => {
+            if (!allowed) {
+                router.replace('/404');
+            }
+            setIsAuthorized(allowed);
+        });
+    }, [router]);
+
     const [saving, setSaving] = useState(false);
     
     const [formData, setFormData] = useState({
@@ -36,12 +55,15 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         stock: '',
     });
     
-    const [existingImages, setExistingImages] = useState<any[]>([]);
+    const [existingImages, setExistingImages] = useState<ExistingImage[]>([]);
     const [newProductImages, setNewProductImages] = useState<File[]>([]);
     const [newProductPreviews, setNewProductPreviews] = useState<string[]>([]);
+    const [mainNewImageIndex, setMainNewImageIndex] = useState<number | null>(null);
     const [variantGroups, setVariantGroups] = useState<VariantGroup[]>([]);
 
     useEffect(() => {
+        if (isAuthorized !== true) return;
+
         const fetchProduct = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`);
@@ -64,7 +86,15 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
             }
         };
         fetchProduct();
-    }, [id]);
+    }, [id, isAuthorized]);
+
+    if (isAuthorized === false) {
+        return <div className="dashboard-container" />;
+    }
+
+    if (isAuthorized === null) {
+        return <div className="dashboard-container" />;
+    }
 
     const handleProductChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -87,6 +117,20 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const removeNewImage = (idx: number) => {
         setNewProductImages(prev => prev.filter((_, i) => i !== idx));
         setNewProductPreviews(prev => prev.filter((_, i) => i !== idx));
+        setMainNewImageIndex(prev => {
+            if (prev === null) return null;
+            if (prev === idx) return null;
+            return prev > idx ? prev - 1 : prev;
+        });
+    };
+
+    const makeExistingImageMain = (idx: number) => {
+        setExistingImages(prev => {
+            const selected = prev[idx];
+            if (!selected) return prev;
+            return [selected, ...prev.filter((_, i) => i !== idx)];
+        });
+        setMainNewImageIndex(null);
     };
 
     const addVariantGroup = () => {
@@ -129,17 +173,27 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         data.append('basePrice', formData.basePrice);
         data.append('stock', formData.stock);
         data.append('existingImages', JSON.stringify(existingImages));
+        if (mainNewImageIndex !== null) {
+            data.append('mainNewImageIndex', String(mainNewImageIndex));
+        }
 
         newProductImages.forEach(file => data.append('images', file));
 
         const groupsToSubmit = variantGroups.map((group) => ({
             name: group.name,
             options: group.options.map((opt) => {
-                const { previewUrl, ...rest } = opt;
                 if (opt.image instanceof File) {
-                    return { ...rest, image: undefined };
+                    return {
+                        name: opt.name,
+                        dimensions: opt.dimensions,
+                        image: undefined,
+                    };
                 }
-                return rest;
+                return {
+                    name: opt.name,
+                    dimensions: opt.dimensions,
+                    image: opt.image,
+                };
             })
         }));
         data.append('variantGroups', JSON.stringify(groupsToSubmit));
@@ -176,7 +230,11 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
 
     return (
         <div className="add-product-container">
-            <Link href="/dashboard" className="back-link">← Back to Dashboard</Link>
+            <DashboardSidebar />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+                <Link href="/dashboard" className="back-link">← Back to Dashboard</Link>
+            </div>
+
             <div className="form-card" style={{ maxWidth: '1000px' }}>
                 <h1 className="dashboard-title">Edit Product</h1>
                 <form onSubmit={handleSubmit} className="form-grid">
@@ -194,12 +252,58 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     </div>
 
                     <div className="form-group full-width">
-                        <label>Current Images (Click to remove)</label>
+                        <label>Current Images (Click "Set Main" to set main image)</label>
                         <div className="preview-grid">
                             {existingImages.map((img, i) => (
-                                <div key={i} className="preview-item" onClick={() => removeExistingImage(i)}>
+                                <div key={i} className="preview-item" style={{ position: 'relative' }}>
                                     <img src={img.url} />
-                                    <div className="remove-img-overlay"><span>×</span></div>
+                                    {/* Explicit X button top-right */}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeExistingImage(i)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: 4,
+                                            right: 4,
+                                            width: 22,
+                                            height: 22,
+                                            borderRadius: '50%',
+                                            border: 'none',
+                                            background: 'rgba(0,0,0,0.65)',
+                                            color: '#fff',
+                                            fontSize: 13,
+                                            lineHeight: '1',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            zIndex: 10,
+                                            padding: 0,
+                                        }}
+                                        title="Remove image"
+                                    >
+                                        ×
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => makeExistingImageMain(i)}
+                                        style={{
+                                            position: 'absolute',
+                                            left: 6,
+                                            right: 6,
+                                            bottom: 6,
+                                            border: 'none',
+                                            background: i === 0 && mainNewImageIndex === null ? '#350008' : '#fffdf7',
+                                            color: i === 0 && mainNewImageIndex === null ? '#fffdf7' : '#350008',
+                                            fontSize: 9,
+                                            padding: '4px 0',
+                                            cursor: 'pointer',
+                                            textTransform: 'uppercase',
+                                            zIndex: 9,
+                                        }}
+                                    >
+                                        {i === 0 && mainNewImageIndex === null ? 'Main Image' : 'Set Main'}
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -213,9 +317,55 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                         </div>
                         <div className="preview-grid">
                             {newProductPreviews.map((url, i) => (
-                                <div key={i} className="preview-item" onClick={() => removeNewImage(i)}>
+                                <div key={i} className="preview-item" style={{ position: 'relative' }}>
                                     <img src={url} />
-                                    <div className="remove-img-overlay"><span>×</span></div>
+                                    {/* Explicit X button top-right */}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeNewImage(i)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: 4,
+                                            right: 4,
+                                            width: 22,
+                                            height: 22,
+                                            borderRadius: '50%',
+                                            border: 'none',
+                                            background: 'rgba(0,0,0,0.65)',
+                                            color: '#fff',
+                                            fontSize: 13,
+                                            lineHeight: '1',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            zIndex: 10,
+                                            padding: 0,
+                                        }}
+                                        title="Remove image"
+                                    >
+                                        ×
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setMainNewImageIndex(i)}
+                                        style={{
+                                            position: 'absolute',
+                                            left: 6,
+                                            right: 6,
+                                            bottom: 6,
+                                            border: 'none',
+                                            background: mainNewImageIndex === i ? '#350008' : '#fffdf7',
+                                            color: mainNewImageIndex === i ? '#fffdf7' : '#350008',
+                                            fontSize: 9,
+                                            padding: '4px 0',
+                                            cursor: 'pointer',
+                                            textTransform: 'uppercase',
+                                            zIndex: 9,
+                                        }}
+                                    >
+                                        {mainNewImageIndex === i ? 'Main Image' : 'Set Main'}
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -254,10 +404,38 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                             <div className="form-group">
                                                 <label>Image</label>
                                                 <input type="file" onChange={(e) => handleOptionImageChange(gIdx, oIdx, e)} />
-                                                {(opt.previewUrl || (opt.image && opt.image.url)) && (
-                                                    <div className="preview-item" style={{ width: '60px', height: '60px', marginTop: '10px' }} onClick={() => removeVariantImage(gIdx, oIdx)}>
-                                                        <img src={opt.previewUrl || opt.image.url} />
-                                                        <div className="remove-img-overlay"><span>×</span></div>
+                                                {(opt.previewUrl || (opt.image && (opt.image as ExistingImage).url)) && (
+                                                    <div style={{ position: 'relative', width: '60px', height: '60px', marginTop: '10px' }}>
+                                                        <img
+                                                            src={opt.previewUrl || (opt.image as ExistingImage).url}
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 }}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeVariantImage(gIdx, oIdx)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: 2,
+                                                                right: 2,
+                                                                width: 18,
+                                                                height: 18,
+                                                                borderRadius: '50%',
+                                                                border: 'none',
+                                                                background: 'rgba(0,0,0,0.65)',
+                                                                color: '#fff',
+                                                                fontSize: 11,
+                                                                lineHeight: '1',
+                                                                cursor: 'pointer',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                zIndex: 10,
+                                                                padding: 0,
+                                                            }}
+                                                            title="Remove image"
+                                                        >
+                                                            ×
+                                                        </button>
                                                     </div>
                                                 )}
                                             </div>

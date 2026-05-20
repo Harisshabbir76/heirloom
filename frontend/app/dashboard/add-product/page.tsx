@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '../../styles/AddProduct.css';
 import '../../styles/Dashboard.css';
+import { hasDashboardAccess } from '../../lib/dashboardAuth';
+import DashboardSidebar from '../../components/DashboardSidebar';
+
 
 interface VariantOption {
     name: string;
@@ -27,6 +30,17 @@ interface VariantGroup {
 export default function AddProduct() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        hasDashboardAccess().then((allowed) => {
+            if (!allowed) {
+                router.replace('/404');
+            }
+            setIsAuthorized(allowed);
+        });
+    }, [router]);
+
     
     const [formData, setFormData] = useState({
         name: '',
@@ -37,6 +51,14 @@ export default function AddProduct() {
     const [productImages, setProductImages] = useState<File[]>([]);
     const [productPreviews, setProductPreviews] = useState<string[]>([]);
     const [variantGroups, setVariantGroups] = useState<VariantGroup[]>([]);
+
+    if (isAuthorized === false) {
+        return <div className="dashboard-container" />;
+    }
+
+    if (isAuthorized === null) {
+        return <div className="dashboard-container" />;
+    }
 
     const handleProductChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -187,8 +209,12 @@ export default function AddProduct() {
 
     return (
         <div className="add-product-container">
-            <Link href="/dashboard" className="back-link">← Back to Dashboard</Link>
-            
+            <DashboardSidebar />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+                <Link href="/dashboard" className="back-link">← Back to Dashboard</Link>
+
+            </div>
+
             <div className="form-card" style={{ maxWidth: '1000px' }}>
                 <h1 className="dashboard-title">Add New Product</h1>
                 

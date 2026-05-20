@@ -75,7 +75,7 @@
 }
 
 .nav-tab {
-  font-family: 'Hanken Grotesk';
+  font-family: 'Hanken Grotesk', sans-serif;
   font-weight: 100;
   font-size: 10px;
   line-height: 20px;
@@ -172,4 +172,222 @@
 
 .order-now-btn:hover {
   opacity: 0.6;
+}
+
+/* Mobile Styles */
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.hamburger-btn:hover {
+  opacity: 0.6;
+}
+
+/* Mobile Sidebar */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-sidebar--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-sidebar__content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background-color: #FFFDF7;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+}
+
+.mobile-sidebar--open .mobile-sidebar__content {
+  transform: translateX(0);
+}
+
+/* For light/dark mode consistency */
+.navbar--light ~ .mobile-sidebar .mobile-sidebar__content,
+.navbar--light + .mobile-sidebar .mobile-sidebar__content {
+  background-color: #FFFDF7;
+}
+
+.navbar:not(.navbar--light) ~ .mobile-sidebar .mobile-sidebar__content {
+  background-color: #FFFDF7;
+}
+
+.mobile-sidebar__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  margin-bottom: 20px;
+  color: #350008;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-sidebar__close:hover {
+  opacity: 0.6;
+}
+
+.mobile-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
+.mobile-sidebar__link {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 100;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #350008;
+  padding: 8px 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-sidebar__link:hover {
+  opacity: 0.6;
+}
+
+.mobile-sidebar__footer {
+  padding-top: 20px;
+  border-top: 1px solid rgba(53, 0, 8, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-sidebar__instagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  color: #350008;
+  transition: opacity 0.3s ease;
+  text-decoration: none;
+}
+
+.mobile-sidebar__instagram:hover {
+  opacity: 0.6;
+}
+
+/* Responsive font size adjustments - keeping same font weights */
+/* Nav Tab responsive sizes */
+@media (max-width: 768px) {
+  .nav-tab {
+    font-size: 8px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-tab {
+    font-size: 7px;
+    line-height: 14px;
+  }
+}
+
+/* Brand name responsive sizes */
+@media (max-width: 768px) {
+  .brand-name {
+    font-size: 18px;
+    line-height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-name {
+    font-size: 14px;
+    line-height: 28px;
+  }
+}
+
+/* Order Now button responsive sizes */
+@media (max-width: 768px) {
+  .order-now-btn {
+    font-size: 8px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-now-btn {
+    font-size: 7px;
+    line-height: 14px;
+  }
+}
+
+/* Mobile sidebar link responsive sizes */
+@media (max-width: 768px) {
+  .mobile-sidebar__link {
+    font-size: 13px;
+    line-height: 18px;
+  }
+  
+  .mobile-sidebar__instagram svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-sidebar__link {
+    font-size: 12px;
+    line-height: 16px;
+  }
+  
+  .mobile-sidebar__instagram svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Ensure navbar container padding works well on mobile */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 16px;
+  }
+}
+
+/* Keep existing desktop styles unaffected */
+@media (min-width: 1024px) {
+  .hamburger-btn {
+    display: none;
+  }
 }

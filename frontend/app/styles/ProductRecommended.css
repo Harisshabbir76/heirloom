@@ -5,7 +5,7 @@
     background-position: center;
     color: #fffdf7;
     padding: 58px 24px 86px;
-    border-bottom: 1px solid var(--color-deep);
+    border-bottom: 1px solid #350008;
 }
 
 .product-recommended__inner {
@@ -15,12 +15,13 @@
 
 .product-recommended__heading {
     margin-bottom: 56px;
+    text-align: center;
 }
 
 .product-recommended__heading h2 {
     font-family: var(--font-cormorant), serif;
-    font-size: 27px;
     font-weight: 400;
+    font-size: 27px;
     line-height: 31px;
     letter-spacing: 0.4px;
     text-transform: uppercase;
@@ -29,8 +30,8 @@
 
 .product-recommended__heading p {
     font-family: var(--font-pinyon), cursive;
-    font-size: 28px;
     font-weight: 400;
+    font-size: 28px;
     line-height: 28px;
     letter-spacing: 0;
     margin-top: 10px;
@@ -38,13 +39,20 @@
 
 .product-recommended__grid {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
 .product-recommended__card {
     width: 190px;
     color: #fffdf7;
     text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.product-recommended__card:hover {
+    transform: translateY(-5px);
 }
 
 .product-recommended__image {
@@ -61,6 +69,11 @@
     height: 100%;
     display: block;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-recommended__image:hover img {
+    transform: scale(1.05);
 }
 
 .product-recommended__image span {
@@ -68,7 +81,10 @@
     place-items: center;
     height: 100%;
     font-family: var(--font-cormorant), serif;
+    font-weight: 400;
     font-size: 18px;
+    text-align: center;
+    padding: 0 10px;
 }
 
 .product-recommended__overlay {
@@ -81,6 +97,7 @@
     text-align: center;
     padding: 7px 0;
     font-family: var(--font-hanken), sans-serif;
+    font-weight: 400;
     font-size: 10px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -96,12 +113,13 @@
 
 .product-recommended__card h3 {
     font-family: var(--font-cormorant), serif;
-    font-size: 14px;
     font-weight: 400;
+    font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.7px;
     text-transform: uppercase;
     margin: 0;
+    transition: text-decoration 0.3s ease;
 }
 
 .product-recommended__card h3:hover {
@@ -111,7 +129,7 @@
 
 .product-recommended__card p {
     font-family: var(--font-hanken), sans-serif;
-    font-weight: 180;
+    font-weight: 400;
     font-size: 12px;
     line-height: 20px;
     letter-spacing: 0.9px;
@@ -120,8 +138,420 @@
     margin: 0;
 }
 
-@media (max-width: 620px) {
+/* Ultra-wide screens (1600px+) */
+@media (min-width: 1600px) {
+    .product-recommended {
+        min-height: 480px;
+        padding: 70px 32px 100px;
+    }
+    
     .product-recommended__inner {
+        max-width: 280px;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 65px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 32px;
+        line-height: 36px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 32px;
+        line-height: 32px;
+        margin-top: 12px;
+    }
+    
+    .product-recommended__grid {
+        gap: 40px;
+    }
+    
+    .product-recommended__card {
+        width: 220px;
+    }
+    
+    .product-recommended__image {
+        width: 220px;
+        height: 283px;
+        margin-bottom: 15px;
+    }
+    
+    .product-recommended__card h3 {
+        font-size: 16px;
+        line-height: 22px;
+        letter-spacing: 0.8px;
+    }
+    
+    .product-recommended__card p {
+        font-size: 13px;
+        line-height: 22px;
+        letter-spacing: 1px;
+    }
+    
+    .product-recommended__overlay {
+        bottom: 10px;
+        left: 15px;
+        right: 15px;
+        padding: 9px 0;
+        font-size: 11px;
+    }
+}
+
+/* Desktop Large (1280px - 1600px) */
+@media (min-width: 1280px) and (max-width: 1600px) {
+    .product-recommended {
+        padding: 58px 24px 86px;
+    }
+}
+
+/* Desktop (1024px - 1280px) */
+@media (min-width: 1024px) and (max-width: 1280px) {
+    .product-recommended {
+        padding: 55px 24px 80px;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 50px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 26px;
+        line-height: 30px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 26px;
+        line-height: 26px;
+    }
+    
+    .product-recommended__grid {
+        gap: 25px;
+    }
+    
+    .product-recommended__card {
+        width: 180px;
+    }
+    
+    .product-recommended__image {
+        width: 180px;
+        height: 231px;
+    }
+}
+
+/* Tablet Landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .product-recommended {
+        min-height: 380px;
+        padding: 50px 20px 75px;
+    }
+    
+    .product-recommended__inner {
+        max-width: 600px;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 45px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 25px;
+        line-height: 29px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 25px;
+        line-height: 25px;
+        margin-top: 8px;
+    }
+    
+    .product-recommended__grid {
+        gap: 25px;
+        justify-content: center;
+    }
+    
+    .product-recommended__card {
+        width: 200px;
+    }
+    
+    .product-recommended__image {
+        width: 200px;
+        height: 257px;
+    }
+    
+    .product-recommended__card h3 {
+        font-size: 13px;
+        line-height: 18px;
+    }
+    
+    .product-recommended__card p {
+        font-size: 11px;
+        line-height: 18px;
+    }
+}
+
+/* Tablet Portrait (640px - 768px) */
+@media (min-width: 640px) and (max-width: 768px) {
+    .product-recommended {
+        min-height: 360px;
+        padding: 48px 20px 70px;
+    }
+    
+    .product-recommended__inner {
+        max-width: 500px;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 42px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 24px;
+        line-height: 24px;
+        margin-top: 8px;
+    }
+    
+    .product-recommended__grid {
+        gap: 20px;
+    }
+    
+    .product-recommended__card {
+        width: 220px;
+    }
+    
+    .product-recommended__image {
+        width: 220px;
+        height: 283px;
+        margin-bottom: 10px;
+    }
+    
+    .product-recommended__card h3 {
+        font-size: 13px;
+        line-height: 18px;
+        letter-spacing: 0.6px;
+    }
+    
+    .product-recommended__card p {
+        font-size: 11px;
+        line-height: 18px;
+        letter-spacing: 0.8px;
+    }
+}
+
+/* Mobile Landscape (480px - 640px) */
+@media (min-width: 480px) and (max-width: 640px) {
+    .product-recommended {
+        min-height: auto;
+        padding: 45px 18px 65px;
+    }
+    
+    .product-recommended__inner {
+        max-width: 100%;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 40px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 24px;
+        line-height: 24px;
+        margin-top: 8px;
+    }
+    
+    .product-recommended__grid {
+        justify-content: center;
+    }
+    
+    .product-recommended__card {
+        width: 260px;
+    }
+    
+    .product-recommended__image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 190 / 244;
+        margin-bottom: 12px;
+    }
+    
+    .product-recommended__card h3 {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    
+    .product-recommended__card p {
+        font-size: 12px;
+        line-height: 20px;
+    }
+}
+
+/* Mobile Small (320px - 480px) */
+@media (min-width: 320px) and (max-width: 480px) {
+    .product-recommended {
+        min-height: auto;
+        padding: 42px 16px 58px;
+    }
+    
+    .product-recommended__inner {
+        max-width: 100%;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 35px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 22px;
+        line-height: 26px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 22px;
+        line-height: 22px;
+        margin-top: 6px;
+    }
+    
+    .product-recommended__grid {
+        justify-content: center;
+    }
+    
+    .product-recommended__card {
+        width: 260px;
+    }
+    
+    .product-recommended__image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 190 / 244;
+        margin-bottom: 10px;
+    }
+    
+    .product-recommended__card h3 {
+        font-size: 13px;
+        line-height: 18px;
+        letter-spacing: 0.6px;
+    }
+    
+    .product-recommended__card p {
+        font-size: 11px;
+        line-height: 18px;
+        letter-spacing: 0.8px;
+    }
+    
+    .product-recommended__overlay {
+        bottom: 5px;
+        left: 8px;
+        right: 8px;
+        padding: 6px 0;
+        font-size: 9px;
+    }
+}
+
+/* Mobile Extra Small (up to 320px) */
+@media (max-width: 320px) {
+    .product-recommended {
+        min-height: auto;
+        padding: 38px 12px 52px;
+    }
+    
+    .product-recommended__inner {
+        max-width: 100%;
+    }
+    
+    .product-recommended__heading {
+        margin-bottom: 30px;
+    }
+    
+    .product-recommended__heading h2 {
+        font-size: 20px;
+        line-height: 24px;
+    }
+    
+    .product-recommended__heading p {
+        font-size: 20px;
+        line-height: 20px;
+        margin-top: 5px;
+    }
+    
+    .product-recommended__grid {
+        justify-content: center;
+    }
+    
+    .product-recommended__card {
+        width: 240px;
+    }
+    
+    .product-recommended__image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 190 / 244;
+        margin-bottom: 8px;
+    }
+    
+    .product-recommended__card h3 {
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.5px;
+    }
+    
+    .product-recommended__card p {
+        font-size: 10px;
+        line-height: 16px;
+        letter-spacing: 0.7px;
+    }
+    
+    .product-recommended__overlay {
+        bottom: 4px;
+        left: 6px;
+        right: 6px;
+        padding: 5px 0;
+        font-size: 8px;
+    }
+}
+
+/* For multiple products - if more than 1 product is shown */
+@media (min-width: 1024px) {
+    .product-recommended__grid {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .product-recommended__card {
+        width: 190px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .product-recommended__grid {
+        gap: 25px;
+    }
+    
+    .product-recommended__card {
+        width: 200px;
+    }
+}
+
+@media (max-width: 767px) {
+    .product-recommended__grid {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .product-recommended__card {
+        width: 100%;
         max-width: 280px;
     }
 }

@@ -122,7 +122,7 @@ exports.getProducts = async (req, res) => {
 // @route   PUT /api/products/:id
 exports.updateProduct = async (req, res) => {
   try {
-    const { name, description, basePrice, stock, variantGroups: groupsRaw, existingImages: existingImagesRaw } = req.body;
+    const { name, description, basePrice, stock, variantGroups: groupsRaw, existingImages: existingImagesRaw, mainNewImageIndex } = req.body;
     const files = req.files || [];
 
     const product = await Product.findById(req.params.id);
@@ -156,7 +156,21 @@ exports.updateProduct = async (req, res) => {
             finalProductImages = JSON.parse(existingImagesRaw);
         } catch (e) { console.error('Error parsing existingImages:', e); }
     }
-    finalProductImages = [...finalProductImages, ...newProductImages];
+    if (mainNewImageIndex !== undefined && mainNewImageIndex !== '') {
+      const mainIndex = Number(mainNewImageIndex);
+      const mainNewImage = newProductImages[mainIndex];
+      if (mainNewImage) {
+        finalProductImages = [
+          mainNewImage,
+          ...finalProductImages,
+          ...newProductImages.filter((_, index) => index !== mainIndex),
+        ];
+      } else {
+        finalProductImages = [...finalProductImages, ...newProductImages];
+      }
+    } else {
+      finalProductImages = [...finalProductImages, ...newProductImages];
+    }
 
     // Process Variant Option Images
     variantGroups.forEach((group, gIdx) => {

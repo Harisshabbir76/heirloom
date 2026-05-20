@@ -135,6 +135,7 @@ const PoliciesPage: React.FC = () => {
                   className="accordion-header"
                   onClick={() => toggleItem(item.id)}
                   aria-expanded={isOpen}
+                  type="button"
                 >
                   <span className="accordion-title">{item.title}</span>
                   <span className="accordion-icon">{isOpen ? "−" : "+"}</span>

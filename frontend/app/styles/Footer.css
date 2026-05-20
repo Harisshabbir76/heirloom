@@ -209,3 +209,49 @@
     margin-bottom: 20px;
   }
 }
+
+@media (max-width: 640px) {
+  .footer {
+    height: auto;
+    min-height: 0;
+    padding: 58px 16px 0;
+  }
+
+  .cta-card {
+    max-width: 360px;
+    height: 230px;
+    padding: 28px 18px;
+    margin-top: -20px;
+    background-size: contain;
+  }
+
+  .cta-card h2 {
+    font-size: 27px;
+    margin-left: -10px;
+  }
+
+  .cta-card p {
+    font-size: 8px;
+    line-height: 13px;
+    margin-left: -10px;
+  }
+
+  .buy-now-btn {
+    margin-left: -10px;
+    padding: 5px 22px;
+  }
+
+  .footer-bottom {
+    padding: 18px 16px;
+    gap: 14px;
+  }
+
+  .footer-links,
+  .footer-info {
+    gap: 14px;
+  }
+
+  .footer-info {
+    flex-direction: column;
+  }
+}

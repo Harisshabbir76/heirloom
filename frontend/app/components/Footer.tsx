@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   const scrollToTop = () => {
+    if (typeof window === 'undefined') return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -16,7 +17,9 @@ const Footer = () => {
         <div className="cta-card">
           <h2>I know you want to...</h2>
           <p>KEEP WHAT MATTERS, BEAUTIFULLY.</p>
-          <Link href="/shop"> <button className="buy-now-btn">BUY YOURS NOW</button> </Link>
+          <Link href="/shop" className="buy-now-link">
+            <button type="button" className="buy-now-btn">BUY YOURS NOW</button>
+          </Link>
         </div>
       </div>
 

@@ -2,20 +2,14 @@
    FAQ PAGE — HEIRLOOM STYLE
 ========================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@300;400;500&display=swap");
-
 :root {
   --bg: #e8e1d8;
   --light-bg: #f3eee7;
   --stripe: #d8d0c4;
   --border: #b9aa9c;
-
-  /* UPDATED COLORS */
   --text: #350008;
   --dark: #1b1714;
   --white: #ffffff;
-
-  /* NEW */
   --faq-box-bg: #E3DFD6;
   --contact-box-bg: #FFFDF7;
 }
@@ -55,9 +49,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 70%;  /* <-- CHANGED: shifts image up so more is visible */
-  transform: scale(1);       /* <-- CHANGED: zooms out the image */
-  transform-origin: center top; /* <-- CHANGED: anchors zoom from top-center */
+  object-position: center 70%;
+  transform: scale(1);
+  transform-origin: center top;
 }
 
 .faq-hero-overlay {
@@ -78,14 +72,16 @@
   justify-content: center;
 }
 
-
 .faq-hero-title {
   font-family: "Cormorant Garamond", serif;
-  font-size: 35px;
   font-weight: 400;
+  font-size: 35px;
   letter-spacing: 0.06em;
   color: white;
   text-align: center;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0 20px;
 }
 
 /* =========================================
@@ -110,14 +106,6 @@
   position: absolute;
 }
 
-.faq-key-icon {
-  width: 48px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 /* =========================================
    ACCORDION
 ========================================= */
@@ -139,6 +127,11 @@
   border: 2px solid var(--border);
   margin-bottom: 14px;
   background: transparent;
+  transition: all 0.3s ease;
+}
+
+.faq-accordion-item--open {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .faq-accordion-header {
@@ -150,20 +143,28 @@
   align-items: center;
   padding: 10px 24px;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.faq-accordion-header:hover {
+  background: rgba(53, 0, 8, 0.05);
 }
 
 .faq-accordion-question {
-  font-weight: 350;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-weight: 400;
   font-size: 10px;
   line-height: 20px;
   letter-spacing: 0.75px;
   color: #350008;
   text-transform: uppercase;
+  text-align: left;
 }
 
 .faq-accordion-icon {
   font-size: 11px;
   color: var(--text);
+  margin-left: 15px;
 }
 
 .faq-accordion-body {
@@ -172,7 +173,8 @@
 
 .faq-accordion-answer {
   max-width: 90%;
-  font-weight: 350;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-weight: 400;
   font-size: 10px;
   line-height: 20px;
   letter-spacing: 0.75px;
@@ -191,13 +193,11 @@
 }
 
 /* LEFT STRIPE */
-
 .faq-contact-left {
   background-image: url("/images/Stripe.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -217,13 +217,11 @@
 }
 
 /* CENTER */
-
 .faq-contact-stripe-bg {
   background-image: url("../images/Stripe.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -243,17 +241,17 @@
 
 .faq-contact-title {
   font-family: "Cormorant Garamond", serif;
-  font-size: 25px;
   font-weight: 400;
+  font-size: 25px;
   color: #350008;
   letter-spacing: 1px;
-  line-height: 1;
-  color: var(--text);
+  line-height: 1.2;
   margin-bottom: 28px;
 }
 
 .faq-contact-body {
-  font-weight: 350;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-weight: 400;
   font-size: 10px;
   line-height: 13px;
   letter-spacing: 0px;
@@ -267,11 +265,13 @@
   background: transparent;
   border: 1px solid #8b7b6e;
   padding: 5px 35px;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-weight: 400;
   font-size: 8px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
   border: black solid 1.5px;
 }
 
@@ -279,10 +279,10 @@
   background: var(--dark);
   color: white;
   border-color: var(--dark);
+  transform: scale(0.98);
 }
 
 /* RIGHT IMAGE */
-
 .faq-contact-right {
   width: 100%;
   height: 100%;
@@ -295,79 +295,571 @@
 }
 
 /* =========================================
-   RESPONSIVE
+   RESPONSIVE BREAKPOINTS
 ========================================= */
 
-@media (max-width: 1100px) {
+/* Ultra-wide screens (1600px+) */
+@media (min-width: 1600px) {
+  .faq-hero {
+    height: 500px;
+  }
+
+  .faq-hero-title {
+    font-size: 45px;
+  }
+
+  .faq-key-emblem {
+    width: 180px;
+    height: 180px;
+    bottom: -60px;
+  }
+
+  .faq-accordion-section {
+    padding-top: 120px;
+    padding-bottom: 110px;
+  }
+
+  .faq-accordion-container {
+    max-width: 800px;
+  }
+
+  .faq-accordion-question,
+  .faq-accordion-answer {
+    font-size: 11px;
+    line-height: 22px;
+  }
+
   .faq-contact-section {
-    grid-template-columns: 1fr;
+    min-height: 720px;
   }
 
-  .faq-contact-left {
-    display: none;
+  .faq-contact-text-block {
+    width: 70%;
+    max-width: 550px;
+    height: 340px;
+    padding: 80px 65px;
   }
 
-  .faq-contact-stripe-bg {
-    padding: 60px 25px;
+  .faq-contact-title {
+    font-size: 28px;
+    margin-bottom: 32px;
   }
 
-  .faq-contact-right {
-    min-height: 450px;
+  .faq-contact-body {
+    font-size: 11px;
+    line-height: 15px;
+    margin-bottom: 48px;
+    max-width: 400px;
+  }
+
+  .faq-contact-btn {
+    padding: 6px 40px;
+    font-size: 9px;
   }
 }
 
+/* Desktop Large (1280px - 1600px) */
+@media (min-width: 1280px) and (max-width: 1600px) {
+  .faq-contact-text-block {
+    padding: 70px 55px;
+  }
+}
+
+/* Desktop (1024px - 1280px) */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .faq-contact-section {
+    grid-template-columns: 120px 1fr 1fr;
+  }
+
+  .faq-contact-stripe-bg {
+    margin-left: -150px;
+    padding: 60px;
+  }
+
+  .faq-contact-text-block {
+    margin-right: -300px;
+    padding: 60px 45px;
+    width: 85%;
+  }
+
+  .faq-contact-title {
+    font-size: 23px;
+    margin-bottom: 24px;
+  }
+
+  .faq-decorative-frame {
+    width: 90px;
+    margin-top: -100px;
+    margin-right: -100px;
+  }
+}
+
+/* Tablet Landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .faq-hero {
+    height: 380px;
+  }
+
+  .faq-hero-title {
+    font-size: 38px;
+  }
+
+  .faq-key-emblem {
+    width: 120px;
+    height: 120px;
+    bottom: -50px;
+  }
+
+  .faq-accordion-section {
+    padding-top: 80px;
+    padding-bottom: 70px;
+  }
+
+  .faq-accordion-container {
+    max-width: 600px;
+    padding: 0 30px;
+  }
+
+  .faq-contact-section {
+    grid-template-columns: 100px 1fr 0.9fr;
+  }
+
+  .faq-contact-left {
+    padding-top: 60px;
+  }
+
+  .faq-decorative-frame {
+    width: 80px;
+    margin-top: -80px;
+    margin-right: -80px;
+  }
+
+  .faq-contact-stripe-bg {
+    margin-left: -100px;
+    padding: 50px;
+  }
+
+  .faq-contact-text-block {
+    margin-right: -250px;
+    padding: 50px 40px;
+    width: 90%;
+    height: 280px;
+  }
+
+  .faq-contact-title {
+    font-size: 22px;
+    margin-bottom: 22px;
+  }
+
+  .faq-contact-body {
+    font-size: 9px;
+    line-height: 12px;
+    margin-bottom: 35px;
+    max-width: 300px;
+  }
+}
+
+/* =========================================
+   SMALL SCREENS (< 768px)
+
+   Layout:
+   - .faq-accordion-section has overflow: visible
+     so the frame (positioned relative to
+     .faq-contact-section) can bleed upward
+   - .faq-contact-section: position relative,
+     single column, 2 rows
+   - .faq-contact-left: position absolute,
+     top: -(70% of frame height) so 30% sits
+     above the stripe, 70% sits on it
+   - .faq-contact-stripe-bg: full width row 1
+   - .faq-contact-right: full width row 2
+========================================= */
+
+/* Allow frame to bleed above contact section on small screens */
 @media (max-width: 768px) {
+  .faq-accordion-section {
+    overflow: visible;
+    position: relative;
+    z-index: 0;
+  }
+
+  /* Contact section is the positioning context */
+  .faq-contact-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    min-height: unset;
+    position: relative;
+    /* overflow must be visible so frame bleeds upward */
+    overflow: visible;
+  }
+
+  /* .faq-contact-left floats absolutely,
+     positioned to straddle the top edge:
+     negative top = 30% of frame height bleeds above */
+  .faq-contact-left {
+    display: block;
+    position: absolute;
+    left: 16px;
+    background: none;
+    padding: 0;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  /* Frame sits inside .faq-contact-left, no extra positioning */
+  .faq-decorative-frame {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 0;
+  }
+
+  .faq-decorative-frame-img {
+    width: 100%;
+    object-fit: contain;
+    opacity: 0.85;
+  }
+
+  /* Stripe bg: full width, row 1 */
+  .faq-contact-stripe-bg {
+    grid-row: 1;
+    grid-column: 1;
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Product image: full width, row 2 */
+  .faq-contact-right {
+    grid-row: 2;
+    grid-column: 1;
+    width: 100%;
+  }
+
+  .faq-contact-product-img {
+    object-position: center;
+  }
+}
+
+/* Tablet Portrait (640px - 768px) */
+@media (min-width: 640px) and (max-width: 768px) {
+  .faq-hero {
+    height: 360px;
+  }
+
+  .faq-hero-title {
+    font-size: 34px;
+  }
+
+  .faq-key-emblem {
+    width: 100px;
+    height: 100px;
+    bottom: -45px;
+  }
+
+  .faq-accordion-section {
+    padding-top: 75px;
+    padding-bottom: 65px;
+  }
+
+  .faq-accordion-container {
+    padding: 0 25px;
+  }
+
+  /* Frame: 100px tall; 30% above = -30px top */
+  .faq-contact-left {
+    top: -30px;
+    left: 20px;
+    width: 100px;
+  }
+
+  .faq-contact-stripe-bg {
+    padding: 70px 30px 60px 30px; /* extra top padding so text clears frame */
+  }
+
+  .faq-contact-text-block {
+    margin: 0;
+    width: min(100%, 480px);
+    height: auto;
+    padding: 50px 40px;
+  }
+
+  .faq-contact-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .faq-contact-body {
+    font-size: 10px;
+    line-height: 13px;
+    max-width: 100%;
+    margin-bottom: 32px;
+  }
+
+  .faq-contact-right {
+    min-height: 380px;
+  }
+}
+
+/* Mobile Landscape (480px - 640px) */
+@media (min-width: 480px) and (max-width: 640px) {
   .faq-hero {
     height: 340px;
   }
 
   .faq-hero-title {
-    font-size: 40px;
-    padding: 0 20px;
+    font-size: 30px;
   }
 
   .faq-key-emblem {
     width: 90px;
     height: 90px;
-    bottom: -45px;
+    bottom: -40px;
   }
 
   .faq-accordion-section {
-    padding-top: 90px;
+    padding-top: 70px;
+    padding-bottom: 60px;
   }
 
   .faq-accordion-container {
-    padding: 0 18px;
-  }
-
-  .faq-contact-title {
-    font-size: 32px;
-  }
-
-  .faq-contact-text-block {
-    padding: 50px 35px;
-  }
-}
-
-@media (max-width: 500px) {
-  .faq-hero-title {
-    font-size: 30px;
+    padding: 0 20px;
   }
 
   .faq-accordion-header {
-    padding: 15px;
+    padding: 8px 18px;
   }
 
   .faq-accordion-question {
-    font-size: 10px;
-    line-height: 1.6;
+    font-size: 9px;
+    line-height: 18px;
+  }
+
+  .faq-accordion-body {
+    padding: 0 18px 18px;
+  }
+
+  .faq-accordion-answer {
+    font-size: 9px;
+    line-height: 18px;
+    max-width: 100%;
+  }
+
+  /* Frame: 90px tall; 30% above = -27px top */
+  .faq-contact-left {
+    top: -27px;
+    left: 16px;
+    width: 90px;
+  }
+
+  .faq-contact-stripe-bg {
+    padding: 65px 25px 55px 25px;
+  }
+
+  .faq-contact-text-block {
+    margin: 0;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    padding: 45px 35px;
   }
 
   .faq-contact-title {
-    font-size: 26px;
+    font-size: 22px;
+    margin-bottom: 18px;
   }
 
   .faq-contact-body {
-    font-size: 10px;
+    font-size: 9px;
+    line-height: 12px;
+    margin-bottom: 30px;
+  }
+
+  .faq-contact-btn {
+    padding: 4px 30px;
+    font-size: 8px;
+  }
+
+  .faq-contact-right {
+    min-height: 320px;
+  }
+}
+
+/* Mobile Small (320px - 480px) */
+@media (min-width: 320px) and (max-width: 480px) {
+  .faq-hero {
+    height: 300px;
+  }
+
+  .faq-hero-title {
+    font-size: 26px;
+    letter-spacing: 0.04em;
+  }
+
+  .faq-key-emblem {
+    width: 80px;
+    height: 80px;
+    bottom: -35px;
+  }
+
+  .faq-accordion-section {
+    padding-top: 60px;
+    padding-bottom: 50px;
+  }
+
+  .faq-accordion-container {
+    padding: 0 16px;
+  }
+
+  .faq-accordion-item {
+    margin-bottom: 10px;
+  }
+
+  .faq-accordion-header {
+    padding: 8px 15px;
+  }
+
+  .faq-accordion-question {
+    font-size: 8px;
+    line-height: 16px;
+    letter-spacing: 0.6px;
+  }
+
+  .faq-accordion-icon {
+    font-size: 9px;
+    margin-left: 10px;
+  }
+
+  .faq-accordion-body {
+    padding: 0 15px 15px;
+  }
+
+  .faq-accordion-answer {
+    font-size: 8px;
+    line-height: 16px;
+    letter-spacing: 0.6px;
+    max-width: 100%;
+  }
+
+  /* Frame: 80px tall; 30% above = -24px top */
+  .faq-contact-left {
+    top: -24px;
+    left: 14px;
+    width: 80px;
+  }
+
+  .faq-contact-stripe-bg {
+    padding: 60px 20px 50px 20px;
+  }
+
+  .faq-contact-text-block {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 40px 28px;
+  }
+
+  .faq-contact-title {
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+
+  .faq-contact-body {
+    font-size: 8px;
+    line-height: 12px;
+    margin-bottom: 28px;
+  }
+
+  .faq-contact-btn {
+    padding: 4px 28px;
+    font-size: 7px;
+    letter-spacing: 0.15em;
+  }
+
+  .faq-contact-right {
+    min-height: 280px;
+  }
+}
+
+/* Mobile Extra Small (up to 320px) */
+@media (max-width: 320px) {
+  .faq-hero {
+    height: 280px;
+  }
+
+  .faq-hero-title {
+    font-size: 22px;
+    letter-spacing: 0.03em;
+  }
+
+  .faq-key-emblem {
+    width: 70px;
+    height: 70px;
+    bottom: -30px;
+  }
+
+  .faq-accordion-section {
+    padding-top: 55px;
+    padding-bottom: 45px;
+  }
+
+  .faq-accordion-container {
+    padding: 0 12px;
+  }
+
+  .faq-accordion-question {
+    font-size: 7px;
+    line-height: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .faq-accordion-answer {
+    font-size: 7px;
+    line-height: 14px;
+  }
+
+  /* Frame: 65px tall; 30% above = -20px top */
+  .faq-contact-left {
+    top: -20px;
+    left: 10px;
+    width: 65px;
+  }
+
+  .faq-contact-stripe-bg {
+    padding: 55px 14px 45px 14px;
+  }
+
+  .faq-contact-text-block {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 35px 18px;
+  }
+
+  .faq-contact-title {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .faq-contact-body {
+    font-size: 7px;
+    line-height: 11px;
+    margin-bottom: 24px;
+  }
+
+  .faq-contact-btn {
+    padding: 3px 25px;
+    font-size: 6px;
+  }
+
+  .faq-contact-right {
+    min-height: 250px;
   }
 }

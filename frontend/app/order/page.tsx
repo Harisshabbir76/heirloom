@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getCartItems, clearCart } from '../components/cart/cartStore';
 import type { CartItem } from '../components/cart/cartTypes';
 import '../../app/styles/checkout/Checkout.css';
@@ -32,7 +33,8 @@ type OrderSummaryData = {
   };
 };
 
-export default function OrderPage() {
+function OrderPageContent() {
+  const searchParams = useSearchParams();
   const [items, setItems] = useState<CartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [currency, setCurrency] = useState<string | undefined>(undefined);
@@ -58,6 +60,31 @@ export default function OrderPage() {
   const shipping = useMemo(() => computeShipping(subtotal), [subtotal]);
   const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
 
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (searchParams.get('payment') !== 'success' || !sessionId) return;
+
+    const verifyPayment = async () => {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
+      const response = await fetch(`${normalizedBase}/api/orders/checkout-session/${sessionId}`);
+      const data = await response.json();
+      if (data.success && data.data.paymentStatus === 'paid') {
+        setOrderData({
+          items: data.data.items,
+          subtotal: data.data.subtotal,
+          shipping: data.data.shipping,
+          total: data.data.total,
+          currency: data.data.currency,
+          contact: data.data.contact,
+        });
+        clearCart();
+      }
+    };
+
+    verifyPayment();
+  }, [searchParams]);
+
   async function handlePlaceOrder(e: React.FormEvent) {
     e.preventDefault();
     if (items.length === 0 || placingOrder) return;
@@ -72,18 +99,30 @@ export default function OrderPage() {
       const apartment = formData.get('apartment') as string || '';
       const city = formData.get('city') as string || '';
       const emirate = formData.get('emirate') as string || '';
+      const contact = { firstName, lastName, address, apartment, city, emirate, email };
 
-      setOrderData({
-        items: [...items],
-        subtotal,
-        shipping,
-        total,
-        currency: currency ?? 'AED',
-        contact: { firstName, lastName, address, apartment, city, emirate, email }
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
+      const response = await fetch(`${normalizedBase}/api/orders/checkout-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items,
+          subtotal,
+          shipping,
+          total,
+          currency: currency ?? 'AED',
+          contact,
+          origin: window.location.origin,
+        }),
       });
 
-      // Placeholder: in real app, you'd POST order to backend here.
-      clearCart();
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(data?.message || 'Unable to start payment');
+      }
+
+      window.location.href = data.data.url;
     } finally {
       setPlacingOrder(false);
     }
@@ -425,5 +464,13 @@ export default function OrderPage() {
         </aside>
       </div>
     </main>
+  );
+}
+
+export default function OrderPage() {
+  return (
+    <Suspense fallback={<div className="checkout-loading">Loading checkout...</div>}>
+      <OrderPageContent />
+    </Suspense>
   );
 }

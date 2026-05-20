@@ -52,6 +52,17 @@
     animation: marquee-infinite 60s linear infinite;
 }
 
+@media (max-width: 520px) {
+    .marquee-container {
+        padding: 8px 0;
+    }
+
+    .marquee-item {
+        font-size: 9px;
+        line-height: 12px;
+    }
+}
+
 @keyframes marquee-infinite {
     0% {
         transform: translateX(0);

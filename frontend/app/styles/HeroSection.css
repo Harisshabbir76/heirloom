@@ -21,18 +21,12 @@
     text-align: center;
     max-width: 900px;
     width: 100%;
-    /* Content should sit slightly above the absolute vertical center exactly like the reference */
-    margin-top: 90px;
     z-index: 2;
 }
 
 .hero-logo-img {
     width: auto;
     height: 90px;
-    /* Estimated height to match proportions */
-    margin-bottom: 40px;
-    margin-top: 40px;
-    /* Precise spacing */
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -49,7 +43,6 @@
     text-transform: uppercase;
     margin: 0 auto;
     max-width: 780px;
-    /* Constrained width like reference */
     opacity: 1;
 }
 
@@ -61,10 +54,6 @@
     line-height: 54px;
     letter-spacing: -0.55px;
     color: #FFFDF7;
-    margin-top: -15px;
-    /* Sit very close below main heading */
-    margin-bottom: 30px;
-    /* Spacing before paragraph */
     opacity: 1;
 }
 
@@ -77,11 +66,8 @@
     color: #FFFDF7;
     text-transform: uppercase;
     max-width: 460px;
-    /* Narrow and centered */
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 48px;
-    /* Spacing before button */
     opacity: 1;
 }
 
@@ -102,7 +88,6 @@
     display: inline-block;
     opacity: 1;
     border-radius: 0;
-    /* Sharp corners */
 }
 
 .hero-cta:hover {
@@ -110,52 +95,332 @@
     border-color: transparent;
 }
 
-
-
-/* Responsiveness */
-@media (max-width: 1024px) {
-    .hero-heading {
-        font-size: 48px;
-        line-height: 54px;
+/* Responsive Styles - Maintaining consistent fonts and weights */
+/* Tablet Landscape (1024px - 1280px) */
+@media (min-width: 1024px) and (max-width: 1280px) {
+    .hero-section {
+        padding-top: 100px;
+        min-height: 100vh;
     }
-
+    
+    .hero-content {
+        margin-top: 0;
+    }
+    
+    .hero-logo-img {
+        height: 85px;
+        margin-bottom: 35px;
+    }
+    
+    .hero-heading {
+        font-size: 34px;
+        line-height: 58px;
+        letter-spacing: -0.62px;
+        margin-bottom: 12px;
+    }
+    
     .hero-script {
-        font-size: 40px;
-        line-height: 48px;
+        font-size: 28px;
+        line-height: 50px;
+        letter-spacing: -0.52px;
+        margin-bottom: 28px;
+    }
+    
+    .hero-paragraph {
+        font-size: 10px;
+        line-height: 20px;
+        letter-spacing: 0.3px;
+        margin-bottom: 40px;
     }
 }
 
-@media (max-width: 768px) {
+/* Tablet Portrait (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
     .hero-section {
-        outline-offset: -10px;
+        padding-top: 90px;
+        min-height: 100vh;
     }
-
+    
+    .hero-content {
+        margin-top: 0;
+    }
+    
+    .hero-logo-img {
+        height: 75px;
+        margin-bottom: 32px;
+    }
+    
     .hero-heading {
-        font-size: 32px;
-        line-height: 38px;
+        font-size: 30px;
+        line-height: 52px;
+        letter-spacing: -0.55px;
+        margin-bottom: 10px;
         max-width: 90%;
     }
-
+    
     .hero-script {
-        font-size: 28px;
-        line-height: 34px;
+        font-size: 26px;
+        line-height: 46px;
+        letter-spacing: -0.48px;
+        margin-bottom: 25px;
+    }
+    
+    .hero-paragraph {
+        font-size: 10px;
+        line-height: 19px;
+        letter-spacing: 0.3px;
+        margin-bottom: 38px;
+        max-width: 90%;
+    }
+    
+    .hero-cta {
+        padding: 5px 32px;
+        font-size: 10px;
+    }
+}
+
+/* Mobile Landscape (480px - 768px) */
+@media (min-width: 480px) and (max-width: 768px) {
+    .hero-section {
+        padding-top: 80px;
+        padding-bottom: 50px;
+        min-height: 100vh;
+    }
+    
+    .hero-content {
+        margin-top: 0;
+    }
+    
+    .hero-logo-img {
+        height: 65px;
+        margin-bottom: 28px;
+    }
+    
+    .hero-heading {
+        font-size: 26px;
+        line-height: 44px;
+        letter-spacing: -0.48px;
+        margin-bottom: 8px;
+        max-width: 95%;
+    }
+    
+    .hero-script {
+        font-size: 24px;
+        line-height: 42px;
+        letter-spacing: -0.44px;
+        margin-bottom: 22px;
+    }
+    
+    .hero-paragraph {
+        font-size: 10px;
+        line-height: 18px;
+        letter-spacing: 0.3px;
+        margin-bottom: 35px;
+        max-width: 95%;
+    }
+    
+    .hero-cta {
+        padding: 5px 30px;
+        font-size: 10px;
+    }
+}
+
+/* Mobile Small (320px - 480px) */
+@media (min-width: 320px) and (max-width: 480px) {
+    .hero-section {
+        padding-top: 80px;
+        padding-bottom: 60px;
+        min-height: 100svh;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    
+    .hero-content {
+        margin-top: 0;
+    }
+    
+    .hero-logo-img {
+        height: 55px;
+        margin-bottom: 24px;
+    }
+    
+    .hero-heading {
+        font-size: 22px;
+        line-height: 36px;
+        letter-spacing: -0.4px;
+        margin-bottom: 6px;
+        max-width: 100%;
+    }
+    
+    .hero-script {
+        font-size: 20px;
+        line-height: 36px;
+        letter-spacing: -0.37px;
+        margin-bottom: 18px;
+    }
+    
+    .hero-paragraph {
+        font-size: 9px;
+        line-height: 16px;
+        letter-spacing: 0.28px;
+        margin-bottom: 30px;
+        max-width: 100%;
+    }
+    
+    .hero-cta {
+        padding: 5px 28px;
+        font-size: 9px;
+        letter-spacing: 0.9px;
+    }
+}
+
+/* Mobile Extra Small (up to 320px) */
+@media (max-width: 320px) {
+    .hero-section {
+        padding-top: 75px;
+        padding-bottom: 50px;
+        min-height: 100svh;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    
+    .hero-content {
+        margin-top: 0;
+    }
+    
+    .hero-logo-img {
+        height: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .hero-heading {
+        font-size: 18px;
+        line-height: 30px;
+        letter-spacing: -0.33px;
+        margin-bottom: 5px;
+    }
+    
+    .hero-script {
+        font-size: 18px;
+        line-height: 32px;
+        letter-spacing: -0.33px;
+        margin-bottom: 16px;
+    }
+    
+    .hero-paragraph {
+        font-size: 8px;
+        line-height: 14px;
+        letter-spacing: 0.25px;
+        margin-bottom: 28px;
+    }
+    
+    .hero-cta {
+        padding: 4px 24px;
+        font-size: 8px;
+        letter-spacing: 0.8px;
+    }
+}
+
+/* Desktop Large (1280px - 1600px) */
+@media (min-width: 1280px) and (max-width: 1600px) {
+    .hero-logo-img {
+        height: 90px;
+        margin-bottom: 40px;
+    }
+    
+    .hero-heading {
+        font-size: 36px;
+        line-height: 62px;
+        margin-bottom: 15px;
+    }
+    
+    .hero-script {
+        font-size: 30px;
+        line-height: 54px;
         margin-bottom: 30px;
     }
-
+    
     .hero-paragraph {
-        font-size: 12px;
-        line-height: 18px;
-        max-width: 85%;
-        margin-bottom: 40px;
+        margin-bottom: 48px;
     }
+}
 
+/* Desktop Ultra Wide (1600px and above) */
+@media (min-width: 1600px) {
+    .hero-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+    }
+    
+    .hero-content {
+        max-width: 1000px;
+    }
+    
     .hero-logo-img {
-        height: 80px;
-        margin-bottom: 40px;
+        height: 100px;
+        margin-bottom: 45px;
     }
-
+    
+    .hero-heading {
+        font-size: 42px;
+        line-height: 72px;
+        letter-spacing: -0.77px;
+        max-width: 880px;
+        margin-bottom: 18px;
+    }
+    
+    .hero-script {
+        font-size: 34px;
+        line-height: 60px;
+        letter-spacing: -0.62px;
+        margin-bottom: 35px;
+    }
+    
+    .hero-paragraph {
+        font-size: 11px;
+        line-height: 22px;
+        letter-spacing: 0.33px;
+        max-width: 520px;
+        margin-bottom: 55px;
+    }
+    
     .hero-cta {
-        padding: 14px 36px;
-        font-size: 12px;
+        padding: 6px 40px;
+        font-size: 11px;
+        letter-spacing: 1.1px;
     }
+}
+
+/* Maintain spacing consistency */
+.hero-logo-img,
+.hero-heading,
+.hero-script,
+.hero-paragraph,
+.hero-cta {
+    transition: all 0.3s ease;
+}
+
+/* Ensure proper gap distribution */
+.hero-content > * {
+    flex-shrink: 0;
+}
+
+.hero-logo-img {
+    margin-top: 0;
+}
+
+.hero-heading {
+    margin-top: 0;
+}
+
+.hero-script {
+    margin-top: 0;
+}
+
+.hero-paragraph {
+    margin-top: 0;
+}
+
+.hero-cta {
+    margin-top: 0;
 }

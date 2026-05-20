@@ -154,3 +154,32 @@
   cursor:not-allowed;
 }
 
+@media (max-width: 520px){
+  .heirloom-cart-sidebar{
+    width:100vw;
+    max-width:100vw;
+  }
+
+  .heirloom-cart-sidebar__header{
+    padding:16px 14px 12px;
+  }
+
+  .heirloom-cart-sidebar__body{
+    padding:12px 14px;
+  }
+
+  .heirloom-cart-sidebar__item{
+    grid-template-columns:72px 1fr;
+    gap:12px;
+  }
+
+  .heirloom-cart-sidebar__item-image{
+    width:72px;
+    height:72px;
+  }
+
+  .heirloom-cart-sidebar__footer{
+    padding:14px;
+  }
+}
+
