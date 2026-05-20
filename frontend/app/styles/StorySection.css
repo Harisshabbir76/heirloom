@@ -327,7 +327,7 @@
     margin-left: 0;
     max-width: 100%;
     text-align: center;
-    margin-top: 0;
+    margin-top: 130px;
     font-size: 24px;
     line-height: 28px;
   }
@@ -358,13 +358,15 @@
   .polaroid-container {
     position: absolute;
     top: -120px;
-    left: 50%;
+    left: 70%;
     transform: translateX(-50%);
+    margin-top: -320px;
   }
   
   .polaroid-img {
     width: 130px;
     height: 150px;
+    
   }
   
   .image-key {
@@ -426,7 +428,6 @@
     margin-left: 0;
     max-width: 100%;
     text-align: center;
-    margin-top: 0;
     font-size: 22px;
     line-height: 26px;
     margin-bottom: 20px;
@@ -470,33 +471,37 @@
   
   .image-key {
     position: absolute;
-    top: 22%;
-    left: 3%;
-    width: 75px;
+    top: auto;
+    bottom: 15%;
+    left: 5%;
+    width: 70px;
   }
   
   .image-woman {
     position: absolute;
-    top: 18%;
-    right: 3%;
+    top: auto;
+    bottom: 15%;
+    right: 5%;
     width: 70px;
   }
   
   .image-purse {
     position: absolute;
-    bottom: 18%;
-    left: 5%;
-    width: 65px;
+    bottom: auto;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75px;
   }
   
   .center-content-box {
     width: 80%;
-    margin: 160px auto 80px;
+    margin: 130px auto 100px;
     padding: 20px;
   }
   
   .center-content-box h3 {
-    font-size: 24px;
+    font-size: 22px;
     margin-bottom: 8px;
   }
   
@@ -528,7 +533,7 @@
     margin-left: 0;
     max-width: 100%;
     text-align: center;
-    margin-top: 0;
+    margin-top: 100px;
     font-size: 20px;
     line-height: 24px;
     margin-bottom: 15px;
@@ -561,51 +566,58 @@
   .polaroid-container {
     position: absolute;
     top: -80px;
-    left: 50%;
+    left: 75%;
     transform: translateX(-50%);
     padding: 6px 6px 20px 6px;
+    margin-top: -280px;
+    
   }
   
   .polaroid-img {
     width: 90px;
     height: 105px;
+    
   }
   
   .image-key {
     position: absolute;
-    top: 25%;
-    left: 2%;
-    width: 60px;
+    top: auto;
+    bottom: 84%;
+    left: 12%;
+    width: 55px;
   }
   
   .image-woman {
     position: absolute;
-    top: 20%;
-    right: 2%;
+    top: auto;
+    bottom: 63%;
+    right: 10%;
     width: 55px;
   }
   
   .image-purse {
     position: absolute;
-    bottom: 20%;
-    left: 3%;
-    width: 55px;
+    bottom: auto;
+    top: 75%;
+    left: 20%;
+    transform: translateX(-50%);
+    width: 65px;
   }
   
   .center-content-box {
-    width: 90%;
-    margin: 140px auto 60px;
+    width: 85%;
+    margin: 110px auto 90px;
     padding: 15px;
   }
   
   .center-content-box h3 {
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 6px;
     letter-spacing: 0.5px;
   }
   
   .center-content-box p {
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 
@@ -632,7 +644,7 @@
     margin-left: 0;
     max-width: 100%;
     text-align: center;
-    margin-top: 0;
+    margin-top: 70;
     font-size: 18px;
     line-height: 22px;
     margin-bottom: 12px;
@@ -665,9 +677,10 @@
   .polaroid-container {
     position: absolute;
     top: -70px;
-    left: 50%;
+    left: 75%;
     transform: translateX(-50%);
     padding: 5px 5px 18px 5px;
+    margin-top: -240px;
   }
   
   .polaroid-img {
@@ -677,39 +690,43 @@
   
   .image-key {
     position: absolute;
-    top: 28%;
-    left: 2%;
-    width: 50px;
+    top: auto;
+    bottom: 83%;
+    left: 10%;
+    width: 48px;
   }
   
   .image-woman {
     position: absolute;
-    top: 22%;
-    right: 2%;
+    top: auto;
+    bottom: 62%;
+    right: 10%;
     width: 48px;
   }
   
   .image-purse {
     position: absolute;
-    bottom: 22%;
-    left: 3%;
-    width: 48px;
+    bottom: auto;
+    top: 75%;
+    left: 20%;
+    transform: translateX(-50%);
+    width: 55px;
   }
   
   .center-content-box {
-    width: 95%;
-    margin: 120px auto 50px;
+    width: 92%;
+    margin: 100px auto 80px;
     padding: 12px;
   }
   
   .center-content-box h3 {
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 5px;
     letter-spacing: 0.3px;
   }
   
   .center-content-box p {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 
@@ -764,7 +781,7 @@
   
   .image-woman {
     width: 125px;
-    right: 9%;
+    right: 11%;
     top: 80px;
   }
   

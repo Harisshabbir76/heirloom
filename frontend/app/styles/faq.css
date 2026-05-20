@@ -192,7 +192,7 @@
   min-height: 640px;
 }
 
-/* LEFT STRIPE */
+/* LEFT STRIPE WITH FRAME - Desktop (frame on top of stripe background) */
 .faq-contact-left {
   background-image: url("/images/Stripe.jpg");
   background-size: cover;
@@ -202,12 +202,16 @@
   justify-content: center;
   align-items: flex-start;
   padding-top: 80px;
+  position: relative;
+  z-index: 1;
 }
 
 .faq-decorative-frame {
   width: 110px;
   margin-top: -120px;
   margin-right: -120px;
+  position: relative;
+  z-index: 10;
 }
 
 .faq-decorative-frame-img {
@@ -227,6 +231,12 @@
   justify-content: center;
   padding: 80px;
   margin-left: -200px;
+  position: relative;
+}
+
+/* Mobile frame - hidden on desktop */
+.faq-mobile-frame {
+  display: none;
 }
 
 .faq-contact-text-block {
@@ -394,7 +404,7 @@
   }
 }
 
-/* Tablet Landscape (768px - 1024px) */
+/* Tablet Landscape (768px - 1024px) - Desktop layout preserved */
 @media (min-width: 768px) and (max-width: 1024px) {
   .faq-hero {
     height: 380px;
@@ -420,6 +430,7 @@
     padding: 0 30px;
   }
 
+  /* Desktop layout preserved for tablet landscape */
   .faq-contact-section {
     grid-template-columns: 100px 1fr 0.9fr;
   }
@@ -457,156 +468,19 @@
     margin-bottom: 35px;
     max-width: 300px;
   }
+
+  /* Hide mobile frame on tablet landscape */
+  .faq-mobile-frame {
+    display: none;
+  }
 }
 
 /* =========================================
-   SMALL SCREENS (< 768px)
-
-   Layout:
-   - .faq-accordion-section has overflow: visible
-     so the frame (positioned relative to
-     .faq-contact-section) can bleed upward
-   - .faq-contact-section: position relative,
-     single column, 2 rows
-   - .faq-contact-left: position absolute,
-     top: -(70% of frame height) so 30% sits
-     above the stripe, 70% sits on it
-   - .faq-contact-stripe-bg: full width row 1
-   - .faq-contact-right: full width row 2
+   MOBILE SCREENS (< 768px)
+   Frame: 70% on stripe, 30% above stripe
 ========================================= */
 
-/* Allow frame to bleed above contact section on small screens */
 @media (max-width: 768px) {
-  .faq-accordion-section {
-    overflow: visible;
-    position: relative;
-    z-index: 0;
-  }
-
-  /* Contact section is the positioning context */
-  .faq-contact-section {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    min-height: unset;
-    position: relative;
-    /* overflow must be visible so frame bleeds upward */
-    overflow: visible;
-  }
-
-  /* .faq-contact-left floats absolutely,
-     positioned to straddle the top edge:
-     negative top = 30% of frame height bleeds above */
-  .faq-contact-left {
-    display: block;
-    position: absolute;
-    left: 16px;
-    background: none;
-    padding: 0;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  /* Frame sits inside .faq-contact-left, no extra positioning */
-  .faq-decorative-frame {
-    position: relative;
-    top: auto;
-    left: auto;
-    margin: 0;
-  }
-
-  .faq-decorative-frame-img {
-    width: 100%;
-    object-fit: contain;
-    opacity: 0.85;
-  }
-
-  /* Stripe bg: full width, row 1 */
-  .faq-contact-stripe-bg {
-    grid-row: 1;
-    grid-column: 1;
-    margin-left: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  /* Product image: full width, row 2 */
-  .faq-contact-right {
-    grid-row: 2;
-    grid-column: 1;
-    width: 100%;
-  }
-
-  .faq-contact-product-img {
-    object-position: center;
-  }
-}
-
-/* Tablet Portrait (640px - 768px) */
-@media (min-width: 640px) and (max-width: 768px) {
-  .faq-hero {
-    height: 360px;
-  }
-
-  .faq-hero-title {
-    font-size: 34px;
-  }
-
-  .faq-key-emblem {
-    width: 100px;
-    height: 100px;
-    bottom: -45px;
-  }
-
-  .faq-accordion-section {
-    padding-top: 75px;
-    padding-bottom: 65px;
-  }
-
-  .faq-accordion-container {
-    padding: 0 25px;
-  }
-
-  /* Frame: 100px tall; 30% above = -30px top */
-  .faq-contact-left {
-    top: -30px;
-    left: 20px;
-    width: 100px;
-  }
-
-  .faq-contact-stripe-bg {
-    padding: 70px 30px 60px 30px; /* extra top padding so text clears frame */
-  }
-
-  .faq-contact-text-block {
-    margin: 0;
-    width: min(100%, 480px);
-    height: auto;
-    padding: 50px 40px;
-  }
-
-  .faq-contact-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-
-  .faq-contact-body {
-    font-size: 10px;
-    line-height: 13px;
-    max-width: 100%;
-    margin-bottom: 32px;
-  }
-
-  .faq-contact-right {
-    min-height: 380px;
-  }
-}
-
-/* Mobile Landscape (480px - 640px) */
-@media (min-width: 480px) and (max-width: 640px) {
   .faq-hero {
     height: 340px;
   }
@@ -649,47 +523,83 @@
     max-width: 100%;
   }
 
-  /* Frame: 90px tall; 30% above = -27px top */
+  /* Change to stacked layout for mobile */
+  .faq-contact-section {
+    display: flex;
+    flex-direction: column;
+    min-height: unset;
+    overflow: visible;
+  }
+
+  /* Hide the left column on mobile */
   .faq-contact-left {
-    top: -27px;
-    left: 16px;
-    width: 90px;
+    display: none;
   }
 
+  /* Adjust stripe background - make position relative for absolute frame */
   .faq-contact-stripe-bg {
-    padding: 65px 25px 55px 25px;
+    margin-left: 0;
+    width: 100%;
+    position: relative;
+    padding: 50px 20px 40px 20px;
+    overflow: visible;
   }
 
+  /* Show mobile frame - positioned to bleed 30% above stripe background */
+  .faq-mobile-frame {
+    display: block;
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .faq-mobile-frame-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.8;
+  }
+
+  /* Text block takes full width */
   .faq-contact-text-block {
     margin: 0;
     width: 100%;
-    max-width: 420px;
+    max-width: 100%;
     height: auto;
-    padding: 45px 35px;
+    padding: 40px 28px;
+    position: relative;
+    z-index: 5;
   }
 
   .faq-contact-title {
-    font-size: 22px;
-    margin-bottom: 18px;
+    font-size: 20px;
+    margin-bottom: 16px;
   }
 
   .faq-contact-body {
-    font-size: 9px;
+    font-size: 8px;
     line-height: 12px;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
+    max-width: 100%;
   }
 
   .faq-contact-btn {
-    padding: 4px 30px;
-    font-size: 8px;
+    padding: 4px 28px;
+    font-size: 7px;
   }
 
+  /* Right image full width */
   .faq-contact-right {
-    min-height: 320px;
+    width: 100%;
+    min-height: 280px;
+  }
+
+  .faq-contact-product-img {
+    object-position: center;
   }
 }
 
-/* Mobile Small (320px - 480px) */
+/* Mobile Small (320px - 480px) - Frame: 70% on stripe, 30% above */
 @media (min-width: 320px) and (max-width: 480px) {
   .faq-hero {
     height: 300px;
@@ -697,7 +607,6 @@
 
   .faq-hero-title {
     font-size: 26px;
-    letter-spacing: 0.04em;
   }
 
   .faq-key-emblem {
@@ -726,7 +635,6 @@
   .faq-accordion-question {
     font-size: 8px;
     line-height: 16px;
-    letter-spacing: 0.6px;
   }
 
   .faq-accordion-icon {
@@ -741,106 +649,22 @@
   .faq-accordion-answer {
     font-size: 8px;
     line-height: 16px;
-    letter-spacing: 0.6px;
-    max-width: 100%;
   }
 
-  /* Frame: 80px tall; 30% above = -24px top */
-  .faq-contact-left {
-    top: -24px;
+  /* Frame: 30% above stripe (negative top = 30% of frame height) */
+  /* For 35px frame: 30% of 35px = ~10px negative top */
+  .faq-mobile-frame {
+    top: -10px;
     left: 14px;
-    width: 80px;
+    width: 35px;
   }
 
   .faq-contact-stripe-bg {
-    padding: 60px 20px 50px 20px;
+    padding: 45px 16px 35px 16px;
   }
 
   .faq-contact-text-block {
-    margin: 0;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    padding: 40px 28px;
-  }
-
-  .faq-contact-title {
-    font-size: 20px;
-    letter-spacing: 0.5px;
-    margin-bottom: 16px;
-  }
-
-  .faq-contact-body {
-    font-size: 8px;
-    line-height: 12px;
-    margin-bottom: 28px;
-  }
-
-  .faq-contact-btn {
-    padding: 4px 28px;
-    font-size: 7px;
-    letter-spacing: 0.15em;
-  }
-
-  .faq-contact-right {
-    min-height: 280px;
-  }
-}
-
-/* Mobile Extra Small (up to 320px) */
-@media (max-width: 320px) {
-  .faq-hero {
-    height: 280px;
-  }
-
-  .faq-hero-title {
-    font-size: 22px;
-    letter-spacing: 0.03em;
-  }
-
-  .faq-key-emblem {
-    width: 70px;
-    height: 70px;
-    bottom: -30px;
-  }
-
-  .faq-accordion-section {
-    padding-top: 55px;
-    padding-bottom: 45px;
-  }
-
-  .faq-accordion-container {
-    padding: 0 12px;
-  }
-
-  .faq-accordion-question {
-    font-size: 7px;
-    line-height: 14px;
-    letter-spacing: 0.5px;
-  }
-
-  .faq-accordion-answer {
-    font-size: 7px;
-    line-height: 14px;
-  }
-
-  /* Frame: 65px tall; 30% above = -20px top */
-  .faq-contact-left {
-    top: -20px;
-    left: 10px;
-    width: 65px;
-  }
-
-  .faq-contact-stripe-bg {
-    padding: 55px 14px 45px 14px;
-  }
-
-  .faq-contact-text-block {
-    margin: 0;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    padding: 35px 18px;
+    padding: 35px 25px;
   }
 
   .faq-contact-title {
@@ -861,5 +685,99 @@
 
   .faq-contact-right {
     min-height: 250px;
+  }
+}
+
+/* Mobile Extra Small (up to 320px) - Frame: 70% on stripe, 30% above */
+@media (max-width: 320px) {
+  .faq-hero {
+    height: 280px;
+  }
+
+  .faq-hero-title {
+    font-size: 22px;
+  }
+
+  .faq-key-emblem {
+    width: 70px;
+    height: 70px;
+    bottom: -30px;
+  }
+
+  .faq-accordion-section {
+    padding-top: 55px;
+    padding-bottom: 45px;
+  }
+
+  .faq-accordion-container {
+    padding: 0 12px;
+  }
+
+  .faq-accordion-question {
+    font-size: 7px;
+    line-height: 14px;
+  }
+
+  .faq-accordion-answer {
+    font-size: 7px;
+    line-height: 14px;
+  }
+
+  /* Frame: 30% above stripe (negative top = 30% of frame height) */
+  /* For 30px frame: 30% of 30px = ~9px negative top */
+  .faq-mobile-frame {
+    top: -9px;
+    left: 10px;
+    width: 30px;
+  }
+
+  .faq-contact-stripe-bg {
+    padding: 40px 12px 30px 12px;
+  }
+
+  .faq-contact-text-block {
+    padding: 30px 18px;
+  }
+
+  .faq-contact-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .faq-contact-body {
+    font-size: 6px;
+    line-height: 10px;
+    margin-bottom: 20px;
+  }
+
+  .faq-contact-btn {
+    padding: 3px 20px;
+    font-size: 5px;
+  }
+
+  .faq-contact-right {
+    min-height: 220px;
+  }
+}
+
+/* Medium Mobile (480px - 640px) */
+@media (min-width: 480px) and (max-width: 640px) {
+  /* Frame: 30% above stripe (negative top = 30% of frame height) */
+  /* For 40px frame: 30% of 40px = ~12px negative top */
+  .faq-mobile-frame {
+    top: -12px;
+    left: 16px;
+    width: 40px;
+  }
+}
+
+/* Tablet Portrait (640px - 768px) */
+@media (min-width: 640px) and (max-width: 768px) {
+  /* Frame: 30% above stripe (negative top = 30% of frame height) */
+  /* For 45px frame: 30% of 45px = ~14px negative top */
+  .faq-mobile-frame {
+    top: -14px;
+    left: 20px;
+    width: 45px;
   }
 }

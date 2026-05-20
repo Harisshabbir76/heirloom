@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import "../styles/faq.css";
-import faqimage from '../images/faq.jpeg'
 
 interface FAQItem {
     id: number;
@@ -83,7 +82,6 @@ const FAQ: React.FC = () => {
                         alt="Key Emblem"
                         className="faq-key-frame"
                     />
-                    
                 </div>
             </section>
 
@@ -99,6 +97,7 @@ const FAQ: React.FC = () => {
                                 className="faq-accordion-header"
                                 onClick={() => toggle(item.id)}
                                 aria-expanded={openId === item.id}
+                                type="button"
                             >
                                 <span className="faq-accordion-question">
                                     {item.id}. {item.question}
@@ -130,6 +129,15 @@ const FAQ: React.FC = () => {
                 </div>
 
                 <div className="faq-contact-stripe-bg">
+                    {/* Mobile Frame - only visible on mobile devices */}
+                    <div className="faq-mobile-frame">
+                        <img
+                            src="/images/faq_frame.png"
+                            alt="Decorative Frame"
+                            className="faq-mobile-frame-img"
+                        />
+                    </div>
+                    
                     <div className="faq-contact-text-block">
                         <h2 className="faq-contact-title">STILL HAVE QUESTIONS?</h2>
                         <p className="faq-contact-body">
