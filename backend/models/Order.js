@@ -42,6 +42,11 @@ const orderSchema = new mongoose.Schema(
       default: null,
       index: true,
     },
+    ziinaPaymentIntentId: {
+      type: String,
+      default: null,
+      index: true,
+    },
     contact: {
       firstName: String,
       lastName: String,

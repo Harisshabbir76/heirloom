@@ -42,6 +42,18 @@ function OrderPageContent() {
   const [orderData, setOrderData] = useState<OrderSummaryData | null>(null);
   const [billingSame, setBillingSame] = useState(true);
 
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  const handleGPayClick = () => {
+    if (formRef.current) {
+      if (!formRef.current.checkValidity()) {
+        formRef.current.reportValidity();
+        return;
+      }
+      formRef.current.requestSubmit();
+    }
+  };
+
   useEffect(() => {
     const sync = () => {
       const nextItems = getCartItems();
@@ -103,7 +115,17 @@ function OrderPageContent() {
 
       const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
-      const response = await fetch(`${normalizedBase}/api/orders/checkout-session`, {
+
+      // Generate a unique client-side UUID as the operation_id (with safe browser fallback)
+      const operation_id = (typeof self !== 'undefined' && self.crypto && typeof self.crypto.randomUUID === 'function')
+        ? self.crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+
+      const response = await fetch(`${normalizedBase}/api/checkout/create-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -113,7 +135,7 @@ function OrderPageContent() {
           total,
           currency: currency ?? 'AED',
           contact,
-          origin: window.location.origin,
+          operation_id,
         }),
       });
 
@@ -122,7 +144,14 @@ function OrderPageContent() {
         throw new Error(data?.message || 'Unable to start payment');
       }
 
-      window.location.href = data.data.url;
+      // Execute browser redirect directly to Ziina hosted checkout
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        throw new Error('Redirect URL not returned by payment gateway.');
+      }
+    } catch (err: any) {
+      alert(err.message || 'An error occurred during checkout.');
     } finally {
       setPlacingOrder(false);
     }
@@ -230,7 +259,12 @@ function OrderPageContent() {
 
             <div className="express-checkout">
               <p className="express-checkout__title">Express checkout</p>
-              <button className="express-btn gpay" type="button">
+              <button
+                onClick={handleGPayClick}
+                className="express-btn gpay"
+                type="button"
+                disabled={isEmpty || placingOrder}
+              >
                 <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay" height="20" />
               </button>
             </div>
@@ -239,11 +273,11 @@ function OrderPageContent() {
               <span>OR</span>
             </div>
 
-            <form onSubmit={handlePlaceOrder} className="checkout-form">
+            <form ref={formRef} onSubmit={handlePlaceOrder} className="checkout-form">
               <div className="checkout-section">
                 <div className="checkout-section__header">
                   <h2>Contact</h2>
-                  <a href="#" className="checkout-link">Sign in</a>
+                  <a href="/login" className="checkout-link">Sign in</a>
                 </div>
                 <div className="form-group">
                   <input required type="text" name="contact" placeholder="Email or mobile phone number" />
@@ -399,9 +433,7 @@ function OrderPageContent() {
                 {isEmpty ? 'Add items to checkout' : placingOrder ? 'Processing...' : 'Pay now'}
               </button>
 
-              <div className="checkout-footer-links">
-                <a href="#">Privacy policy</a>
-              </div>
+              
             </form>
           </div>
         </section>

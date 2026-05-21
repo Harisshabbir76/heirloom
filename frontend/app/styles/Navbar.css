@@ -271,13 +271,13 @@
 
 .mobile-sidebar__link {
   font-family: 'Hanken Grotesk', sans-serif;
-  font-weight: 100;
+  font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.9px;
   text-transform: uppercase;
   text-decoration: none;
-  color: #350008;
+  color: #000000;
   padding: 8px 0;
   transition: opacity 0.3s ease;
 }

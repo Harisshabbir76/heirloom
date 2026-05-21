@@ -8,6 +8,8 @@ const orderRoutes = require('./routes/orderRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 
 const cookieParser = require('cookie-parser');
+const checkoutRoutes = require('./routes/checkoutRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 const app = express();
 
@@ -26,7 +28,13 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => {
+    if (buf && buf.length) {
+      req.rawBody = buf;
+    }
+  }
+}));
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
@@ -34,6 +42,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/checkout', checkoutRoutes);
+app.use('/api/webhooks', webhookRoutes);
 
 // Error Handler (Simple)
 

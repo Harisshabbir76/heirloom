@@ -142,7 +142,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
             type="button"
             className="heirloom-cart-sidebar__checkout"
             onClick={() => {
-              window.location.href = '/order';
+              window.location.href = '/checkout';
             }}
             disabled={items.length === 0}
           >
