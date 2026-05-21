@@ -3,10 +3,10 @@
 import React, { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import '../../../styles/AddProduct.css';
-import '../../../styles/Dashboard.css';
-import { hasDashboardAccess } from '../../../lib/dashboardAuth';
-import DashboardSidebar from '../../../components/DashboardSidebar';
+import '../.../../../../../../../styles/AddProduct.css';
+import '../../../../../../styles/Dashboard.css';
+import { hasDashboardAccess } from '../../../../../../lib/dashboardAuth';
+import DashboardSidebar from '../../../../../../components/DashboardSidebar';
 
 interface VariantOption {
     name: string;
@@ -202,7 +202,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
             const result = await response.json();
             if (result.success) {
                 alert('Product updated successfully!');
-                router.push('/dashboard');
+                router.push('/heirloom/admin/panel/dashboard');
             } else {
                 alert('Error: ' + result.message);
             }
@@ -220,7 +220,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         <div className="add-product-container">
             <DashboardSidebar />
 
-            <Link href="/dashboard" className="back-link">← Back to Dashboard</Link>
+            <Link href="/heirloom/admin/panel/dashboard" className="back-link">← Back to Dashboard</Link>
 
             <div className="form-card">
                 <h1 className="dashboard-title" style={{ marginBottom: '32px' }}>Edit Product</h1>

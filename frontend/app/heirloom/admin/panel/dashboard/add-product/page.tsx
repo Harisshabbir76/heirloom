@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import '../../styles/AddProduct.css';
-import '../../styles/Dashboard.css';
-import { hasDashboardAccess } from '../../lib/dashboardAuth';
-import DashboardSidebar from '../../components/DashboardSidebar';
+import '../../../../../styles/AddProduct.css';
+import '../../../../../styles/Dashboard.css';
+import { hasDashboardAccess } from '../../../../../lib/dashboardAuth';
+import DashboardSidebar from '../../../../../components/DashboardSidebar';
 
 interface VariantOption {
     name: string;
@@ -178,7 +178,7 @@ export default function AddProduct() {
             const result = await response.json();
             if (result.success) {
                 alert('Product added successfully!');
-                router.push('/dashboard');
+                router.push('/heirloom/admin/panel/dashboard');
             } else {
                 alert('Server Error: ' + (result.message || 'Unknown error occurred'));
             }
@@ -194,7 +194,7 @@ export default function AddProduct() {
         <div className="add-product-container">
             <DashboardSidebar />
 
-            <Link href="/dashboard" className="back-link">← Back to Dashboard</Link>
+            <Link href="/heirloom/admin/panel/dashboard" className="back-link">← Back to Dashboard</Link>
 
             <div className="form-card">
                 <h1 className="dashboard-title" style={{ marginBottom: '32px' }}>Add New Product</h1>

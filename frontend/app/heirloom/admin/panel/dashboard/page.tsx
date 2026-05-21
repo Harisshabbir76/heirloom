@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import '../styles/Dashboard.css';
+import '../../../../styles/Dashboard.css';
 import { useRouter } from 'next/navigation';
-import { hasDashboardAccess } from '../lib/dashboardAuth';
-import DashboardSidebar from '../components/DashboardSidebar';
+import { hasDashboardAccess } from '../../../../lib/dashboardAuth';
+import DashboardSidebar from '../../../../components/DashboardSidebar';
 
 export default function Dashboard() {
     const router = useRouter();
@@ -58,7 +58,7 @@ export default function Dashboard() {
             <DashboardSidebar />
             <header className="dashboard-header">
                 <h1 className="dashboard-title">INVENTORY DASHBOARD</h1>
-                <Link href="/dashboard/add-product" className="add-btn">
+                <Link href="/heirloom/admin/panel/dashboard/add-product" className="add-btn">
                     + Add Product
                 </Link>
             </header>
@@ -116,7 +116,7 @@ export default function Dashboard() {
                                         <td>{product.stock ?? 0}</td>
                                         <td>
                                             <Link 
-                                                href={`/dashboard/edit-product/${product._id}`}
+                                                href={`/heirloom/admin/panel/dashboard/edit-product/${product._id}`}
                                                 className="edit-link"
                                             >
                                                 Edit

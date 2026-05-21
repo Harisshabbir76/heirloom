@@ -2,9 +2,9 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import '../../styles/Dashboard.css';
-import { hasDashboardAccess } from '../../lib/dashboardAuth';
-import DashboardSidebar from '../../components/DashboardSidebar';
+import '../../../../../styles/Dashboard.css';
+import { hasDashboardAccess } from '../../../../../lib/dashboardAuth';
+import DashboardSidebar from '../../../../../components/DashboardSidebar';
 
 type OrderStatus = 'new' | 'in-process' | 'delivered';
 

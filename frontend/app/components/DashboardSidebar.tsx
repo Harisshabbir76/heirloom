@@ -6,9 +6,9 @@ import { useState, useEffect } from 'react';
 import { clearAuthCookieClient } from '../lib/auth';
 
 const links = [
-    { href: '/dashboard', label: 'Catalog' },
-    { href: '/dashboard/add-product', label: 'Add Products' },
-    { href: '/dashboard/orders', label: 'Orders' },
+    { href: '/heirloom/admin/panel/dashboard', label: 'Catalog' },
+    { href: '/heirloom/admin/panel/dashboard/add-product', label: 'Add Products' },
+    { href: '/heirloom/admin/panel/dashboard/orders', label: 'Orders' },
 ];
 
 export default function DashboardSidebar() {
