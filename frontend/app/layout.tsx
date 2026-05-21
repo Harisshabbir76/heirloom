@@ -26,6 +26,9 @@ const pinyonScript = Pinyon_Script({
 export const metadata: Metadata = {
   title: "Heirloom By SK",
   description: "Heirloom By SK – Timeless pieces, crafted for generations.",
+  icons: {
+    icon: "/images/hero_logo.png",
+  },
 };
 
 export default function RootLayout({

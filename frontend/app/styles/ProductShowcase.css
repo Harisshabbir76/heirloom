@@ -36,27 +36,24 @@
     margin-top: 4px;
 }
 
+/* ─── Products Container ──────────────────────────────────────────────────────
+   Desktop: centered flex row (unchanged).
+   Below 1024px: 2-column grid with equal padding on both sides — same as shop
+   page layout. Cards are fluid (calc'd width), not fixed px, so they always
+   fill the available space symmetrically.
+   ─────────────────────────────────────────────────────────────────────────── */
 .products-container {
     display: flex;
     justify-content: center;
     gap: 40px;
-    margin-bottom: 0;
     width: 100%;
     flex-wrap: nowrap;
     margin-top: -40px;
-    overflow-x: auto;
-    padding-bottom: 10px;
+    overflow-x: visible;
 }
 
-/* Hide scrollbar */
-.products-container::-webkit-scrollbar {
-    display: none;
-}
-
-.products-container {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+.products-container::-webkit-scrollbar { display: none; }
+.products-container { -ms-overflow-style: none; scrollbar-width: none; }
 
 .product-card {
     width: 230px;
@@ -152,9 +149,7 @@
     margin: 0;
 }
 
-.mobile-break {
-    display: none;
-}
+.mobile-break { display: none; }
 
 .showcase-bottom-script {
     font-family: var(--font-pinyon), cursive;
@@ -198,277 +193,265 @@
     border-color: transparent;
 }
 
-/* Ultra-wide screens */
+/* ─── Ultra-wide ──────────────────────────────────────────────────────────── */
 @media (min-width: 1600px) {
-    .showcase-section {
-        padding: 150px 40px;
-    }
-
-    .product-card {
-        width: 280px;
-    }
-
-    .product-image-wrapper {
-        width: 280px;
-        height: 340px;
-    }
-
-    .products-container {
-        gap: 50px;
-    }
-
-    .showcase-top-heading {
-        font-size: 30px;
-        line-height: 38px;
-    }
-
-    .showcase-top-script {
-        font-size: 30px;
-    }
-
-    .showcase-bottom-heading {
-        font-size: 36px;
-        line-height: 48px;
-    }
+    .showcase-section { padding: 150px 40px; }
+    .product-card { width: 280px; }
+    .product-image-wrapper { width: 280px; height: 340px; }
+    .products-container { gap: 50px; }
+    .showcase-top-heading { font-size: 30px; line-height: 38px; }
+    .showcase-top-script  { font-size: 30px; }
+    .showcase-bottom-heading { font-size: 36px; line-height: 48px; }
 }
 
-/* Desktop */
+/* ─── Desktop (1024 – 1280) ───────────────────────────────────────────────── */
 @media (min-width: 1024px) and (max-width: 1280px) {
+    .product-card { width: 220px; }
+    .product-image-wrapper { width: 220px; height: 268px; }
+    .products-container { gap: 35px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BELOW DESKTOP (< 1024px)
+   ─────────────────────────────────────────────────────────────────────────
+   Switch to a 2-column grid that mirrors the shop page layout:
+   • Section keeps symmetric horizontal padding (same value left & right).
+   • Container becomes a 2-col grid filling the full padded width.
+   • Cards are 100% wide within their grid cell — no fixed px widths.
+   • Image wrapper matches the card width via width: 100%.
+   This guarantees the left edge of the left card = right edge of the right
+   card = section padding. Perfectly symmetric, just like the shop page.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Tablet Landscape (768 – 1024) ──────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .showcase-section {
+        padding: 100px 32px;
+    }
+
+    .showcase-intro { margin-bottom: 80px; }
+
+    /* 2-column grid, gap mirrors the shop page */
+    .products-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        width: 100%;
+        margin-top: -20px;
+        overflow-x: visible;
+        justify-content: unset;
+    }
+
+    /* Cards fill their column */
     .product-card {
-        width: 220px;
+        width: 100%;
+        flex-shrink: unset;
     }
 
     .product-image-wrapper {
-        width: 220px;
-        height: 268px;
+        width: 100%;
+        height: 0;
+        padding-bottom: 122%; /* ~portrait ratio, matches shop page */
+    }
+
+    /* Because height is 0 + padding-bottom, the img needs absolute pos */
+    .product-image-wrapper img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+    }
+
+    .showcase-top-heading { font-size: 20px; line-height: 28px; }
+    .showcase-top-script  { font-size: 20px; line-height: 28px; }
+    .showcase-bottom-heading { font-size: 24px; line-height: 34px; }
+    .showcase-bottom-script  { font-size: 24px; line-height: 28px; }
+    .showcase-divider { margin: 50px auto; }
+}
+
+/* ─── Tablet Portrait (640 – 768) ────────────────────────────────────────── */
+@media (min-width: 640px) and (max-width: 767px) {
+    .showcase-section {
+        padding: 90px 28px;
     }
 
     .products-container {
-        gap: 35px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+        margin-top: -20px;
+        overflow-x: visible;
+        justify-content: unset;
     }
+
+    .product-card {
+        width: 100%;
+        flex-shrink: unset;
+    }
+
+    .product-image-wrapper {
+        width: 100%;
+        height: 0;
+        padding-bottom: 122%;
+    }
+
+    .product-image-wrapper img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+    }
+
+    .showcase-top-heading { font-size: 18px; line-height: 24px; }
+    .showcase-top-script  { font-size: 18px; line-height: 24px; }
+    .showcase-bottom-heading { font-size: 21px; line-height: 30px; }
+    .showcase-bottom-script  { font-size: 21px; line-height: 26px; }
+    .showcase-divider { margin: 45px auto; }
 }
 
-/* Tablet Landscape */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* ─── Mobile Landscape (480 – 640) ───────────────────────────────────────── */
+@media (min-width: 480px) and (max-width: 639px) {
     .showcase-section {
-        padding: 100px 20px;
+        padding: 70px 20px;
     }
 
-    .showcase-intro {
-        margin-bottom: 80px;
+    .mobile-break { display: inline; }
+
+    .products-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        width: 100%;
+        margin-top: -20px;
+        overflow-x: visible;
+        justify-content: unset;
     }
 
-    .showcase-top-heading {
-        font-size: 20px;
-        line-height: 28px;
+    .product-card {
+        width: 100%;
+        flex-shrink: unset;
     }
 
-    .showcase-top-script {
-        font-size: 20px;
-        line-height: 28px;
+    .product-image-wrapper {
+        width: 100%;
+        height: 0;
+        padding-bottom: 122%;
     }
 
-    .showcase-bottom-heading {
-        font-size: 24px;
-        line-height: 34px;
+    .product-image-wrapper img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
     }
 
-    .showcase-bottom-script {
-        font-size: 24px;
-        line-height: 28px;
-    }
-}
-
-/* Tablet Portrait */
-@media (min-width: 640px) and (max-width: 768px) {
-    .showcase-top-heading {
-        font-size: 18px;
-        line-height: 24px;
-    }
-
-    .showcase-top-script {
-        font-size: 18px;
-        line-height: 24px;
-    }
-
-    .showcase-bottom-heading {
-        font-size: 21px;
-        line-height: 30px;
-    }
-
-    .showcase-bottom-script {
-        font-size: 21px;
-        line-height: 26px;
-    }
-}
-
-/* Mobile Landscape */
-@media (min-width: 480px) and (max-width: 640px) {
-    .showcase-section {
-        padding: 70px 16px;
-    }
-
-    .mobile-break {
-        display: inline;
-    }
-
-    .showcase-top-heading {
-        font-size: 20px;
-        line-height: 28px;
-    }
-
-    .showcase-top-script {
-        font-size: 20px;
-        line-height: 28px;
-    }
-
-    .showcase-bottom-heading {
-        font-size: 22px;
-        line-height: 32px;
-    }
-
-    .showcase-bottom-script {
-        font-size: 18px;
-        line-height: 22px;
-        margin-top: 22px;
-    }
-
+    .showcase-top-heading { font-size: 20px; line-height: 28px; }
+    .showcase-top-script  { font-size: 20px; line-height: 28px; }
+    .showcase-bottom-heading { font-size: 22px; line-height: 32px; }
+    .showcase-bottom-script  { font-size: 18px; line-height: 22px; margin-top: 22px; }
     .showcase-bottom-text {
-        font-size: 9px;
-        line-height: 14px;
-        margin-top: 35px;
-        margin-bottom: 40px;
+        font-size: 9px; line-height: 14px;
+        margin-top: 35px; margin-bottom: 40px;
         max-width: 320px;
     }
-
-    .product-card {
-        width: 190px;
-    }
-
-    .product-image-wrapper {
-        width: 190px;
-        height: 232px;
-    }
-
-    .showcase-divider {
-        width: 90%;
-        margin: 40px auto;
-    }
+    .showcase-divider { width: 90%; margin: 40px auto; }
 }
 
-/* Mobile Small */
-@media (min-width: 320px) and (max-width: 480px) {
+/* ─── Mobile Small (320 – 480) ───────────────────────────────────────────── */
+@media (min-width: 320px) and (max-width: 479px) {
     .showcase-section {
         padding: 60px 16px;
     }
 
-    .mobile-break {
-        display: inline;
-    }
+    .mobile-break { display: inline; }
 
-    .showcase-top-heading {
-        font-size: 18px;
-        line-height: 26px;
-    }
-
-    .showcase-top-script {
-        font-size: 18px;
-        line-height: 26px;
-    }
-
-    .showcase-bottom-heading {
-        font-size: 20px;
-        line-height: 30px;
-    }
-
-    .showcase-bottom-script {
-        font-size: 16px;
-        line-height: 20px;
-        margin-top: 18px;
-    }
-
-    .showcase-bottom-text {
-        font-size: 8px;
-        line-height: 13px;
-        margin-top: 30px;
-        margin-bottom: 35px;
-        max-width: 280px;
+    .products-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+        margin-top: -20px;
+        overflow-x: visible;
+        justify-content: unset;
     }
 
     .product-card {
-        width: 170px;
+        width: 100%;
+        flex-shrink: unset;
     }
 
     .product-image-wrapper {
-        width: 170px;
-        height: 207px;
-    }
-
-    .showcase-divider {
         width: 100%;
-        margin: 35px 0;
+        height: 0;
+        padding-bottom: 122%;
     }
 
-    .showcase-cta {
-        font-size: 8px;
-        padding: 4px 25px;
+    .product-image-wrapper img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
     }
+
+    .showcase-top-heading { font-size: 18px; line-height: 26px; }
+    .showcase-top-script  { font-size: 18px; line-height: 26px; }
+    .showcase-bottom-heading { font-size: 20px; line-height: 30px; }
+    .showcase-bottom-script  { font-size: 16px; line-height: 20px; margin-top: 18px; }
+    .showcase-bottom-text {
+        font-size: 8px; line-height: 13px;
+        margin-top: 30px; margin-bottom: 35px;
+        max-width: 280px;
+    }
+    .showcase-divider { width: 100%; margin: 35px 0; }
+    .showcase-cta { font-size: 8px; padding: 4px 25px; }
 }
 
-/* Extra Small */
-@media (max-width: 320px) {
+/* ─── Extra Small (< 320) ────────────────────────────────────────────────── */
+@media (max-width: 319px) {
     .showcase-section {
         padding: 50px 12px;
     }
 
-    .mobile-break {
-        display: inline;
-    }
+    .mobile-break { display: inline; }
 
-    .showcase-top-heading {
-        font-size: 16px;
-        line-height: 24px;
-    }
-
-    .showcase-top-script {
-        font-size: 16px;
-        line-height: 24px;
-    }
-
-    .showcase-bottom-heading {
-        font-size: 18px;
-        line-height: 28px;
-    }
-
-    .showcase-bottom-script {
-        font-size: 14px;
-        line-height: 18px;
-        margin-top: 16px;
-    }
-
-    .showcase-bottom-text {
-        font-size: 7px;
-        line-height: 12px;
-        margin-top: 25px;
-        margin-bottom: 30px;
-        max-width: 250px;
+    .products-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+        margin-top: -20px;
+        overflow-x: visible;
+        justify-content: unset;
     }
 
     .product-card {
-        width: 150px;
+        width: 100%;
+        flex-shrink: unset;
     }
 
     .product-image-wrapper {
-        width: 150px;
-        height: 183px;
+        width: 100%;
+        height: 0;
+        padding-bottom: 122%;
     }
 
-    .showcase-divider {
-        margin: 30px 0;
+    .product-image-wrapper img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
     }
 
-    .showcase-cta {
-        font-size: 7px;
-        padding: 3px 20px;
+    .showcase-top-heading { font-size: 16px; line-height: 24px; }
+    .showcase-top-script  { font-size: 16px; line-height: 24px; }
+    .showcase-bottom-heading { font-size: 18px; line-height: 28px; }
+    .showcase-bottom-script  { font-size: 14px; line-height: 18px; margin-top: 16px; }
+    .showcase-bottom-text {
+        font-size: 7px; line-height: 12px;
+        margin-top: 25px; margin-bottom: 30px;
+        max-width: 250px;
     }
+    .showcase-divider { margin: 30px 0; }
+    .showcase-cta { font-size: 7px; padding: 3px 20px; }
 }
