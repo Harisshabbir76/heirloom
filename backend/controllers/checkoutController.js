@@ -14,7 +14,7 @@ function getZiinaToken() {
  */
 exports.createPaymentIntent = async (req, res) => {
   try {
-    const { items, subtotal, shipping, total, currency, contact, operation_id } = req.body;
+    const { items, subtotal, total, currency, contact, operation_id } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ success: false, message: 'Cart items are required.' });
@@ -33,11 +33,11 @@ exports.createPaymentIntent = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Valid total order amount is required.' });
     }
 
-    // 1. Create a pending order in our database
+    // 1. Create a pending order in our database (shipping removed)
     const order = await Order.create({
       items,
       subtotal: Number(subtotal) || 0,
-      shipping: Number(shipping) || 0,
+      shipping: 0,
       total: calculatedTotal,
       currency: currency || 'AED',
       contact,

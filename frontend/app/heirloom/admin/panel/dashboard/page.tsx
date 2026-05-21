@@ -6,6 +6,7 @@ import '../../../../styles/Dashboard.css';
 import { useRouter } from 'next/navigation';
 import { hasDashboardAccess } from '../../../../lib/dashboardAuth';
 import DashboardSidebar from '../../../../components/DashboardSidebar';
+import { getDefaultProductPrice } from '../../../../lib/productPricing';
 
 export default function Dashboard() {
     const router = useRouter();
@@ -69,15 +70,9 @@ export default function Dashboard() {
                     <div className="stat-value">{products.length}</div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-label">Total Stock</div>
-                    <div className="stat-value">
-                        {products.reduce((acc: number, item: any) => acc + (Number(item.stock) || 0), 0)}
-                    </div>
-                </div>
-                <div className="stat-card">
                     <div className="stat-label">Inventory Value</div>
                     <div className="stat-value">
-                        AED {products.reduce((acc: number, item: any) => acc + (item.basePrice || 0), 0).toLocaleString()}
+                        AED {products.reduce((acc: number, item: any) => acc + getDefaultProductPrice(item), 0).toLocaleString()}
                     </div>
                 </div>
             </div>
@@ -95,8 +90,7 @@ export default function Dashboard() {
                                 <tr>
                                     <th>Product</th>
                                     <th>Variants</th>
-                                    <th>Base Price</th>
-                                    <th>Stock</th>
+                                    <th>Price</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -112,8 +106,7 @@ export default function Dashboard() {
                                             {product.name}
                                         </td>
                                         <td>{product.variantGroups?.length || 0} variants</td>
-                                        <td>AED {product.basePrice}</td>
-                                        <td>{product.stock ?? 0}</td>
+                                        <td>AED {getDefaultProductPrice(product)}</td>
                                         <td>
                                             <Link 
                                                 href={`/heirloom/admin/panel/dashboard/edit-product/${product._id}`}

@@ -14,7 +14,6 @@ function formatMoney(amount: number, currency?: string) {
 type OrderData = {
   items: CartItem[];
   subtotal: number;
-  shipping: number;
   total: number;
   currency: string;
   contact: {
@@ -182,10 +181,6 @@ function SuccessPageContent() {
               <div className="summary-row">
                 <span>Subtotal</span>
                 <span className="summary-val">{formatMoney(order.subtotal, order.currency)}</span>
-              </div>
-              <div className="summary-row">
-                <span>Standard Shipping</span>
-                <span className="summary-val">{formatMoney(order.shipping, order.currency)}</span>
               </div>
               <div className="summary-divider" />
               <div className="summary-row summary-row--total">

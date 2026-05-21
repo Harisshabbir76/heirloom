@@ -11,15 +11,11 @@ function formatMoney(amount: number, currency?: string) {
   return `${cur} ${amount.toFixed(2)}`;
 }
 
-function computeShipping(subtotal: number) {
-  if (subtotal <= 0) return 0;
-  return 20; // Default standard shipping
-}
+// Shipping charges removed — totals are derived from cart subtotal only
 
 type OrderSummaryData = {
   items: CartItem[];
   subtotal: number;
-  shipping: number;
   total: number;
   currency: string;
   contact: {
@@ -69,8 +65,7 @@ function OrderPageContent() {
     return () => window.removeEventListener('heirloom_cart_updated', sync);
   }, []);
 
-  const shipping = useMemo(() => computeShipping(subtotal), [subtotal]);
-  const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
+  const total = useMemo(() => subtotal, [subtotal]);
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
@@ -85,7 +80,6 @@ function OrderPageContent() {
         setOrderData({
           items: data.data.items,
           subtotal: data.data.subtotal,
-          shipping: data.data.shipping,
           total: data.data.total,
           currency: data.data.currency,
           contact: data.data.contact,
@@ -129,14 +123,13 @@ function OrderPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: items.map(item => ({ ...item, giftWrap: item.giftWrap ?? false })),
-          subtotal,
-          shipping,
-          total,
-          currency: currency ?? 'AED',
-          contact,
-          operation_id,
-        }),
+            items: items.map(item => ({ ...item, giftWrap: item.giftWrap ?? false })),
+            subtotal,
+            total: subtotal,
+            currency: currency ?? 'AED',
+            contact,
+            operation_id,
+          }),
       });
 
       const data = await response.json().catch(() => null);
@@ -222,10 +215,6 @@ function OrderPageContent() {
                 <div className="summary-row">
                   <span>Subtotal</span>
                   <span className="summary-val">{formatMoney(orderData.subtotal, orderData.currency)}</span>
-                </div>
-                <div className="summary-row">
-                  <span>Standard Shipping</span>
-                  <span className="summary-val">{formatMoney(orderData.shipping, orderData.currency)}</span>
                 </div>
                 <div className="summary-divider" />
                 <div className="summary-row summary-row--total">
@@ -479,11 +468,6 @@ function OrderPageContent() {
                 <span>Subtotal</span>
                 <span className="summary-val">{formatMoney(subtotal, currency)}</span>
               </div>
-              <div className="summary-row">
-                <span>Standard Shipping</span>
-                <span className="summary-val">{formatMoney(shipping, currency)}</span>
-              </div>
-
               <div className="summary-divider" />
 
               <div className="summary-row summary-row--total">

@@ -30,7 +30,7 @@ function rejectNonAdmin(req, res) {
 
 exports.createOrder = async (req, res) => {
   try {
-    const { items, subtotal, shipping, total, currency, contact } = req.body;
+    const { items, subtotal, total, currency, contact } = req.body;
 
     if (!Array.isArray(items) || items.length === 0 || !contact?.email) {
       return res.status(400).json({ success: false, message: 'Order items and email are required' });
@@ -39,7 +39,7 @@ exports.createOrder = async (req, res) => {
     const order = await Order.create({
       items,
       subtotal: Number(subtotal) || 0,
-      shipping: Number(shipping) || 0,
+      shipping: 0,
       total: Number(total) || 0,
       currency: currency || 'AED',
       contact,
@@ -53,7 +53,7 @@ exports.createOrder = async (req, res) => {
 
 exports.createCheckoutSession = async (req, res) => {
   try {
-    const { items, subtotal, shipping, total, currency, contact, origin } = req.body;
+    const { items, subtotal, total, currency, contact, origin } = req.body;
 
     if (!Array.isArray(items) || items.length === 0 || !contact?.email) {
       return res.status(400).json({ success: false, message: 'Order items and email are required' });
@@ -62,7 +62,7 @@ exports.createCheckoutSession = async (req, res) => {
     const order = await Order.create({
       items,
       subtotal: Number(subtotal) || 0,
-      shipping: Number(shipping) || 0,
+      shipping: 0,
       total: Number(total) || 0,
       currency: currency || 'AED',
       contact,
@@ -84,14 +84,7 @@ exports.createCheckoutSession = async (req, res) => {
           },
           unit_amount: Math.round(Number((item.unitPrice || 0) + (item.giftWrap ? 50 : 0)) * 100),
         },
-      })).concat(Number(shipping) > 0 ? [{
-        quantity: 1,
-        price_data: {
-          currency: String(currency || 'AED').toLowerCase(),
-          product_data: { name: 'Standard Shipping' },
-          unit_amount: Math.round(Number(shipping) * 100),
-        },
-      }] : []),
+      })),
       metadata: {
         orderId: order._id.toString(),
       },
