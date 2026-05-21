@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import '../../../styles/checkout/Checkout.css';
+import '../../styles/checkout/Checkout.css';
 
 export default function CancelPage() {
   const router = useRouter();
