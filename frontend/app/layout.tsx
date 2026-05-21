@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Hanken_Grotesk, Pinyon_Script } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import { CartSidebarStateProvider } from "./components/cart/CartSidebarState";
+import LayoutShell from "./components/LayoutShell";
 
 
 const cormorantGaramond = Cormorant_Garamond({
@@ -47,11 +45,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <CartSidebarStateProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </CartSidebarStateProvider>
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );

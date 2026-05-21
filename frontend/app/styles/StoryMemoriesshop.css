@@ -64,6 +64,7 @@
     aspect-ratio: 1 / 0.95;
     overflow: hidden;
     background: #fffdf7;
+    
 }
 
 .story-memories__image {
@@ -152,6 +153,10 @@
         line-height: 20px;
         margin-bottom: 34px;
     }
+    .story-memories__image-wrap {
+    margin-bottom: -17px;
+    }
+ 
     
     .story-memories__note {
         font-size: 9px;
@@ -182,6 +187,9 @@
         line-height: 20px;
         margin-bottom: 30px;
     }
+    .story-memories__image-wrap {
+    margin-bottom: -17px;
+    }
     
     .story-memories__note {
         font-size: 9px;
@@ -207,6 +215,9 @@
         margin-bottom: 28px;
     }
     
+    .story-memories__image-wrap {
+    margin-bottom: -17px;
+    }
     .story-memories__title {
         font-size: 15px;
         line-height: 19px;
@@ -235,6 +246,9 @@
         font-size: 16px;
         line-height: 22px;
         margin-bottom: 25px;
+    }
+    .story-memories__image-wrap {
+    margin-bottom: -17px;
     }
     
     .story-memories__title {
@@ -272,7 +286,9 @@
         line-height: 17px;
         margin-bottom: 22px;
     }
-    
+    .story-memories__image-wrap {
+    margin-bottom: -17px;
+    }
     .story-memories__note {
         font-size: 8px;
         line-height: 12px;

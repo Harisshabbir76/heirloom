@@ -190,14 +190,14 @@ export default function DashboardOrdersPage() {
                     <div className="orders-list">
                         {visibleOrders.map((order) => (
                             <article className="order-card" key={order._id}>
-                                <div>
+                                <div className="order-info">
                                     <p className="order-card__id">#{order._id.slice(-6).toUpperCase()}</p>
                                     <h3>{order.contact.firstName || 'Customer'} {order.contact.lastName || ''}</h3>
                                     <p>{order.contact.email}</p>
                                 </div>
-                                <div>
+                                <div className="order-details">
                                     <span className="order-card__date">{new Date(order.createdAt).toLocaleDateString()}</span>
-                                    <strong>{formatMoney(order.total, order.currency)}</strong>
+                                    <strong className="order-total">{formatMoney(order.total, order.currency)}</strong>
                                 </div>
                                 <div className="order-card__actions">
                                     <select value={order.status} onChange={(event) => updateStatus(order._id, event.target.value as OrderStatus)}>

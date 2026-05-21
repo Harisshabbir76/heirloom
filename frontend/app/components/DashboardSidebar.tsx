@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { clearAuthCookieClient } from '../lib/auth';
 
 const links = [
@@ -15,6 +15,18 @@ export default function DashboardSidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
+
+    // Close sidebar on route change
+    useEffect(() => {
+        setIsOpen(false);
+    }, [pathname]);
+
+    // Lock body scroll while drawer is open
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [isOpen]);
+
     const closeMenu = () => setIsOpen(false);
 
     async function logout() {
@@ -35,36 +47,60 @@ export default function DashboardSidebar() {
     }
 
     return (
-        <aside className={`dashboard-sidebar ${isOpen ? 'is-open' : ''}`}>
-            <div className="dashboard-sidebar__top">
-                <Link href="/" className="dashboard-sidebar__brand" onClick={closeMenu}>Heirloom By SK</Link>
+        <>
+            {/* ── Mobile topbar (hidden on desktop via CSS) ── */}
+            <div className="dashboard-topbar">
+                <Link href="/" className="dashboard-topbar__brand">
+                    Heirloom By SK
+                </Link>
                 <button
                     type="button"
-                    className="dashboard-sidebar__toggle"
-                    aria-label="Toggle dashboard navigation"
+                    className="dashboard-topbar__toggle"
+                    aria-label="Toggle navigation menu"
                     aria-expanded={isOpen}
-                    onClick={() => setIsOpen((current) => !current)}
+                    onClick={() => setIsOpen((v) => !v)}
                 >
-                    <span />
-                    <span />
-                    <span />
+                    <span className={`hamburger-icon ${isOpen ? 'is-open' : ''}`}>
+                        <span />
+                        <span />
+                        <span />
+                    </span>
                 </button>
             </div>
-            <nav className="dashboard-sidebar__nav">
-                {links.map((link) => (
-                    <Link
-                        href={link.href}
-                        key={link.href}
-                        className={pathname === link.href ? 'is-active' : ''}
-                        onClick={closeMenu}
-                    >
-                        {link.label}
-                    </Link>
-                ))}
-            </nav>
-            <button type="button" className="dashboard-sidebar__logout" onClick={logout}>
-                Logout
-            </button>
-        </aside>
+
+            {/* ── Backdrop (mobile only) ── */}
+            {isOpen && (
+                <div
+                    className="dashboard-sidebar-backdrop"
+                    onClick={closeMenu}
+                    aria-hidden="true"
+                />
+            )}
+
+            {/* ── Sidebar (fixed on desktop / right-side drawer on mobile) ── */}
+            <aside className={`dashboard-sidebar ${isOpen ? 'is-open' : ''}`}>
+                {/* Brand shown only on desktop (topbar shows it on mobile) */}
+                <Link href="/" className="dashboard-sidebar__brand" onClick={closeMenu}>
+                    Heirloom By SK
+                </Link>
+
+                <nav className="dashboard-sidebar__nav">
+                    {links.map((link) => (
+                        <Link
+                            href={link.href}
+                            key={link.href}
+                            className={pathname === link.href ? 'is-active' : ''}
+                            onClick={closeMenu}
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
+                </nav>
+
+                <button type="button" className="dashboard-sidebar__logout" onClick={logout}>
+                    Logout
+                </button>
+            </aside>
+        </>
     );
 }

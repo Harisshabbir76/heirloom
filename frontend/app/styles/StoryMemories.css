@@ -4,6 +4,8 @@
     color: #350008;
     border-bottom: 2px solid #350008;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .story-memories__inner {
@@ -36,8 +38,8 @@
     font-family: var(--font-hanken), sans-serif;
     font-weight: 300;
     font-size: 10px;
-    line-height: 13px;
     color: black;
+    line-height: 15px;
     letter-spacing: 0.3px;
     text-transform: uppercase;
     margin: 0 0 68px;
@@ -95,7 +97,7 @@
     
     .story-memories__note {
         font-size: 11px;
-        line-height: 15px;
+        line-height: 16px;
         margin-bottom: 78px;
     }
     
@@ -119,46 +121,53 @@
 /* Desktop (1024px - 1280px) */
 @media (min-width: 1024px) and (max-width: 1280px) {
     .story-memories__inner {
-        padding: 52px 24px 36px;
+        padding: 50px 24px 34px;
     }
     
     .story-memories__script {
-        font-size: 20px;
+        font-size: 19px;
+        line-height: 27px;
         margin-bottom: 38px;
     }
     
     .story-memories__title {
-        font-size: 18px;
+        font-size: 17px;
+        line-height: 21px;
         margin-bottom: 38px;
     }
     
     .story-memories__note {
         font-size: 10px;
+        line-height: 15px;
         margin-bottom: 58px;
+    }
+    
+    .story-memories__gallery {
+        gap: 4px;
     }
 }
 
-/* Tablet Landscape (768px - 1024px) - 3 columns */
+/* Tablet Landscape (768px - 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
     .story-memories__inner {
         padding: 48px 20px 34px;
     }
     
     .story-memories__script {
-        font-size: 19px;
+        font-size: 18px;
         line-height: 26px;
         margin-bottom: 34px;
     }
     
     .story-memories__title {
-        font-size: 17px;
+        font-size: 16px;
         line-height: 20px;
         margin-bottom: 34px;
     }
     
     .story-memories__note {
         font-size: 9px;
-        line-height: 13px;
+        line-height: 14px;
         margin-bottom: 48px;
     }
     
@@ -168,7 +177,7 @@
     }
 }
 
-/* Tablet Portrait (640px - 768px) - 3 columns with smaller padding */
+/* Tablet Portrait (640px - 768px) */
 @media (min-width: 640px) and (max-width: 768px) {
     .story-memories__inner {
         padding: 45px 20px 32px;
@@ -176,29 +185,29 @@
     
     .story-memories__script {
         font-size: 18px;
-        line-height: 24px;
+        line-height: 26px;
         margin-bottom: 30px;
     }
     
     .story-memories__title {
         font-size: 16px;
-        line-height: 19px;
+        line-height: 20px;
         margin-bottom: 30px;
     }
     
     .story-memories__note {
         font-size: 9px;
-        line-height: 13px;
+        line-height: 14px;
         margin-bottom: 42px;
     }
     
     .story-memories__gallery {
         grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
+        gap: 6px;
     }
 }
 
-/* Mobile Landscape (480px - 640px) - 3 columns */
+/* Mobile Landscape (480px - 640px) */
 @media (min-width: 480px) and (max-width: 640px) {
     .story-memories__inner {
         padding: 42px 18px 30px;
@@ -206,13 +215,13 @@
     
     .story-memories__script {
         font-size: 17px;
-        line-height: 23px;
+        line-height: 24px;
         margin-bottom: 28px;
     }
     
     .story-memories__title {
         font-size: 15px;
-        line-height: 18px;
+        line-height: 19px;
         margin-bottom: 28px;
     }
     
@@ -224,11 +233,11 @@
     
     .story-memories__gallery {
         grid-template-columns: repeat(3, 1fr);
-        gap: 4px;
+        gap: 5px;
     }
 }
 
-/* Mobile Small (320px - 480px) - 2 columns */
+/* Mobile Small (320px - 480px) */
 @media (min-width: 320px) and (max-width: 480px) {
     .story-memories__inner {
         padding: 38px 16px 28px;
@@ -242,7 +251,7 @@
     
     .story-memories__title {
         font-size: 14px;
-        line-height: 17px;
+        line-height: 18px;
         margin-bottom: 25px;
     }
     
@@ -258,7 +267,7 @@
     }
 }
 
-/* Mobile Extra Small (up to 320px) - 2 columns with smaller padding */
+/* Mobile Extra Small (up to 320px) */
 @media (max-width: 320px) {
     .story-memories__inner {
         padding: 35px 12px 25px;
@@ -272,7 +281,7 @@
     
     .story-memories__title {
         font-size: 13px;
-        line-height: 16px;
+        line-height: 17px;
         margin-bottom: 22px;
     }
     

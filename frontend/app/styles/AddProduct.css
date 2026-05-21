@@ -1,7 +1,7 @@
 .add-product-container {
     min-height: 100vh;
     background-color: var(--bg-luxury);
-    padding: 60px 8% 60px 300px;
+    padding: 50px 6% 60px calc(var(--sidebar-width) + 48px);
     font-family: 'Inter', sans-serif;
 }
 
@@ -9,10 +9,15 @@
     color: var(--text-light);
     text-decoration: none;
     font-size: 14px;
-    margin-bottom: 20px;
-    display: flex;
+    margin-bottom: 24px;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--primary-luxury);
 }
 
 .form-card {
@@ -20,8 +25,7 @@
     padding: 50px;
     border-radius: 12px;
     box-shadow: var(--shadow-soft);
-    max-width: 800px;
-    margin: 0 auto;
+    margin-top: 24px;
 }
 
 .form-grid {
@@ -34,7 +38,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 4px;
 }
 
 .form-group.full-width {
@@ -42,15 +46,15 @@
 }
 
 .form-group label {
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--text-light);
     font-weight: 600;
 }
 
-.form-group input, 
-.form-group select, 
+.form-group input,
+.form-group select,
 .form-group textarea {
     padding: 12px 15px;
     border: 1px solid #e0e0e0;
@@ -58,13 +62,18 @@
     font-size: 15px;
     outline: none;
     transition: border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
 }
 
-.form-group input:focus, 
-.form-group select:focus, 
+.form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
     border-color: var(--secondary-luxury);
 }
+
+/* ─── File upload ───────────────────────────────────────────── */
 
 .file-input-wrapper {
     position: relative;
@@ -81,43 +90,21 @@
     background-color: rgba(197, 160, 89, 0.05);
 }
 
-.submit-btn {
-    grid-column: span 2;
-    background-color: var(--primary-luxury);
-    color: white;
-    padding: 16px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 20px;
-}
-
-.submit-btn:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-}
-
-.submit-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
+/* ─── Image previews ────────────────────────────────────────── */
 
 .preview-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 10px;
     margin-top: 15px;
 }
 
 .preview-item {
     position: relative;
-    height: 100px;
+    height: 90px;
     border-radius: 4px;
     overflow: hidden;
-    group: hover;
+    cursor: pointer;
 }
 
 .preview-item img {
@@ -128,17 +115,13 @@
 
 .remove-img-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: rgba(255, 77, 77, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     transition: opacity 0.3s;
-    cursor: pointer;
 }
 
 .preview-item:hover .remove-img-overlay {
@@ -151,11 +134,27 @@
     font-size: 20px;
 }
 
+/* ─── Variant section ───────────────────────────────────────── */
+
 .variant-section {
     grid-column: span 2;
     margin-top: 20px;
-    padding-top: 20px;
+    padding-top: 24px;
     border-top: 1px solid #eee;
+}
+
+.variant-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 12px;
+}
+
+.variant-section-header h3 {
+    margin: 0;
+    font-size: 17px;
+    color: var(--primary-luxury);
 }
 
 .variant-card {
@@ -171,16 +170,19 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    gap: 12px;
 }
 
 .remove-btn {
     background: #ffeded;
     color: #ff4d4d;
     border: none;
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .add-variant-btn {
@@ -192,6 +194,14 @@
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.add-variant-btn:hover {
+    background: #f3f3f3;
+    border-color: var(--secondary-luxury);
 }
 
 .dimension-grid {
@@ -200,13 +210,46 @@
     gap: 10px;
 }
 
+/* ─── Submit ────────────────────────────────────────────────── */
+
+.submit-btn {
+    grid-column: span 2;
+    background-color: var(--primary-luxury);
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: var(--secondary-luxury);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+}
+
+.submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* ─── Tablet / mobile (≤ 900px) ────────────────────────────── */
+
 @media (max-width: 900px) {
     .add-product-container {
-        padding: 92px 18px 46px;
+        /* same offset as Dashboard.css mobile: below topbar, no sidebar indent */
+        padding: calc(var(--topbar-height) + 30px) 18px 50px;
     }
 
     .form-card {
-        padding: 32px 22px;
+        padding: 28px 20px;
+        margin-top: 20px;
     }
 
     .form-grid {
@@ -214,34 +257,166 @@
         gap: 0;
     }
 
+    /* All grid spans reset to single column */
     .form-group.full-width,
     .variant-section,
     .submit-btn {
         grid-column: auto;
     }
 
+    .variant-section {
+        padding-top: 20px;
+    }
+
     .dimension-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+    }
+
+    .preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
 }
 
-@media (max-width: 520px) {
+/* ─── Small mobile (≤ 600px) ────────────────────────────────── */
+
+@media (max-width: 600px) {
     .add-product-container {
         padding-left: 14px;
         padding-right: 14px;
     }
 
     .form-card {
-        padding: 24px 16px;
+        padding: 22px 14px;
+    }
+
+    .variant-section-header {
+        flex-wrap: wrap;
     }
 
     .variant-header {
         align-items: flex-start;
-        flex-direction: column;
-        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .dimension-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
     }
 
     .file-input-wrapper {
-        padding: 22px 14px;
+        padding: 20px 12px;
     }
+
+    .preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+
+    .preview-item {
+        height: 70px;
+    }
+
+    /* Variant option inner padding */
+    .variant-card {
+        padding: 16px 12px;
+    }
+
+    /* Inline variant option form collapses neatly */
+    .form-group input,
+    .form-group textarea {
+        font-size: 16px; /* prevents iOS zoom on focus */
+    }
+}
+
+/* ─── Very small (≤ 380px) ──────────────────────────────────── */
+
+@media (max-width: 380px) {
+    .dimension-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .variant-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .variant-section-header .add-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ─── Image card (edit page: existing / new images with buttons) ── */
+
+.img-card {
+    position: relative;
+    height: 90px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.img-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.img-card__remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 0;
+}
+
+.img-card__set-main {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: none;
+    background: #fffdf7;
+    color: #350008;
+    font-size: 9px;
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 0;
+    cursor: pointer;
+    z-index: 9;
+    transition: background 0.15s, color 0.15s;
+}
+
+.img-card__set-main.is-main {
+    background: #350008;
+    color: #fffdf7;
+}
+
+/* ─── Variant group name input (shared between add/edit) ── */
+.variant-group-name-input {
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-bottom: 2px solid var(--secondary-luxury);
+    outline: none;
+    padding: 4px 0;
+    width: 100%;
+    background: transparent;
+    font-family: inherit;
+    margin-bottom: 12px;
 }

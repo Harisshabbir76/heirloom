@@ -7,14 +7,11 @@ import { useRouter } from 'next/navigation';
 import { hasDashboardAccess } from '../lib/dashboardAuth';
 import DashboardSidebar from '../components/DashboardSidebar';
 
-
 export default function Dashboard() {
     const router = useRouter();
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-
-
 
     useEffect(() => {
         const authorizeAndFetchProducts = async () => {
@@ -48,13 +45,11 @@ export default function Dashboard() {
         authorizeAndFetchProducts();
     }, [router]);
 
-
     if (isAuthorized === false) {
         return <div className="dashboard-container" />;
     }
 
     if (isAuthorized === null) {
-        // Authorization check happens on mount; avoid flashing content.
         return <div className="dashboard-container" />;
     }
 
@@ -62,7 +57,7 @@ export default function Dashboard() {
         <div className="dashboard-container">
             <DashboardSidebar />
             <header className="dashboard-header">
-                <h1 className="dashboard-title">Inventory Dashboard</h1>
+                <h1 className="dashboard-title">INVENTORY DASHBOARD</h1>
                 <Link href="/dashboard/add-product" className="add-btn">
                     + Add Product
                 </Link>
@@ -94,49 +89,44 @@ export default function Dashboard() {
                 ) : products.length === 0 ? (
                     <div className="no-products">No products found in the database.</div>
                 ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{ textAlign: 'left', borderBottom: '1px solid #eee' }}>
-                                <th style={{ padding: '15px 0' }}>Product</th>
-                                <th>Variants</th>
-                                <th>Base Price</th>
-                                <th>Stock</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products.map((product: any) => (
-                                <tr key={product._id} style={{ borderBottom: '1px solid #f9f9f9' }}>
-                                    <td style={{ padding: '15px 0', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                        <img 
-                                            src={product.images && product.images[0]?.url} 
-                                            alt={product.name} 
-                                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
-                                        />
-                                        {product.name}
-                                    </td>
-                                    <td>{product.variantGroups?.length || 0} variants</td>
-                                    <td>AED {product.basePrice}</td>
-                                    <td>{product.stock ?? 0}</td>
-                                    <td>
-                                        <Link 
-                                            href={`/dashboard/edit-product/${product._id}`}
-                                            style={{ 
-                                                fontSize: '12px', 
-                                                color: '#c5a059', 
-                                                textDecoration: 'none',
-                                                border: '1px solid #c5a059',
-                                                padding: '4px 10px',
-                                                borderRadius: '4px'
-                                            }}
-                                        >
-                                            Edit
-                                        </Link>
-                                    </td>
+                    <div className="products-table-wrapper">
+                        <table className="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Variants</th>
+                                    <th>Base Price</th>
+                                    <th>Stock</th>
+                                    <th>Action</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {products.map((product: any) => (
+                                    <tr key={product._id}>
+                                        <td className="product-cell">
+                                            <img 
+                                                src={product.images && product.images[0]?.url} 
+                                                alt={product.name} 
+                                                className="product-thumbnail"
+                                            />
+                                            {product.name}
+                                        </td>
+                                        <td>{product.variantGroups?.length || 0} variants</td>
+                                        <td>AED {product.basePrice}</td>
+                                        <td>{product.stock ?? 0}</td>
+                                        <td>
+                                            <Link 
+                                                href={`/dashboard/edit-product/${product._id}`}
+                                                className="edit-link"
+                                            >
+                                                Edit
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </section>
         </div>

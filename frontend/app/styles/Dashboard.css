@@ -1,30 +1,36 @@
 :root {
     --primary-luxury: #1a1a1a;
-    --secondary-luxury: #c5a059; /* Gold accent */
+    --secondary-luxury: #c5a059;
     --bg-luxury: #fffdf7;
     --text-dark: #333;
     --text-light: #777;
     --glass-bg: rgba(255, 255, 255, 0.8);
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --sidebar-width: 240px;
+    --topbar-height: 60px;
 }
+
+/* ─── Layout ───────────────────────────────────────────────── */
 
 .dashboard-container {
     min-height: 100vh;
     background-color: var(--bg-luxury);
-    padding: 60px 8% 60px 300px;
+    padding: 50px 6% 60px calc(var(--sidebar-width) + 48px);
     font-family: 'Inter', sans-serif;
 }
+
+/* ─── Desktop Sidebar ───────────────────────────────────────── */
 
 .dashboard-sidebar {
     position: fixed;
     left: 0;
-    top: 70px;
+    top: 0;
     bottom: 0;
-    width: 240px;
+    width: var(--sidebar-width);
     background: #350008;
     color: #fffdf7;
     padding: 34px 24px;
-    z-index: 20;
+    z-index: 200;
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(255, 253, 247, 0.12);
@@ -38,31 +44,8 @@
     font-weight: 400;
     text-transform: uppercase;
     margin-bottom: 40px;
-}
-
-.dashboard-sidebar__top {
-    display: contents;
-}
-
-.dashboard-sidebar__toggle {
-    display: none;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(255, 253, 247, 0.25);
-    background: transparent;
-    color: #fffdf7;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.dashboard-sidebar__toggle span {
-    width: 16px;
-    height: 1px;
-    background: currentColor;
     display: block;
+    line-height: 1.2;
 }
 
 .dashboard-sidebar__nav {
@@ -84,6 +67,9 @@
     background: transparent;
     text-align: left;
     cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+    display: block;
+    width: 100%;
 }
 
 .dashboard-sidebar__nav a.is-active,
@@ -96,6 +82,18 @@
 .dashboard-sidebar__logout {
     margin-top: auto;
 }
+
+/* Mobile topbar — hidden on desktop */
+.dashboard-topbar {
+    display: none;
+}
+
+/* Backdrop — hidden on desktop */
+.dashboard-sidebar-backdrop {
+    display: none;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
 
 .dashboard-header {
     display: flex;
@@ -126,6 +124,7 @@
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .add-btn:hover {
@@ -134,9 +133,11 @@
     box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
 }
 
+/* ─── Stats ─────────────────────────────────────────────────── */
+
 .dashboard-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 30px;
     margin-bottom: 50px;
 }
@@ -163,6 +164,8 @@
     color: var(--primary-luxury);
 }
 
+/* ─── Product list ──────────────────────────────────────────── */
+
 .product-list-section {
     background: white;
     padding: 40px;
@@ -183,13 +186,65 @@
     font-style: italic;
 }
 
-.dashboard-kicker {
-    margin: 6px 0 0;
-    color: var(--text-light);
-    font-family: var(--font-hanken), sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.3px;
+/* Products Table Styles */
+.products-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.products-table th {
+    text-align: left;
+    padding: 15px 0;
+    font-weight: 600;
+    color: var(--primary-luxury);
+    border-bottom: 2px solid #eee;
+}
+
+.products-table td {
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.products-table tr:hover {
+    background: #fafafa;
+}
+
+.product-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-thumbnail {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.edit-link {
+    font-size: 12px;
+    color: #c5a059;
+    text-decoration: none;
+    border: 1px solid #c5a059;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.edit-link:hover {
+    background: #c5a059;
+    color: white;
+}
+
+/* ─── Orders Panel ──────────────────────────────────────────── */
 
 .dashboard-panel {
     background: white;
@@ -244,9 +299,14 @@
     min-width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: rgba(255, 253, 247, 0.16);
+    background: rgba(53, 0, 8, 0.1);
 }
 
+.orders-tabs button.is-active span {
+    background: rgba(255, 253, 247, 0.22);
+}
+
+/* Orders List Styles */
 .orders-list {
     display: grid;
     gap: 12px;
@@ -255,29 +315,42 @@
 .order-card {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    gap: 24px;
+    gap: 20px;
     align-items: center;
     border: 1px solid rgba(53, 0, 8, 0.08);
     background: #fffdf7;
-    padding: 18px;
+    padding: 18px 20px;
+    border-radius: 8px;
 }
 
-.order-card h3,
-.order-card p {
+.order-info h3 {
+    color: #350008;
+    font-family: var(--font-cormorant), serif;
+    font-size: 20px;
+    font-weight: 500;
     margin: 0;
 }
 
-.order-card h3 {
-    color: #350008;
-    font-family: var(--font-cormorant), serif;
-    font-size: 22px;
-    font-weight: 500;
-}
-
-.order-card p,
-.order-card__date {
+.order-info p {
+    margin: 4px 0 0;
     color: var(--text-light);
     font-size: 12px;
+}
+
+.order-details {
+    text-align: right;
+}
+
+.order-details .order-card__date {
+    color: var(--text-light);
+    font-size: 12px;
+    display: block;
+}
+
+.order-total {
+    color: #350008;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .order-card__id {
@@ -285,12 +358,27 @@
     font-size: 10px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    color: var(--text-light);
 }
 
 .order-card__actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    align-items: center;
 }
+
+.order-card__actions select,
+.order-card__actions button {
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.order-card__actions button:hover {
+    background: #350008;
+    color: #fffdf7;
+}
+
+/* ─── Order Modal ───────────────────────────────────────────── */
 
 .order-modal {
     position: fixed;
@@ -300,28 +388,38 @@
     display: grid;
     place-items: center;
     padding: 24px;
+    overflow-y: auto;
 }
 
 .order-modal__card {
     width: min(760px, 100%);
-    max-height: 86vh;
-    overflow: auto;
+    max-height: 90vh;
+    overflow-y: auto;
     background: #fffdf7;
     color: #350008;
     padding: 34px;
     position: relative;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+    margin: auto;
 }
 
 .order-modal__close {
-    position: absolute;
-    right: 22px;
-    top: 18px;
+    position: sticky;
+    float: right;
+    top: 0;
+    right: 0;
     border: 1px solid rgba(53, 0, 8, 0.18);
-    background: transparent;
+    background: #fffdf7;
     color: #350008;
-    padding: 8px 12px;
+    padding: 8px 14px;
     cursor: pointer;
+    font-family: var(--font-hanken), sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    z-index: 5;
 }
 
 .order-modal h2,
@@ -367,56 +465,135 @@
     color: var(--text-light);
 }
 
+/* ─── Misc ──────────────────────────────────────────────────── */
+
+.dashboard-kicker {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-family: var(--font-hanken), sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+}
+
+/* ─── Hamburger icon ────────────────────────────────────────── */
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 22px;
+    height: 22px;
+}
+
+.hamburger-icon span {
+    display: block;
+    height: 1.5px;
+    background: #fffdf7;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+    transform-origin: center;
+}
+
+.hamburger-icon.is-open span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger-icon.is-open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger-icon.is-open span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ─── Responsive: tablet & mobile (≤ 900px) ────────────────── */
+
 @media (max-width: 900px) {
-    .dashboard-container {
-        padding: 92px 18px 46px;
-    }
 
-    .dashboard-sidebar {
-        top: 64px;
-        right: 0;
-        width: auto;
-        height: auto;
-        bottom: auto;
-        padding: 12px 18px;
-        overflow: visible;
-    }
-
-    .dashboard-sidebar__top {
+    /* Show the fixed topbar */
+    .dashboard-topbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--topbar-height);
+        background: #350008;
+        color: #fffdf7;
+        padding: 0 20px;
+        z-index: 300;
+        border-bottom: 1px solid rgba(255, 253, 247, 0.12);
     }
 
-    .dashboard-sidebar__brand {
-        margin: 0;
-        white-space: nowrap;
-        font-size: 18px;
+    .dashboard-topbar__brand {
+        color: #fffdf7;
+        text-decoration: none;
+        font-family: var(--font-cormorant), serif;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
-    .dashboard-sidebar__toggle {
+    .dashboard-topbar__toggle {
         display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: 1px solid rgba(255, 253, 247, 0.25);
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
     }
 
-    .dashboard-sidebar__nav {
+    /* Sidebar becomes a RIGHT-side drawer */
+    .dashboard-sidebar {
+        top: 0;
+        bottom: 0;
+        left: auto;
+        right: 0;
+        width: min(280px, 85vw);
+        padding: 80px 24px 28px;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: none;
+        border-right: none;
+        border-left: 1px solid rgba(255, 253, 247, 0.12);
+        overflow-y: auto;
+    }
+
+    .dashboard-sidebar.is-open {
+        transform: translateX(0);
+        box-shadow: -6px 0 32px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Hide desktop brand inside sidebar on mobile */
+    .dashboard-sidebar .dashboard-sidebar__brand {
         display: none;
-        grid-template-columns: 1fr;
-        gap: 8px;
-        margin-top: 12px;
     }
 
-    .dashboard-sidebar.is-open .dashboard-sidebar__nav {
-        display: grid;
-    }
-
-    .dashboard-sidebar__logout {
-        display: none;
-        margin-top: 12px;
-    }
-
-    .dashboard-sidebar.is-open .dashboard-sidebar__logout {
+    /* Backdrop covers the whole screen */
+    .dashboard-sidebar-backdrop {
         display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 199;
+        animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Page content below the topbar */
+    .dashboard-container {
+        padding: calc(var(--topbar-height) + 30px) 18px 50px;
     }
 
     .dashboard-header {
@@ -444,7 +621,15 @@
 
     .order-card {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
+    }
+
+    .order-details {
+        text-align: left;
+    }
+
+    .order-card__actions {
+        justify-content: flex-start;
     }
 
     .order-modal__grid {
@@ -457,6 +642,8 @@
         flex: 1 1 140px;
     }
 }
+
+/* ─── Small mobile (≤ 520px) ───────────────────────────────── */
 
 @media (max-width: 520px) {
     .dashboard-container {
@@ -491,5 +678,55 @@
 
     .order-modal__card {
         padding: 28px 18px;
+    }
+
+    .products-table th,
+    .products-table td {
+        font-size: 12px;
+        padding: 10px 0;
+    }
+
+    .product-thumbnail {
+        width: 30px;
+        height: 30px;
+    }
+
+    .edit-link {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+}
+
+/* ─── Extra small mobile (≤ 380px) ─────────────────────────── */
+
+@media (max-width: 380px) {
+    .dashboard-title {
+        font-size: 24px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    .products-table th,
+    .products-table td {
+        font-size: 10px;
+    }
+
+    .product-cell {
+        gap: 8px;
+    }
+
+    .product-thumbnail {
+        width: 25px;
+        height: 25px;
     }
 }
