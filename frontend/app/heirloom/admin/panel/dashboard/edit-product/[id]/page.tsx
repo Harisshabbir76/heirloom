@@ -18,6 +18,7 @@ interface VariantOption {
         height: string;
         description: string;
     };
+    price?: string | number;
 }
 
 interface ExistingImage {
@@ -28,6 +29,7 @@ interface ExistingImage {
 interface VariantGroup {
     name: string;
     options: VariantOption[];
+    hasVariantPrice?: boolean;
 }
 
 export default function EditProduct({ params }: { params: Promise<{ id: string }> }) {
@@ -133,9 +135,40 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
 
     const addOptionToGroup = (gIdx: number) => {
         const newGroups = [...variantGroups];
-        newGroups[gIdx].options.push({ name: '', dimensions: { length: '', width: '', height: '', description: '' } });
+        newGroups[gIdx].options.push({
+            name: '',
+            dimensions: { length: '', width: '', height: '', description: '' },
+            price: '',
+        });
         setVariantGroups(newGroups);
     };
+
+    const pricingEnabled = variantGroups.some((group) => group.hasVariantPrice);
+
+    const handleOptionChange = (gIdx: number, oIdx: number, field: string, value: string) => {
+        const newGroups = [...variantGroups];
+        if (field.includes('.')) {
+            const [parent, child] = field.split('.');
+            (newGroups[gIdx].options[oIdx] as any)[parent][child] = value;
+        } else {
+            if (field === 'price') {
+                (newGroups[gIdx].options[oIdx] as any).price = value;
+            } else {
+                (newGroups[gIdx].options[oIdx] as any)[field] = value;
+            }
+        }
+        setVariantGroups(newGroups);
+    };
+
+    const toggleVariantPricing = (gIdx: number) => {
+        const newGroups = variantGroups.map((group, idx) => ({
+            ...group,
+            hasVariantPrice: idx === gIdx ? !group.hasVariantPrice : false,
+        }));
+        setVariantGroups(newGroups);
+    };
+
+    const pricedGroupIndex = variantGroups.findIndex((group) => group.hasVariantPrice);
 
     const removeOption = (gIdx: number, oIdx: number) => {
         const newGroups = [...variantGroups];
@@ -168,6 +201,36 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         e.preventDefault();
         setSaving(true);
 
+        for (const group of variantGroups) {
+            if (!group.name.trim()) {
+                alert('Please provide a name for all variant groups (e.g., "Size" or "Design")');
+                setSaving(false);
+                return;
+            }
+            if (group.options.length === 0) {
+                alert(`Please add at least one option to the "${group.name}" group`);
+                setSaving(false);
+                return;
+            }
+            for (const option of group.options) {
+                if (!option.name.trim()) {
+                    alert(`Please provide a name for all options in the "${group.name}" group`);
+                    setSaving(false);
+                    return;
+                }
+                if (group.hasVariantPrice && (option.price === undefined || option.price === null || option.price === '')) {
+                    alert(`Please set a price for all options in the priced variant group "${group.name}"`);
+                    setSaving(false);
+                    return;
+                }
+                if (group.hasVariantPrice && option.price !== undefined && option.price !== null && option.price !== '' && Number.isNaN(Number(option.price))) {
+                    alert(`Please use a valid number for option pricing in "${group.name}"`);
+                    setSaving(false);
+                    return;
+                }
+            }
+        }
+
         const data = new FormData();
         data.append('name', formData.name);
         data.append('description', formData.description);
@@ -180,10 +243,12 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
 
         const groupsToSubmit = variantGroups.map((group) => ({
             name: group.name,
+            hasVariantPrice: Boolean(group.hasVariantPrice),
             options: group.options.map((opt) => ({
                 name: opt.name,
                 dimensions: opt.dimensions,
                 image: opt.image instanceof File ? undefined : opt.image,
+                price: group.hasVariantPrice ? opt.price : undefined,
             })),
         }));
         data.append('variantGroups', JSON.stringify(groupsToSubmit));
@@ -233,8 +298,14 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                         <input type="text" name="name" value={formData.name} onChange={handleProductChange} required />
                     </div>
                     <div className="form-group">
-                        <label>Price (AED)</label>
-                        <input type="number" name="basePrice" value={formData.basePrice} onChange={handleProductChange} required />
+                        <label>Price (AED){pricingEnabled ? ' (optional when variant pricing enabled)' : ''}</label>
+                        <input
+                            type="number"
+                            name="basePrice"
+                            value={formData.basePrice}
+                            onChange={handleProductChange}
+                            required={!pricingEnabled}
+                        />
                     </div>
                     <div className="form-group">
                         <label>Stock</label>
@@ -344,6 +415,20 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                     </button>
                                 </div>
 
+                                <div style={{ paddingLeft: '12px', marginBottom: '14px' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={Boolean(group.hasVariantPrice)}
+                                            disabled={pricedGroupIndex !== -1 && pricedGroupIndex !== gIdx}
+                                            onChange={() => toggleVariantPricing(gIdx)}
+                                        />
+                                        <span style={{ fontSize: '14px', color: '#333' }}>
+                                            Enable variant pricing for this group
+                                        </span>
+                                    </label>
+                                </div>
+
                                 <div style={{ paddingLeft: '12px' }}>
                                     {group.options.map((opt, oIdx) => (
                                         <div key={oIdx} className="variant-card" style={{ background: '#fafafa', marginBottom: '10px' }}>
@@ -387,6 +472,18 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                                         </div>
                                                     )}
                                                 </div>
+                                                {group.hasVariantPrice && (
+                                                    <div className="form-group">
+                                                        <label>Option Price (AED)</label>
+                                                        <input
+                                                            type="number"
+                                                            step="0.01"
+                                                            value={opt.price ?? ''}
+                                                            onChange={(e) => handleOptionChange(gIdx, oIdx, 'price', e.target.value)}
+                                                            required
+                                                        />
+                                                    </div>
+                                                )}
                                                 <div className="form-group full-width">
                                                     <label>Dimensions (L × W × H)</label>
                                                     <div className="dimension-grid">

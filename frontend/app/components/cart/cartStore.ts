@@ -27,14 +27,14 @@ function writeCart(snapshot: CartSnapshot) {
   window.localStorage.setItem(CART_KEY, JSON.stringify(snapshot));
 }
 
-function createItemId(productId: string, variantSelections: CartItem['variantSelections']) {
+function createItemId(productId: string, variantSelections: CartItem['variantSelections'], giftWrap?: boolean) {
   const variantPart = variantSelections
     .slice()
     .sort((a, b) => a.groupName.localeCompare(b.groupName))
     .map((v) => `${v.groupName}:${v.optionName}`)
     .join('|');
 
-  return `${productId}::${variantPart}`;
+  return `${productId}::${variantPart}${giftWrap ? '::giftwrap' : ''}`;
 }
 
 export function getCartItems(): CartItem[] {
@@ -46,12 +46,12 @@ export function getCartTotalQuantity(): number {
 }
 
 export function getCartSubtotal(): number {
-  return getCartItems().reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  return getCartItems().reduce((sum, item) => sum + (item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, 0);
 }
 
 export function addToCart(input: Omit<CartItem, 'id'>): CartItem {
   const snapshot = readCart();
-  const id = createItemId(input.productId, input.variantSelections);
+  const id = createItemId(input.productId, input.variantSelections, input.giftWrap);
 
   const existing = snapshot.items.find((i) => i.id === id);
   if (existing) {

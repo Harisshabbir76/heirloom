@@ -8,6 +8,7 @@ const orderItemSchema = new mongoose.Schema(
     unitPrice: { type: Number, required: true },
     quantity: { type: Number, required: true },
     currency: { type: String, default: 'AED' },
+    giftWrap: { type: Boolean, default: false },
     variantSelections: [
       {
         groupName: String,

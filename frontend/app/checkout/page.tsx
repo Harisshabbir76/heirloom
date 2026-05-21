@@ -57,7 +57,7 @@ function OrderPageContent() {
   useEffect(() => {
     const sync = () => {
       const nextItems = getCartItems();
-      const nextSubtotal = nextItems.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
+      const nextSubtotal = nextItems.reduce((sum, i) => sum + (i.unitPrice + (i.giftWrap ? 50 : 0)) * i.quantity, 0);
       setItems(nextItems);
       setSubtotal(nextSubtotal);
       setCurrency(nextItems[0]?.currency);
@@ -129,7 +129,7 @@ function OrderPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items,
+          items: items.map(item => ({ ...item, giftWrap: item.giftWrap ?? false })),
           subtotal,
           shipping,
           total,
@@ -200,18 +200,19 @@ function OrderPageContent() {
                     </div>
                     <div className="checkout-item__main">
                       <div className="checkout-item__name">{item.productName}</div>
-                      {item.variantSelections.length > 0 ? (
+                      {(item.variantSelections.length > 0 || item.giftWrap) ? (
                         <div className="checkout-item__variants">
                           {item.variantSelections.map((v) => (
                             <span key={`${item.id}-${v.groupName}`}>
                               {v.optionName}
                             </span>
                           ))}
+                          {item.giftWrap && <span>Gift Wrapping (+50 AED)</span>}
                         </div>
                       ) : null}
                     </div>
                     <div className="checkout-item__price">
-                      {formatMoney(item.unitPrice * item.quantity, item.currency)}
+                      {formatMoney((item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, item.currency)}
                     </div>
                   </div>
                 ))}
@@ -454,18 +455,19 @@ function OrderPageContent() {
                     </div>
                     <div className="checkout-item__main">
                       <div className="checkout-item__name">{item.productName}</div>
-                      {item.variantSelections.length > 0 ? (
+                      {(item.variantSelections.length > 0 || item.giftWrap) ? (
                         <div className="checkout-item__variants">
                           {item.variantSelections.map((v) => (
                             <span key={`${item.id}-${v.groupName}`}>
                               {v.optionName}
                             </span>
                           ))}
+                          {item.giftWrap && <span>Gift Wrapping (+50 AED)</span>}
                         </div>
                       ) : null}
                     </div>
                     <div className="checkout-item__price">
-                      {formatMoney(item.unitPrice * item.quantity, item.currency)}
+                      {formatMoney((item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, item.currency)}
                     </div>
                   </div>
                 ))}

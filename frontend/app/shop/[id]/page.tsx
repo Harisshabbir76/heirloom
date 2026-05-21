@@ -26,6 +26,7 @@ export type ProductVariantOption = {
 export type ProductVariantGroup = {
     name: string;
     options: ProductVariantOption[];
+    hasVariantPrice?: boolean;
 };
 
 export type Product = {

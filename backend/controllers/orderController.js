@@ -79,10 +79,10 @@ exports.createCheckoutSession = async (req, res) => {
         price_data: {
           currency: String(item.currency || currency || 'AED').toLowerCase(),
           product_data: {
-            name: item.productName,
+            name: item.productName + (item.giftWrap ? ' (with Gift Wrapping)' : ''),
             images: item.imageUrl ? [item.imageUrl] : undefined,
           },
-          unit_amount: Math.round(Number(item.unitPrice || 0) * 100),
+          unit_amount: Math.round(Number((item.unitPrice || 0) + (item.giftWrap ? 50 : 0)) * 100),
         },
       })).concat(Number(shipping) > 0 ? [{
         quantity: 1,

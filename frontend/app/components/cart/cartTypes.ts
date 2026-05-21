@@ -12,5 +12,6 @@ export type CartItem = {
   quantity: number;
   currency?: string;
   variantSelections: CartVariantSelection[];
+  giftWrap?: boolean;
 };
 

@@ -158,18 +158,21 @@ function SuccessPageContent() {
                   </div>
                   <div className="checkout-item__main">
                     <div className="checkout-item__name">{item.productName}</div>
-                    {item.variantSelections && item.variantSelections.length > 0 ? (
+                    {(item.variantSelections && item.variantSelections.length > 0) || item.giftWrap ? (
                       <div className="checkout-item__variants">
-                        {item.variantSelections.map((v: CartVariantSelection, vIdx: number) => (
+                        {item.variantSelections && item.variantSelections.map((v: CartVariantSelection, vIdx: number) => (
                           <span key={`${v.groupName}-${vIdx}`} style={{ marginRight: '8px', color: 'rgba(53, 0, 8, 0.6)' }}>
                             {v.groupName}: {v.optionName}
                           </span>
                         ))}
+                        {item.giftWrap && (
+                          <span style={{ marginRight: '8px', color: 'rgba(53, 0, 8, 0.6)' }}>Gift Wrapping (+50 AED)</span>
+                        )}
                       </div>
                     ) : null}
                   </div>
                   <div className="checkout-item__price">
-                    {formatMoney(item.unitPrice * item.quantity, item.currency)}
+                    {formatMoney((item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, item.currency)}
                   </div>
                 </div>
               ))}

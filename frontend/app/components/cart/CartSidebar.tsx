@@ -29,7 +29,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
       // Intentionally update state only from the event callback.
       const nextItems = getCartItems();
       const nextTotalQty = nextItems.reduce((s, i) => s + i.quantity, 0);
-      const nextSubtotal = nextItems.reduce((s, i) => s + i.unitPrice * i.quantity, 0);
+      const nextSubtotal = nextItems.reduce((s, i) => s + (i.unitPrice + (i.giftWrap ? 50 : 0)) * i.quantity, 0);
 
       setItems(nextItems);
       setTotalQty(nextTotalQty);
@@ -87,11 +87,14 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                 <div className="heirloom-cart-sidebar__item-main">
                   <div className="heirloom-cart-sidebar__item-name">{item.productName}</div>
 
-                  {item.variantSelections.length > 0 ? (
+                  {item.variantSelections.length > 0 || item.giftWrap ? (
                     <div className="heirloom-cart-sidebar__item-variant">
                       {item.variantSelections.map((v) => (
                         <span key={`${item.id}-${v.groupName}`}>{v.groupName}: {v.optionName}</span>
                       ))}
+                      {item.giftWrap && (
+                        <span>Gift Wrapping: Yes (+50 AED)</span>
+                      )}
                     </div>
                   ) : null}
 
@@ -117,7 +120,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   </div>
 
                   <div className="heirloom-cart-sidebar__item-total">
-                    {formatMoney(item.unitPrice * item.quantity, item.currency)}
+                    {formatMoney((item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, item.currency)}
                   </div>
 
                   <button

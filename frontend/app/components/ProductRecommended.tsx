@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Product } from '../shop/[id]/page';
+import { getDefaultProductPrice } from '../lib/productPricing';
 import '../styles/ProductRecommended.css';
 
 type ProductRecommendedProps = {
@@ -39,7 +40,7 @@ const ProductRecommended: React.FC<ProductRecommendedProps> = ({ products }) => 
                                     </div>
                                 </div>
                                 <h3>{product.name}</h3>
-                                <p>{product.basePrice} {product.currency ?? 'AED'}</p>
+                                <p>{getDefaultProductPrice(product)} {product.currency ?? 'AED'}</p>
                             </Link>
                         );
                     })}

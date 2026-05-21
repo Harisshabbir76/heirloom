@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { getDefaultProductPrice } from "../lib/productPricing";
 import "../styles/ProductShowcase.css";
 
 const ProductShowcase: React.FC = () => {
@@ -82,7 +83,7 @@ const ProductShowcase: React.FC = () => {
               <h3 className="product-name">{product.name}</h3>
 
               <p className="product-price">
-                {product.basePrice} AED
+                {getDefaultProductPrice(product)} AED
               </p>
             </Link>
           ))

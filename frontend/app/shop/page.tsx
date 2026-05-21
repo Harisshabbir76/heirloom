@@ -5,6 +5,7 @@ import Link from 'next/link';
 import '../styles/Shop.css';
 import ProductFaqs from '../components/ProductFaqs';
 import StoryMemoriesshop from '../components/StoryMemoriesshop';
+import { getDefaultProductPrice } from '../lib/productPricing';
 
 type ShopProduct = {
     _id: string;
@@ -12,6 +13,11 @@ type ShopProduct = {
     basePrice: number;
     images?: {
         url: string;
+    }[];
+    variantGroups?: {
+        name: string;
+        hasVariantPrice?: boolean;
+        options: { name: string; price?: number }[];
     }[];
 };
 
@@ -70,7 +76,7 @@ export default function ShopPage() {
                                     />
                                 </div>
                                 <h3 className="shop-product-name">{product.name}</h3>
-                                <p className="shop-product-price">{product.basePrice} AED</p>
+                                <p className="shop-product-price">{getDefaultProductPrice(product)} AED</p>
                             </Link>
                         ))}
                     </div>

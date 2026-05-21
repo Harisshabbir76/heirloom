@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import type { Product, ProductVariantOption } from '../shop/[id]/page';
+import { getProductPrice } from '../lib/productPricing';
 import '../styles/ProductDetailTop.css';
 
 type ProductDetailTopProps = {
@@ -74,6 +75,7 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
             .filter(Boolean) as { groupName: string; optionName: string }[];
 
         const imageUrl = mainImage || galleryImages[0]?.url || undefined;
+        const activePrice = getProductPrice(product, selectedOptions);
 
         // Lazy import to avoid affecting bundle for users who never open a product.
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -82,10 +84,11 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
                 productId: product._id,
                 productName: product.name,
                 imageUrl,
-                unitPrice: product.basePrice,
+                unitPrice: activePrice,
                 currency: product.currency ?? 'AED',
                 quantity,
                 variantSelections,
+                giftWrap,
             });
         });
     };
@@ -127,7 +130,7 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
                     <h1>{product.name}</h1>
 
                     <p className="product-detail-top__price">
-                        {product.basePrice} {product.currency ?? 'AED'}
+                        {getProductPrice(product, selectedOptions)} {product.currency ?? 'AED'}
                     </p>
 
                     {product.description && (

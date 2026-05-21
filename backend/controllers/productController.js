@@ -1,5 +1,43 @@
 const Product = require('../models/Product');
 
+const normalizeVariantGroups = (variantGroups) => {
+  if (!Array.isArray(variantGroups)) return [];
+  return variantGroups.map((group) => ({
+    name: String(group.name || '').trim(),
+    hasVariantPrice: group.hasVariantPrice === true || group.hasVariantPrice === 'true' || group.hasVariantPrice === '1',
+    options: Array.isArray(group.options)
+      ? group.options.map((option) => ({
+          ...option,
+          price:
+            option.price !== undefined && option.price !== null && option.price !== ''
+              ? Number(option.price)
+              : undefined,
+        }))
+      : [],
+  }));
+};
+
+const validateVariantGroups = (variantGroups) => {
+  const pricedGroups = variantGroups.filter((group) => group.hasVariantPrice);
+  if (pricedGroups.length > 1) {
+    return 'Only one variant group may have pricing. Please choose a single priced group.';
+  }
+
+  const pricingGroup = pricedGroups[0];
+  if (pricingGroup) {
+    if (!Array.isArray(pricingGroup.options) || pricingGroup.options.length === 0) {
+      return `The priced variant group "${pricingGroup.name}" must contain at least one option.`;
+    }
+    for (const option of pricingGroup.options) {
+      if (option.price === undefined || option.price === null || Number.isNaN(option.price)) {
+        return `All options in the priced variant group "${pricingGroup.name}" must have a valid numeric price.`;
+      }
+    }
+  }
+
+  return null;
+};
+
 // @desc    Add new product
 // @route   POST /api/products
 // @access  Public
@@ -11,8 +49,8 @@ exports.addProduct = async (req, res) => {
 
     const { name, description, basePrice, stock, variantGroups: groupsRaw } = req.body;
     
-    if (!name || !description || !basePrice) {
-      return res.status(400).json({ success: false, message: 'Please provide name, description and basePrice' });
+    if (!name || !description) {
+      return res.status(400).json({ success: false, message: 'Please provide name and description' });
     }
 
     const files = req.files || [];
@@ -20,11 +58,21 @@ exports.addProduct = async (req, res) => {
     let variantGroups = [];
     if (groupsRaw && groupsRaw !== 'undefined' && groupsRaw !== 'null') {
       try {
-        variantGroups = JSON.parse(groupsRaw);
+        variantGroups = normalizeVariantGroups(JSON.parse(groupsRaw));
       } catch (e) {
         console.error('Error parsing variantGroups:', e);
         return res.status(400).json({ success: false, message: 'Invalid variantGroups JSON format' });
       }
+    }
+
+    const validationError = validateVariantGroups(variantGroups);
+    if (validationError) {
+      return res.status(400).json({ success: false, message: validationError });
+    }
+
+    const hasPricingGroup = variantGroups.some((group) => group.hasVariantPrice);
+    if (!hasPricingGroup && (basePrice === undefined || basePrice === '' || isNaN(Number(basePrice)))) {
+      return res.status(400).json({ success: false, message: 'Please provide a valid basePrice when variant pricing is not enabled' });
     }
 
     // Process Product Images
@@ -130,13 +178,19 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    let variantGroups = [];
+    let variantGroups = product.variantGroups || [];
     if (groupsRaw && groupsRaw !== 'undefined' && groupsRaw !== 'null') {
       try {
-        variantGroups = JSON.parse(groupsRaw);
+        variantGroups = normalizeVariantGroups(JSON.parse(groupsRaw));
       } catch (e) {
         console.error('Error parsing variantGroups:', e);
+        return res.status(400).json({ success: false, message: 'Invalid variantGroups JSON format' });
       }
+    }
+
+    const validationError = validateVariantGroups(variantGroups);
+    if (validationError) {
+      return res.status(400).json({ success: false, message: validationError });
     }
 
     // Process New Product Images
@@ -190,7 +244,9 @@ exports.updateProduct = async (req, res) => {
 
     product.name = name || product.name;
     product.description = description || product.description;
-    product.basePrice = basePrice ? Number(basePrice) : product.basePrice;
+    if (basePrice !== undefined && basePrice !== '') {
+      product.basePrice = Number(basePrice);
+    }
     product.stock = stock !== undefined ? (stock === '' ? null : Number(stock)) : product.stock;
     product.images = finalProductImages;
     product.variantGroups = variantGroups;

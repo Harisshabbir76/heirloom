@@ -20,6 +20,7 @@ const variantOptionSchema = new mongoose.Schema({
 const variantGroupSchema = new mongoose.Schema({
   name: { type: String, required: true }, // e.g., "Size" or "Design"
   options: [variantOptionSchema],
+  hasVariantPrice: { type: Boolean, default: false },
 });
 
 const productSchema = new mongoose.Schema({
@@ -34,7 +35,7 @@ const productSchema = new mongoose.Schema({
   },
   basePrice: {
     type: Number,
-    required: [true, 'Please add a price'],
+    default: 0,
   },
   currency: {
     type: String,
@@ -49,5 +50,11 @@ const productSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
+
+productSchema.path('variantGroups').validate(function (groups) {
+  if (!Array.isArray(groups)) return true;
+  const pricedGroups = groups.filter((group) => group.hasVariantPrice);
+  return pricedGroups.length <= 1;
+}, 'Only one variant group can have variant pricing.');
 
 module.exports = mongoose.model('Product', productSchema);
