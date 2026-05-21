@@ -6,7 +6,7 @@ import '../styles/Shop.css';
 import ProductFaqs from '../components/ProductFaqs';
 import StoryMemoriesshop from '../components/StoryMemoriesshop';
 import { getDefaultProductPrice } from '../lib/productPricing';
-import { Product } from '../types/product'; // ✅ IMPORTANT FIX
+import type { Product } from './[id]/page';
 
 export default function ShopPage() {
     const [products, setProducts] = useState<Product[]>([]);
