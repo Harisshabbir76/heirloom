@@ -270,7 +270,7 @@ function OrderPageContent() {
                   <a href="/login" className="checkout-link">Sign in</a>
                 </div>
                 <div className="form-group">
-                  <input required type="text" name="contact" placeholder="Email or mobile phone number" />
+                  <input required type="text" name="contact" placeholder="Enter your Email" />
                 </div>
               </div>
 
@@ -303,7 +303,6 @@ function OrderPageContent() {
                   </div>
                   <div className="form-group">
                     <select required name="emirate">
-                      <option value="">Emirate</option>
                       <option value="Abu Dhabi">Abu Dhabi</option>
                       <option value="Dubai">Dubai</option>
                       <option value="Sharjah">Sharjah</option>
@@ -400,7 +399,6 @@ function OrderPageContent() {
                       </div>
                       <div className="form-group">
                         <select required name="billingEmirate">
-                          <option value="">Emirate</option>
                           <option value="Abu Dhabi">Abu Dhabi</option>
                           <option value="Dubai">Dubai</option>
                           <option value="Sharjah">Sharjah</option>

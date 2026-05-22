@@ -306,7 +306,7 @@ export default function DashboardOrdersPage() {
             {/* Delete Confirmation Modal */}
             {deleteConfirmModal.show && (
                 <div className="modal-overlay" onClick={cancelDeleteOrder}>
-                    <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal-container" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 'calc(100vw - 32px)', padding: '24px 20px' }}>
                         <div className="modal-icon modal-icon-warning">
                             ?
                         </div>
@@ -316,18 +316,18 @@ export default function DashboardOrdersPage() {
                         <p className="modal-message">
                             Are you sure you want to delete order {deleteConfirmModal.orderNumber}? This action cannot be undone.
                         </p>
-                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '20px' }}>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
                             <button
                                 className="modal-button modal-button-cancel"
                                 onClick={cancelDeleteOrder}
-                                style={{ background: '#888' }}
+                                style={{ background: '#888', minWidth: '100px' }}
                             >
                                 Cancel
                             </button>
                             <button
                                 className="modal-button modal-button-confirm"
                                 onClick={handleDeleteOrder}
-                                style={{ background: '#d9383a' }}
+                                style={{ background: '#d9383a', minWidth: '100px' }}
                             >
                                 Delete
                             </button>
