@@ -24,7 +24,7 @@ export default function Dashboard() {
         const authorizeAndFetchProducts = async () => {
             const allowed = await hasDashboardAccess();
             if (!allowed) {
-                router.replace('/404');
+                router.replace('/login');
                 setIsAuthorized(false);
                 setLoading(false);
                 return;

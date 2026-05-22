@@ -46,7 +46,16 @@ export default function LoginPage() {
         return;
       }
 
-      router.push('/');
+      // Check if user has dashboard access (is admin) and redirect accordingly
+      const dashboardCheck = await fetch(`${normalizedApiBase}/api/auth/dashboard-access`, {
+        credentials: 'include',
+      });
+
+      if (dashboardCheck.ok) {
+        router.push('/heirloom/admin/panel/dashboard');
+      } else {
+        router.push('/');
+      }
       router.refresh();
     } catch (err) {
       let message = 'Login failed';
