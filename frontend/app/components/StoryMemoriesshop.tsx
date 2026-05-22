@@ -1,25 +1,30 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import "../styles/StoryMemoriesshop.css";
-
-import memoryOne from "../images/memories1.png";
-import memoryTwo from "../images/memories2.png";
-import memoryThree from "../images/memories3.png";
-import memoryFour from "../images/memories4.png";
-import memoryFive from "../images/memories5.png";
-import memorySix from "../images/memories6.png";
 import stripeImage from "../images/Stripe.jpg";
-
-const memories = [
-    { src: memoryOne, alt: "Jewelry and keepsakes on fabric" },
-    { src: memoryTwo, alt: "Hand holding a glass on green velvet" },
-    { src: memoryThree, alt: "Hand placing a red jewelry box" },
-    { src: memoryFour, alt: "Woman standing in a doorway" },
-    { src: memoryFive, alt: "Jewelry reflected behind lace" },
-    { src: memorySix, alt: "Gloved hand with a perfume bottle" },
-];
+import {
+    defaultStoryMemoryShopImages,
+    fetchSiteContent,
+    StoryMemoryShopImage,
+} from "../lib/siteContent";
 
 const StoryMemories: React.FC = () => {
+    const [memories, setMemories] = useState<StoryMemoryShopImage[]>(defaultStoryMemoryShopImages);
+
+    useEffect(() => {
+        fetchSiteContent()
+            .then((content) => {
+                const savedImages = content.storyMemoryShopImages.map((item, index) => ({
+                    label: item.label || `Image ${index + 1}`,
+                    image: item.image || defaultStoryMemoryShopImages[index]?.image,
+                }));
+                setMemories(savedImages.length ? savedImages : defaultStoryMemoryShopImages);
+            })
+            .catch(() => setMemories(defaultStoryMemoryShopImages));
+    }, []);
+
     return (
         <section className="story-memories">
             <Image
@@ -44,13 +49,12 @@ const StoryMemories: React.FC = () => {
                 </p>
 
                 <div className="story-memories__gallery" aria-label="Memory image collection">
-                    {memories.map((memory) => (
-                        <div className="story-memories__image-wrap" key={memory.alt}>
-                            <Image
-                                src={memory.src}
-                                alt={memory.alt}
+                    {memories.slice(0, 6).map((memory, index) => (
+                        <div className="story-memories__image-wrap" key={memory.label || index}>
+                            <img
+                                src={memory.image?.url || defaultStoryMemoryShopImages[index]?.image?.url}
+                                alt={memory.label || `Memory image ${index + 1}`}
                                 className="story-memories__image"
-                                sizes="(max-width: 768px) 46vw, 156px"
                             />
                         </div>
                     ))}

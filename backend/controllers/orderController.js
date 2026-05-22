@@ -173,3 +173,18 @@ exports.updateOrderStatus = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.deleteOrder = async (req, res) => {
+  try {
+    if (rejectNonAdmin(req, res)) return;
+
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    return res.status(200).json({ success: true, data: { id: req.params.id } });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

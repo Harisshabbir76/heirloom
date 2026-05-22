@@ -1,4 +1,25 @@
 const Product = require('../models/Product');
+const jwt = require('jsonwebtoken');
+const { cloudinary } = require('../config/cloudinary');
+
+function isAdminRequest(req) {
+  const token = req.cookies?.auth_token;
+  const adminEmail = String(process.env.DASHBOARD_ACCESS_ADMIN_EMAIL || '').trim().toLowerCase();
+  if (!token || !adminEmail || !process.env.JWT_SECRET) return false;
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    return String(payload.email || '').trim().toLowerCase() === adminEmail;
+  } catch {
+    return false;
+  }
+}
+
+function rejectNonAdmin(req, res) {
+  if (isAdminRequest(req)) return false;
+  res.status(404).json({ success: false, message: 'Not found' });
+  return true;
+}
 
 const normalizeVariantGroups = (variantGroups) => {
   if (!Array.isArray(variantGroups)) return [];
@@ -262,6 +283,39 @@ exports.updateProduct = async (req, res) => {
     });
   } catch (error) {
     console.error('Update Product Error:', error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.deleteProduct = async (req, res) => {
+  try {
+    if (rejectNonAdmin(req, res)) return;
+
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    const cloudinaryIds = [
+      ...(product.images || []).map((image) => image.cloudinaryId),
+      ...(product.variantGroups || []).flatMap((group) => (
+        (group.options || []).map((option) => option.image?.cloudinaryId)
+      )),
+    ].filter(Boolean);
+
+    await Promise.allSettled(
+      cloudinaryIds.map((cloudinaryId) => cloudinary.uploader.destroy(cloudinaryId))
+    );
+
+    res.status(200).json({
+      success: true,
+      data: { id: req.params.id },
+    });
+  } catch (error) {
+    console.error('Delete Product Error:', error);
     res.status(400).json({
       success: false,
       message: error.message,

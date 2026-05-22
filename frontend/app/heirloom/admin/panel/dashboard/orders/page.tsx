@@ -58,6 +58,11 @@ export default function DashboardOrdersPage() {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [deleteConfirmModal, setDeleteConfirmModal] = useState<{ show: boolean; orderId: string | null; orderNumber: string }>({ 
+        show: false, 
+        orderId: null, 
+        orderNumber: '' 
+    });
 
     const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
     const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
@@ -142,6 +147,39 @@ export default function DashboardOrdersPage() {
         }
     }
 
+    // Show confirmation modal instead of direct delete
+    const confirmDeleteOrder = (orderId: string, orderNumber: string) => {
+        setDeleteConfirmModal({ show: true, orderId, orderNumber });
+    };
+
+    // Execute delete after confirmation
+    const handleDeleteOrder = async () => {
+        if (!deleteConfirmModal.orderId) return;
+
+        try {
+            const response = await fetch(`${normalizedBase}/api/orders/${deleteConfirmModal.orderId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+            const data = await response.json();
+            if (data.success) {
+                setOrders((current) => current.filter((order) => order._id !== deleteConfirmModal.orderId));
+                setSelectedOrder((current) => current?._id === deleteConfirmModal.orderId ? null : current);
+                setDeleteConfirmModal({ show: false, orderId: null, orderNumber: '' });
+            } else {
+                alert('Failed to delete order.');
+                setDeleteConfirmModal({ show: false, orderId: null, orderNumber: '' });
+            }
+        } catch {
+            alert('Failed to delete order.');
+            setDeleteConfirmModal({ show: false, orderId: null, orderNumber: '' });
+        }
+    };
+
+    const cancelDeleteOrder = () => {
+        setDeleteConfirmModal({ show: false, orderId: null, orderNumber: '' });
+    };
+
     if (isAuthorized !== true) {
         return <div className="dashboard-container" />;
     }
@@ -151,7 +189,7 @@ export default function DashboardOrdersPage() {
             <DashboardSidebar />
             <header className="dashboard-header">
                 <div>
-                    <h1 className="dashboard-title">Orders</h1>
+                    <h1 className="dashboard-title">ORDERS</h1>
                     <p className="dashboard-kicker">Manage checkout orders by status and date.</p>
                 </div>
             </header>
@@ -206,6 +244,13 @@ export default function DashboardOrdersPage() {
                                         ))}
                                     </select>
                                     <button type="button" onClick={() => setSelectedOrder(order)}>Detail</button>
+                                    <button 
+                                        type="button" 
+                                        className="delete-action-btn" 
+                                        onClick={() => confirmDeleteOrder(order._id, `#${order._id.slice(-6).toUpperCase()}`)}
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
                             </article>
                         ))}
@@ -254,6 +299,39 @@ export default function DashboardOrdersPage() {
                                 </div>
                             ))}
                         </section>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deleteConfirmModal.show && (
+                <div className="modal-overlay" onClick={cancelDeleteOrder}>
+                    <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-icon modal-icon-warning">
+                            ?
+                        </div>
+                        <h3 className="modal-title">
+                            Confirm Deletion
+                        </h3>
+                        <p className="modal-message">
+                            Are you sure you want to delete order {deleteConfirmModal.orderNumber}? This action cannot be undone.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '20px' }}>
+                            <button
+                                className="modal-button modal-button-cancel"
+                                onClick={cancelDeleteOrder}
+                                style={{ background: '#888' }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="modal-button modal-button-confirm"
+                                onClick={handleDeleteOrder}
+                                style={{ background: '#d9383a' }}
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

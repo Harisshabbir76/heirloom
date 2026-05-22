@@ -47,6 +47,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const [mainNewImageIndex, setMainNewImageIndex] = useState<number | null>(null);
     const [variantGroups, setVariantGroups] = useState<VariantGroup[]>([]);
     const [modal, setModal] = useState<{ show: boolean; message: string; success: boolean }>({ show: false, message: '', success: false });
+    const [confirmModal, setConfirmModal] = useState<{ show: boolean; groupIndex: number | null; groupName: string }>({ show: false, groupIndex: null, groupName: '' });
 
     useEffect(() => {
         hasDashboardAccess().then((allowed) => {
@@ -178,8 +179,20 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         setVariantGroups(newGroups);
     };
 
-    const removeGroup = (gIdx: number) => {
-        setVariantGroups(prev => prev.filter((_, i) => i !== gIdx));
+    // Updated removeGroup to show confirmation modal instead of direct removal
+    const confirmRemoveGroup = (gIdx: number, groupName: string) => {
+        setConfirmModal({ show: true, groupIndex: gIdx, groupName: groupName || 'this group' });
+    };
+
+    const handleRemoveGroup = () => {
+        if (confirmModal.groupIndex !== null) {
+            setVariantGroups(prev => prev.filter((_, i) => i !== confirmModal.groupIndex));
+        }
+        setConfirmModal({ show: false, groupIndex: null, groupName: '' });
+    };
+
+    const cancelRemoveGroup = () => {
+        setConfirmModal({ show: false, groupIndex: null, groupName: '' });
     };
 
     const handleOptionImageChange = (gIdx: number, oIdx: number, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -295,7 +308,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
             <Link href="/heirloom/admin/panel/dashboard" className="back-link">← Back to Dashboard</Link>
 
             <div className="form-card">
-                <h1 className="dashboard-title form-page-title">Edit Product</h1>
+                <h1 className="dashboard-title form-page-title">EDIT PRODUCT</h1>
 
                 <form onSubmit={handleSubmit} className="form-grid">
 
@@ -417,7 +430,11 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                         }}
                                         placeholder="Group name (e.g. Size, Color)"
                                     />
-                                    <button type="button" onClick={() => removeGroup(gIdx)} className="remove-btn">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => confirmRemoveGroup(gIdx, group.name)} 
+                                        className="remove-btn"
+                                    >
                                         Remove Group
                                     </button>
                                 </div>
@@ -538,6 +555,8 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                         {saving ? 'Updating…' : 'Update Product'}
                     </button>
                 </form>
+                
+                {/* Success/Error Modal */}
                 {modal.show && (
                     <div className="modal-overlay" onClick={() => setModal({ show: false, message: '', success: modal.success })}>
                         <div className="modal-container" onClick={(e) => e.stopPropagation()}>
@@ -559,6 +578,39 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                             >
                                 OK
                             </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Confirmation Modal for removing group */}
+                {confirmModal.show && (
+                    <div className="modal-overlay" onClick={cancelRemoveGroup}>
+                        <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-icon modal-icon-warning">
+                                ?
+                            </div>
+                            <h3 className="modal-title">
+                                Confirm Removal
+                            </h3>
+                            <p className="modal-message">
+                                Are you sure you want to remove the variant group "{confirmModal.groupName}"? This action cannot be undone.
+                            </p>
+                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '20px' }}>
+                                <button
+                                    className="modal-button modal-button-cancel"
+                                    onClick={cancelRemoveGroup}
+                                    style={{ background: '#888' }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="modal-button modal-button-confirm"
+                                    onClick={handleRemoveGroup}
+                                    style={{ background: '#d9383a' }}
+                                >
+                                    Remove
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

@@ -92,7 +92,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         <main>
             <ProductDetailTop product={product} />
             <ProductRecommended products={recommendedProducts} />
-            <ProductFaqs />
+            <ProductFaqs placement="product" />
             <StoryMemories />
         </main>
     );

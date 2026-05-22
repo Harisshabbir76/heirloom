@@ -1,29 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/ProductFaqs.css';
+import { defaultFaqs, FaqItem, fetchSiteContent } from '../lib/siteContent';
 
-const faqs = [
-    {
-        question: 'WHAT MATERIALS ARE USED IN YOUR JEWELRY BOXES?',
-        answer: 'OUR JEWELRY BOXES ARE CRAFTED WITH CAREFULLY SELECTED WOOD, SOFT VELVET LINING, AND STRUCTURED COMPARTMENTS DESIGNED TO PROTECT YOUR PIECES.',
-    },
-    {
-        question: 'ARE YOUR JEWELRY BOXES SUITABLE FOR TRAVEL?',
-        answer: 'YES, OUR DESIGNS ARE STRUCTURED AND COMPACT, MAKING THEM SUITABLE FOR BOTH EVERYDAY USE AND TRAVEL, WHILE KEEPING YOUR PIECES SECURE.',
-    },
-    {
-        question: 'HOW MANY DESIGNS DO YOU OFFER?',
-        answer: 'WE OFFER A CURATED SELECTION OF DESIGNS, WITH OPTIONS THAT MAY VARY BY SIZE, FABRIC COLOR, AND INTERIOR DETAIL.',
-    },
-    {
-        question: 'DO YOU OFFER INTERNATIONAL SHIPPING?',
-        answer: 'YES, INTERNATIONAL SHIPPING OPTIONS ARE AVAILABLE AND CAN BE CONFIRMED DURING CHECKOUT.',
-    },
-];
+type ProductFaqsProps = {
+    placement?: 'product' | 'shop';
+};
 
-const ProductFaqs: React.FC = () => {
-    const [openQuestion, setOpenQuestion] = useState<string | null>('ARE YOUR JEWELRY BOXES SUITABLE FOR TRAVEL?');
+const isVisibleForPlacement = (faq: FaqItem, placement: ProductFaqsProps['placement']) => (
+    placement === 'shop' ? faq.showOnShopPage : faq.showOnProductPage
+);
+
+const ProductFaqs: React.FC<ProductFaqsProps> = ({ placement = 'product' }) => {
+    const [openQuestion, setOpenQuestion] = useState<string | null>(null);
+    const [faqs, setFaqs] = useState<FaqItem[]>(defaultFaqs.filter((faq) => isVisibleForPlacement(faq, placement)));
+
+    useEffect(() => {
+        fetchSiteContent()
+            .then((content) => {
+                setFaqs(content.faqs.filter((faq) => isVisibleForPlacement(faq, placement)));
+            })
+            .catch(() => setFaqs(defaultFaqs.filter((faq) => isVisibleForPlacement(faq, placement))));
+    }, [placement]);
+
+    if (faqs.length === 0) {
+        return null;
+    }
 
     return (
         <section className="product-faqs">
@@ -32,7 +35,7 @@ const ProductFaqs: React.FC = () => {
 
                 <div className="product-faqs__list">
                     {faqs.map((faq) => (
-                        <div className="product-faqs__item" key={faq.question}>
+                        <div className="product-faqs__item" key={faq._id || faq.question}>
                             <button
                                 className="product-faqs__question"
                                 type="button"

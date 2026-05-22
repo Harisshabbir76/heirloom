@@ -14,6 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   position: relative;
   margin-bottom: 0px;
 }
@@ -33,11 +34,9 @@
   justify-content: center;
   gap: 10px;
   margin: -40px auto 0;
-  /* Centered with negative top margin to account for the wax seal part of the image */
 }
 
-/* Wax seal styles removed as it's now part of the background image */
-
+/* Remove the negative margins from these selectors globally */
 .cta-card h2 {
   font-family: var(--font-pinyon);
   font-size: 35px;
@@ -46,7 +45,6 @@
   margin: 0;
   text-align: center;
   width: 100%;
-  margin-left: -20px;
 }
 
 .cta-card p {
@@ -58,7 +56,6 @@
   margin: 5px 0 15px;
   text-align: center;
   width: 100%;
-  margin-left: -20px;
   margin-top: -10px;
 }
 
@@ -73,8 +70,6 @@
   cursor: pointer;
   text-transform: uppercase;
   transition: transform 0.2s ease;
-  margin-left: -20px;
-  top: 50%;
 }
 
 .buy-now-btn:hover {
@@ -251,6 +246,7 @@
   }
 }
 
+/* Mobile styles - all content now fully centered */
 @media (max-width: 640px) {
   .footer {
     height: auto;
@@ -258,29 +254,50 @@
     padding: 58px 0 0;
   }
 
+  .footer-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
   .cta-card {
     max-width: 360px;
     width: 90%;
     height: 230px;
     padding: 28px 18px;
-    margin-top: -20px;
+    margin: -20px auto 0;
     background-size: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cta-card h2 {
     font-size: 27px;
-    margin-left: -10px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    width: 100%;
   }
 
   .cta-card p {
     font-size: 8px;
     line-height: 13px;
-    margin-left: -10px;
+    margin: 5px 0 15px;
+    padding: 0;
+    text-align: center;
+    width: 100%;
   }
 
   .buy-now-btn {
-    margin-left: -10px;
+    margin: 0;
     padding: 5px 22px;
+  }
+
+  .buy-now-link {
+    margin: 0;
+    padding: 0;
   }
 
   .footer-bottom {
@@ -307,9 +324,43 @@
   }
 }
 
+/* Small mobile devices (480px and below) */
 @media (max-width: 480px) {
+  .footer-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
   .cta-card {
-    width: 95%;
+    width: 90%;
+    max-width: 320px;
+    height: 200px;
+    padding: 20px 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .cta-card h2 {
+    font-size: 24px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .cta-card p {
+    font-size: 7px;
+    line-height: 11px;
+    margin: 5px 0 12px;
+    padding: 0;
+    text-align: center;
+  }
+
+  .buy-now-btn {
+    margin: 0;
+    padding: 4px 18px;
+    font-size: 8px;
   }
   
   .footer-links {
@@ -327,5 +378,28 @@
   
   .footer-info span {
     font-size: 8px;
+  }
+}
+
+/* Extra small mobile devices (375px and below) */
+@media (max-width: 375px) {
+  .cta-card {
+    max-width: 280px;
+    height: 180px;
+    padding: 15px 12px;
+  }
+  
+  .cta-card h2 {
+    font-size: 22px;
+  }
+
+  .cta-card p {
+    font-size: 6.5px;
+    line-height: 10px;
+  }
+
+  .buy-now-btn {
+    padding: 3px 15px;
+    font-size: 7px;
   }
 }

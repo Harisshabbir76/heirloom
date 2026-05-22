@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import '../styles/Shop.css';
 import ProductFaqs from '../components/ProductFaqs';
@@ -11,6 +11,7 @@ import type { Product } from './[id]/page';
 export default function ShopPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [carouselIndex, setCarouselIndex] = useState(0);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -33,6 +34,54 @@ export default function ShopPage() {
         fetchProducts();
     }, []);
 
+    useEffect(() => {
+        setCarouselIndex(0);
+    }, [products.length]);
+
+    const visibleProducts = useMemo(() => {
+        if (products.length <= 3) return products;
+
+        return Array.from({ length: 3 }, (_, index) => (
+            products[(carouselIndex + index) % products.length]
+        ));
+    }, [carouselIndex, products]);
+
+    const showCarousel = products.length > 3;
+
+    const showPreviousProducts = () => {
+        setCarouselIndex((current) => (current - 1 + products.length) % products.length);
+    };
+
+    const showNextProducts = () => {
+        setCarouselIndex((current) => (current + 1) % products.length);
+    };
+
+    const renderProduct = (product: Product) => (
+        <Link
+            key={product._id}
+            href={`/shop/${product._id}`}
+            className="shop-product-card"
+        >
+            <div className="shop-image-wrapper">
+                <img
+                    src={
+                        product.images?.[0]?.url ||
+                        '/placeholder-product.png'
+                    }
+                    alt={product.name}
+                />
+            </div>
+
+            <h3 className="shop-product-name">
+                {product.name}
+            </h3>
+
+            <p className="shop-product-price">
+                {getDefaultProductPrice(product)} AED
+            </p>
+        </Link>
+    );
+
     return (
         <div>
             <div className="shop-container">
@@ -51,38 +100,38 @@ export default function ShopPage() {
                     <div className="shop-state">
                         Our collection is currently being updated. Please check back soon.
                     </div>
+                ) : showCarousel ? (
+                    <div className="shop-carousel" aria-label="Product carousel">
+                        <button
+                            type="button"
+                            className="shop-carousel__button"
+                            onClick={showPreviousProducts}
+                            aria-label="Show previous products"
+                        >
+                            &lt;
+                        </button>
+
+                        <div className="products-grid products-grid--three products-grid--carousel">
+                            {visibleProducts.map(renderProduct)}
+                        </div>
+
+                        <button
+                            type="button"
+                            className="shop-carousel__button"
+                            onClick={showNextProducts}
+                            aria-label="Show next products"
+                        >
+                            &gt;
+                        </button>
+                    </div>
                 ) : (
-                    <div className="products-grid">
-                        {products.map((product) => (
-                            <Link
-                                key={product._id}
-                                href={`/shop/${product._id}`}
-                                className="shop-product-card"
-                            >
-                                <div className="shop-image-wrapper">
-                                    <img
-                                        src={
-                                            product.images?.[0]?.url ||
-                                            '/placeholder-product.png'
-                                        }
-                                        alt={product.name}
-                                    />
-                                </div>
-
-                                <h3 className="shop-product-name">
-                                    {product.name}
-                                </h3>
-
-                                <p className="shop-product-price">
-                                    {getDefaultProductPrice(product)} AED
-                                </p>
-                            </Link>
-                        ))}
+                    <div className={`products-grid ${products.length === 3 ? 'products-grid--three' : ''}`}>
+                        {products.map(renderProduct)}
                     </div>
                 )}
             </div>
 
-            <ProductFaqs />
+            <ProductFaqs placement="shop" />
             <StoryMemoriesshop />
         </div>
     );

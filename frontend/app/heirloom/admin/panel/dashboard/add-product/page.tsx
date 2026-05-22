@@ -236,7 +236,7 @@ export default function AddProduct() {
             <Link href="/heirloom/admin/panel/dashboard" className="back-link">← Back to Dashboard</Link>
 
             <div className="form-card">
-                <h1 className="dashboard-title form-page-title">Add New Product</h1>
+                <h1 className="dashboard-title form-page-title">ADD NEW PRODUCT</h1>
 
                 <form onSubmit={handleSubmit} className="form-grid">
                     {/* Name */}

@@ -6,9 +6,12 @@ import { useState, useEffect } from 'react';
 import { clearAuthCookieClient } from '../lib/auth';
 
 const links = [
-    { href: '/heirloom/admin/panel/dashboard', label: 'Catalog' },
+    { href: '/heirloom/admin/panel/dashboard', label: 'products' },
     { href: '/heirloom/admin/panel/dashboard/add-product', label: 'Add Products' },
     { href: '/heirloom/admin/panel/dashboard/orders', label: 'Orders' },
+    { href: '/heirloom/admin/panel/dashboard/faq', label: 'FAQ' },
+    { href: '/heirloom/admin/panel/dashboard/policies', label: 'Policies' },
+    { href: '/heirloom/admin/panel/dashboard/story-memories-shop', label: 'Story Memories Shop' },
 ];
 
 export default function DashboardSidebar() {
@@ -18,7 +21,7 @@ export default function DashboardSidebar() {
 
     // Close sidebar on route change
     useEffect(() => {
-        setIsOpen(false);
+        queueMicrotask(() => setIsOpen(false));
     }, [pathname]);
 
     // Lock body scroll while drawer is open

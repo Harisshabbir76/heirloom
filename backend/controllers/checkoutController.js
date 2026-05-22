@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 // Ensure token is configured
 function getZiinaToken() {
@@ -52,9 +53,9 @@ exports.createPaymentIntent = async (req, res) => {
       amount: amountInFils,
       currency_code: 'AED',
       message: 'Order Payment for Heirloom by SK',
-      success_url: 'http://localhost:3000/checkout/success?payment_intent_id={PAYMENT_INTENT_ID}',
-      cancel_url: 'http://localhost:3000/checkout/cancel',
-      failure_url: 'http://localhost:3000/checkout/failed',
+      success_url: `${frontendUrl}/checkout/success?payment_intent_id={PAYMENT_INTENT_ID}`,
+      cancel_url: `${frontendUrl}/checkout/cancel`,
+      failure_url: `${frontendUrl}/checkout/failed`,
       test: true, // Strictly set to true for sandbox execution
       allow_tips: false,
       operation_id: operation_id,

@@ -1,117 +1,32 @@
-'use client'
-import React, { useState } from "react";
+'use client';
+
+import React, { useEffect, useState } from "react";
 import "../styles/legal.css";
+import { defaultLegalPolicies, fetchSiteContent, LegalPolicy } from "../lib/siteContent";
 
-interface AccordionItem {
-  id: string;
-  title: string;
-  content: React.ReactNode;
-}
-
-const shippingContent = (
-  <div className="accordion-body">
-    <p className="accordion-intro">
-      AT HEIRLOOM BY SK, WE ENSURE THAT EVERY ORDER IS HANDLED WITH CARE AND
-      DELIVERED TO YOU SAFELY.
-    </p>
-
-    <div className="policy-section">
-      <h3 className="sub-heading underline">PROCESSING TIME</h3>
-      <p className="paragraph">
-        ALL ORDERS ARE PROCESSED WITHIN 1–3 BUSINESS DAYS (EXCLUDING WEEKENDS
-        AND PUBLIC HOLIDAYS). ONCE YOUR ORDER IS CONFIRMED, YOU WILL RECEIVE A
-        CONFIRMATION EMAIL.
-      </p>
-    </div>
-
-    <div className="policy-section">
-      <h3 className="sub-heading underline">SHIPPING TIME</h3>
-      <p className="paragraph">
-        DELIVERY TIMELINES MAY VARY DEPENDING ON YOUR LOCATION:
-      </p>
-      <p className="paragraph">
-        UAE: 1–3 BUSINESS DAYS
-        <br />
-        INTERNATIONAL: 5–10 BUSINESS DAYS
-      </p>
-      <p className="paragraph">
-        PLEASE NOTE THAT DELIVERY TIMES ARE ESTIMATES AND MAY VARY DUE TO
-        EXTERNAL FACTORS.
-      </p>
-    </div>
-
-    <div className="policy-section">
-      <h3 className="sub-heading underline">SHIPPING FEES</h3>
-      <p className="paragraph">
-        SHIPPING COSTS ARE CALCULATED AT CHECKOUT BASED ON YOUR LOCATION.
-      </p>
-    </div>
-
-    <div className="policy-section">
-      <h3 className="sub-heading underline">ORDER TRACKING</h3>
-      <p className="paragraph">
-        ONCE YOUR ORDER HAS BEEN SHIPPED, YOU WILL RECEIVE A TRACKING NUMBER VIA
-        EMAIL TO MONITOR YOUR DELIVERY.
-      </p>
-    </div>
-
-    <div className="policy-section">
-      <h3 className="sub-heading underline">CUSTOMS &amp; DUTIES</h3>
-      <p className="paragraph">
-        FOR INTERNATIONAL ORDERS, CUSTOMS DUTIES AND TAXES (IF APPLICABLE) ARE
-        THE RESPONSIBILITY OF THE CUSTOMER.
-      </p>
-    </div>
-  </div>
+const renderParagraph = (text: string, key: string) => (
+  <p className="paragraph" key={key}>
+    {text.split('\n').map((line, index, lines) => (
+      <React.Fragment key={`${key}-${index}`}>
+        {line}
+        {index < lines.length - 1 && <br />}
+      </React.Fragment>
+    ))}
+  </p>
 );
-
-const accordionItems: AccordionItem[] = [
-  {
-    id: "shipping",
-    title: "SHIPPING & DELIVERY",
-    content: shippingContent,
-  },
-  {
-    id: "returns",
-    title: "RETURNS & EXCHANGES POLICY",
-    content: (
-      <div className="accordion-body">
-        <p className="paragraph">
-          Please contact us within 7 days of receiving your order for any return
-          or exchange inquiries. Items must be unused and in original condition.
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: "privacy",
-    title: "PRIVACY POLICY",
-    content: (
-      <div className="accordion-body">
-        <p className="paragraph">
-          We are committed to protecting your personal information and privacy.
-          Your data will never be shared with third parties without your
-          consent.
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: "terms",
-    title: "TERMS & CONDITIONS",
-    content: (
-      <div className="accordion-body">
-        <p className="paragraph">
-          By using our website and placing an order, you agree to our terms and
-          conditions. Please read them carefully before completing your purchase.
-        </p>
-      </div>
-    ),
-  },
-];
 
 const PoliciesPage: React.FC = () => {
   const [openItem, setOpenItem] = useState<string | null>("shipping");
+  const [accordionItems, setAccordionItems] = useState<LegalPolicy[]>(defaultLegalPolicies);
+
+  useEffect(() => {
+    fetchSiteContent()
+      .then((content) => {
+        setAccordionItems(content.legalPolicies);
+        setOpenItem(content.legalPolicies[0]?.key || null);
+      })
+      .catch(() => setAccordionItems(defaultLegalPolicies));
+  }, []);
 
   const toggleItem = (id: string) => {
     setOpenItem((prev) => (prev === id ? null : id));
@@ -124,25 +39,42 @@ const PoliciesPage: React.FC = () => {
 
         <div className="accordion-list">
           {accordionItems.map((item) => {
-            const isOpen = openItem === item.id;
+            const isOpen = openItem === item.key;
 
             return (
               <div
-                key={item.id}
+                key={item._id || item.key}
                 className={`accordion-item ${isOpen ? "open" : ""}`}
               >
                 <button
                   className="accordion-header"
-                  onClick={() => toggleItem(item.id)}
+                  onClick={() => toggleItem(item.key)}
                   aria-expanded={isOpen}
                   type="button"
                 >
                   <span className="accordion-title">{item.title}</span>
-                  <span className="accordion-icon">{isOpen ? "−" : "+"}</span>
+                  <span className="accordion-icon">{isOpen ? "-" : "+"}</span>
                 </button>
 
                 <div className="accordion-content">
-                  {item.content}
+                  <div className="accordion-body">
+                    {item.intro && (
+                      <p className={item.key === 'shipping' ? 'accordion-intro' : 'paragraph'}>
+                        {item.intro}
+                      </p>
+                    )}
+
+                    {item.sections.map((section, sectionIndex) => (
+                      <div className="policy-section" key={section._id || `${item.key}-${sectionIndex}`}>
+                        {section.heading && (
+                          <h3 className="sub-heading underline">{section.heading}</h3>
+                        )}
+                        {section.paragraphs.map((paragraph, paragraphIndex) => (
+                          renderParagraph(paragraph, `${item.key}-${sectionIndex}-${paragraphIndex}`)
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             );

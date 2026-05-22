@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import '../../../../styles/Dashboard.css';
+import '../../../../styles/ContentDashboard.css';
 import { useRouter } from 'next/navigation';
 import { hasDashboardAccess } from '../../../../lib/dashboardAuth';
 import DashboardSidebar from '../../../../components/DashboardSidebar';
@@ -13,6 +14,11 @@ export default function Dashboard() {
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+    const [deleteModal, setDeleteModal] = useState<{ show: boolean; productId: string | null; productName: string }>({ 
+        show: false, 
+        productId: null, 
+        productName: '' 
+    });
 
     useEffect(() => {
         const authorizeAndFetchProducts = async () => {
@@ -46,6 +52,38 @@ export default function Dashboard() {
         authorizeAndFetchProducts();
     }, [router]);
 
+    const confirmDeleteProduct = (productId: string, productName: string) => {
+        setDeleteModal({ show: true, productId, productName });
+    };
+
+    const cancelDelete = () => {
+        setDeleteModal({ show: false, productId: null, productName: '' });
+    };
+
+    const confirmDelete = async () => {
+        const productId = deleteModal.productId;
+        if (!productId) return;
+        
+        setDeleteModal({ show: false, productId: null, productName: '' });
+
+        try {
+            const base = process.env.NEXT_PUBLIC_API_URL || '';
+            const normalizedBase = base.replace(/\/+$/u, '').replace(/\/api$/u, '');
+            const response = await fetch(`${normalizedBase}/api/products/${productId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+            const data = await response.json();
+            if (data.success) {
+                setProducts((current) => current.filter((product) => product._id !== productId));
+            } else {
+                alert('Failed to delete product.');
+            }
+        } catch {
+            alert('Failed to delete product.');
+        }
+    };
+
     if (isAuthorized === false) {
         return <div className="dashboard-container" />;
     }
@@ -58,7 +96,7 @@ export default function Dashboard() {
         <div className="dashboard-container">
             <DashboardSidebar />
             <header className="dashboard-header">
-                <h1 className="dashboard-title">Inventory Dashboard</h1>
+                <h1 className="dashboard-title">INVENTORY DASHBOARD</h1>
                 <Link href="/heirloom/admin/panel/dashboard/add-product" className="add-btn">
                     + Add Product
                 </Link>
@@ -78,7 +116,7 @@ export default function Dashboard() {
             </div>
 
             <section className="product-list-section">
-                <h2 className="section-title">Product Inventory</h2>
+                <h2 className="section-title">PRODUCT INVENTORY</h2>
                 {loading ? (
                     <div className="no-products">Loading products…</div>
                 ) : products.length === 0 ? (
@@ -143,12 +181,21 @@ export default function Dashboard() {
                                                         );
                                                     })}
                                                     <td>
-                                                        <Link
-                                                            href={`/heirloom/admin/panel/dashboard/edit-product/${product._id}`}
-                                                            className="edit-link"
-                                                        >
-                                                            Edit
-                                                        </Link>
+                                                        <div className="table-actions">
+                                                            <Link
+                                                                href={`/heirloom/admin/panel/dashboard/edit-product/${product._id}`}
+                                                                className="edit-link"
+                                                            >
+                                                                Edit
+                                                            </Link>
+                                                            <button
+                                                                type="button"
+                                                                className="delete-link"
+                                                                onClick={() => confirmDeleteProduct(product._id, product.name)}
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             );
@@ -160,6 +207,39 @@ export default function Dashboard() {
                     </div>
                 )}
             </section>
+            
+            {/* Delete Confirmation Modal */}
+            {deleteModal.show && (
+                <div className="modal-overlay" onClick={cancelDelete}>
+                    <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-icon modal-icon-warning">
+                            ?
+                        </div>
+                        <h3 className="modal-title">
+                            Confirm Delete
+                        </h3>
+                        <p className="modal-message">
+                            Are you sure you want to delete the product "{deleteModal.productName}"? This action cannot be undone.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '20px' }}>
+                            <button
+                                className="modal-button modal-button-cancel"
+                                onClick={cancelDelete}
+                                style={{ background: '#888' }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="modal-button modal-button-confirm"
+                                onClick={confirmDelete}
+                                style={{ background: '#d9383a' }}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
