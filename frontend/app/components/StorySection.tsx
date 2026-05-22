@@ -6,11 +6,11 @@ import Link from 'next/link';
 import '../styles/StorySection.css';
 
 // Import images
-import Image1 from '../images/1.png';
-import Image2 from '../images/2.png';
-import Image3 from '../images/3.png';
-import Image4 from '../images/4.png';
-import Image5 from '../images/5.png';
+import Image1 from '../images/1.jpeg';
+import Image2 from '../images/2.jpeg';
+import Image3 from '../images/3.jpeg';
+import Image4 from '../images/4.jpeg';
+import Image5 from '../images/5.jpeg';
 
 const StorySection = () => {
   return (

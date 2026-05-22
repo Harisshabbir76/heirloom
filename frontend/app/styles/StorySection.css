@@ -24,8 +24,8 @@
 
 .main-box-img {
   max-width: 450px;
-  width: 85%;
-  height: auto;
+  width: 250px;
+  height: 250px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   margin-left: -60px;
   margin-top: -40px;
@@ -99,18 +99,19 @@
 /* Polaroid image overlapping */
 .polaroid-container {
   position: absolute;
-  top: -160px;
+  top: 30px;
   left: 40%;
   transform: translateX(-50%);
   z-index: 10;
   background: white;
   padding: 10px 10px 35px 10px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  
 }
 
 .polaroid-img {
-  width: 160px;
-  height: 180px;
+  width: 120px;
+  height: 150px;
   display: block;
   object-fit: cover;
 }
@@ -137,8 +138,8 @@
   position: absolute;
   bottom: 30px;
   left: 14%;
-  width: 100px;
-  height: auto;
+  width: 80px;
+  height: 80px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -388,6 +389,7 @@
     bottom: 15%;
     left: 8%;
     width: 80px;
+    height: 80px;
   }
   
   .center-content-box {
@@ -430,7 +432,8 @@
     text-align: center;
     font-size: 22px;
     line-height: 26px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
+    margin-top: 60px;
   }
   
   .story-top-right p {
@@ -458,38 +461,38 @@
   
   .polaroid-container {
     position: absolute;
-    top: -100px;
-    left: 50%;
+    top: -320px;
+    left: 70%;
     transform: translateX(-50%);
     padding: 8px 8px 25px 8px;
   }
   
   .polaroid-img {
-    width: 110px;
-    height: 125px;
+    width: 80px;
+    height: 100px;
   }
   
   .image-key {
     position: absolute;
     top: auto;
-    bottom: 15%;
-    left: 5%;
+    bottom: 85%;
+    left: 10%;
     width: 70px;
   }
   
   .image-woman {
     position: absolute;
     top: auto;
-    bottom: 15%;
-    right: 5%;
+    bottom: 60%;
+    right: 10%;
     width: 70px;
   }
   
   .image-purse {
     position: absolute;
     bottom: auto;
-    top: 10%;
-    left: 50%;
+    top: 75%;
+    left: 17%;
     transform: translateX(-50%);
     width: 75px;
   }
