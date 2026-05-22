@@ -183,7 +183,7 @@ export default function DashboardOrdersPage() {
                 </div>
 
                 {loading ? (
-                    <div className="no-products">Loading orders...</div>
+                    <div className="no-products">Loading orders…</div>
                 ) : visibleOrders.length === 0 ? (
                     <div className="no-products">No orders found for this view.</div>
                 ) : (

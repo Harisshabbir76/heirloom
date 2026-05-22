@@ -105,7 +105,7 @@ exports.addProduct = async (req, res) => {
     const product = await Product.create({
       name,
       description,
-      basePrice: Number(basePrice),
+      basePrice: hasPricingGroup ? null : Number(basePrice),
       currency: 'AED',
       stock: stock ? Number(stock) : null,
       images: productImages,
@@ -244,7 +244,10 @@ exports.updateProduct = async (req, res) => {
 
     product.name = name || product.name;
     product.description = description || product.description;
-    if (basePrice !== undefined && basePrice !== '') {
+    if (basePrice === '') {
+      // Explicitly clearing basePrice from the edit form should set it to null
+      product.basePrice = null;
+    } else if (basePrice !== undefined) {
       product.basePrice = Number(basePrice);
     }
     product.stock = stock !== undefined ? (stock === '' ? null : Number(stock)) : product.stock;

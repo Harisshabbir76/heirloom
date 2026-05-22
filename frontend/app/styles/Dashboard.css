@@ -8,6 +8,27 @@
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
     --sidebar-width: 240px;
     --topbar-height: 60px;
+
+    /* ── Typography scale ─────────────────────────────────────── */
+    /* Page-level headings  (Cormorant, display weight) */
+    --type-heading-xl-size:   38px;
+    --type-heading-xl-weight: 400;
+
+    /* Section / card headings */
+    --type-heading-md-size:   18px;
+    --type-heading-md-weight: 500;
+
+    /* Stat / accent numerals */
+    --type-stat-size:   26px;
+    --type-stat-weight: 600;
+
+    /* Body / table copy */
+    --type-body-size:   13px;
+    --type-body-weight: 400;
+
+    /* Small labels, kickers, badges */
+    --type-small-size:   11px;
+    --type-small-weight: 500;
 }
 
 /* ─── Layout ───────────────────────────────────────────────── */
@@ -17,6 +38,9 @@
     background-color: var(--bg-luxury);
     padding: 50px 6% 60px calc(var(--sidebar-width) + 48px);
     font-family: 'Inter', sans-serif;
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-dark);
 }
 
 /* ─── Desktop Sidebar ───────────────────────────────────────── */
@@ -58,8 +82,8 @@
     color: #fffdf7;
     text-decoration: none;
     font-family: var(--font-hanken), sans-serif;
-    font-size: 11px;
-    font-weight: 500;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     letter-spacing: 0.8px;
     text-transform: uppercase;
     padding: 12px 10px;
@@ -104,11 +128,14 @@
     padding-bottom: 20px;
 }
 
+/* Page-level title */
 .dashboard-title {
     font-family: var(--font-cormorant), serif;
-    font-size: 42px;
+    font-size: var(--type-heading-xl-size);
+    font-weight: var(--type-heading-xl-weight);
     color: var(--primary-luxury);
     margin: 0;
+    line-height: 1.15;
 }
 
 .add-btn {
@@ -117,7 +144,8 @@
     padding: 12px 28px;
     border: none;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     letter-spacing: 1px;
     text-transform: uppercase;
     cursor: pointer;
@@ -150,18 +178,22 @@
     border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
+/* Small label above the number */
 .stat-label {
     color: var(--text-light);
-    font-size: 14px;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     margin-bottom: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
 }
 
+/* The big number */
 .stat-value {
-    font-size: 32px;
-    font-weight: 600;
+    font-size: var(--type-stat-size);
+    font-weight: var(--type-stat-weight);
     color: var(--primary-luxury);
+    line-height: 1.2;
 }
 
 /* ─── Product list ──────────────────────────────────────────── */
@@ -173,16 +205,20 @@
     box-shadow: var(--shadow-soft);
 }
 
+/* Section / panel headings */
 .section-title {
-    font-size: 20px;
+    font-size: var(--type-heading-md-size);
+    font-weight: var(--type-heading-md-weight);
     margin-bottom: 30px;
     color: var(--primary-luxury);
+    line-height: 1.3;
 }
 
 .no-products {
     text-align: center;
     padding: 50px;
     color: var(--text-light);
+    font-size: var(--type-body-size);
     font-style: italic;
 }
 
@@ -201,13 +237,19 @@
 .products-table th {
     text-align: left;
     padding: 15px 0;
-    font-weight: 600;
-    color: var(--primary-luxury);
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-light);
     border-bottom: 2px solid #eee;
 }
 
 .products-table td {
     padding: 15px 0;
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-dark);
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -226,16 +268,20 @@
     height: 40px;
     object-fit: cover;
     border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .edit-link {
-    font-size: 12px;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     color: #c5a059;
     text-decoration: none;
     border: 1px solid #c5a059;
     padding: 4px 10px;
     border-radius: 4px;
     display: inline-block;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
@@ -276,8 +322,8 @@
     color: #350008;
     padding: 9px 12px;
     font-family: var(--font-hanken), sans-serif;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     letter-spacing: 0.4px;
     text-transform: uppercase;
 }
@@ -300,6 +346,8 @@
     height: 20px;
     border-radius: 50%;
     background: rgba(53, 0, 8, 0.1);
+    font-size: 10px;
+    font-weight: 600;
 }
 
 .orders-tabs button.is-active span {
@@ -323,18 +371,21 @@
     border-radius: 8px;
 }
 
+/* Order card heading — matches section-title scale */
 .order-info h3 {
     color: #350008;
     font-family: var(--font-cormorant), serif;
-    font-size: 20px;
-    font-weight: 500;
+    font-size: var(--type-heading-md-size);
+    font-weight: var(--type-heading-md-weight);
     margin: 0;
+    line-height: 1.3;
 }
 
 .order-info p {
     margin: 4px 0 0;
     color: var(--text-light);
-    font-size: 12px;
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
 }
 
 .order-details {
@@ -343,22 +394,30 @@
 
 .order-details .order-card__date {
     color: var(--text-light);
-    font-size: 12px;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     display: block;
+    letter-spacing: 0.3px;
 }
 
 .order-total {
     color: #350008;
-    font-size: 14px;
+    font-size: var(--type-body-size);
+    font-weight: 600;
     white-space: nowrap;
+    display: block;
+    margin-top: 4px;
 }
 
 .order-card__id {
     font-family: var(--font-hanken), sans-serif;
-    font-size: 10px;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-light);
+    display: block;
+    margin-bottom: 4px;
 }
 
 .order-card__actions {
@@ -414,19 +473,38 @@
     padding: 8px 14px;
     cursor: pointer;
     font-family: var(--font-hanken), sans-serif;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     letter-spacing: 0.4px;
     text-transform: uppercase;
     margin-bottom: 12px;
     z-index: 5;
 }
 
-.order-modal h2,
+/* Modal headings share the same scale */
+.order-modal h2 {
+    font-family: var(--font-cormorant), serif;
+    font-size: var(--type-heading-xl-size);
+    font-weight: var(--type-heading-xl-weight);
+    text-transform: uppercase;
+    margin: 0 0 4px;
+    line-height: 1.15;
+}
+
 .order-modal h3 {
     font-family: var(--font-cormorant), serif;
-    font-weight: 500;
+    font-size: var(--type-heading-md-size);
+    font-weight: var(--type-heading-md-weight);
     text-transform: uppercase;
+    margin: 0 0 12px;
+    line-height: 1.3;
+}
+
+.order-modal p,
+.order-modal small {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-dark);
 }
 
 .order-modal__grid {
@@ -463,16 +541,33 @@
     display: block;
     margin: 3px 0 0;
     color: var(--text-light);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
 }
 
 /* ─── Misc ──────────────────────────────────────────────────── */
 
+/* Kicker / subtitle under a heading */
 .dashboard-kicker {
-    margin: 6px 0 0;
+    margin: 5px 0 0;
     color: var(--text-light);
     font-family: var(--font-hanken), sans-serif;
-    font-size: 12px;
+    font-size: var(--type-small-size);
+    font-weight: var(--type-small-weight);
     letter-spacing: 0.3px;
+}
+
+/* Form pages reuse .dashboard-title but need bottom margin */
+.form-page-title {
+    margin-bottom: 32px;
+}
+
+/* Textarea inherits browser defaults — pin it to the body scale */
+.form-grid textarea {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    font-family: inherit;
+    line-height: 1.6;
 }
 
 /* ─── Hamburger icon ────────────────────────────────────────── */
@@ -604,7 +699,7 @@
     }
 
     .dashboard-title {
-        font-size: 32px;
+        font-size: 30px;
     }
 
     .dashboard-stats {
@@ -652,7 +747,7 @@
     }
 
     .dashboard-title {
-        font-size: 28px;
+        font-size: 26px;
     }
 
     .add-btn {
@@ -665,7 +760,7 @@
     }
 
     .stat-value {
-        font-size: 26px;
+        font-size: 22px;
     }
 
     .order-card__actions {
@@ -682,7 +777,7 @@
 
     .products-table th,
     .products-table td {
-        font-size: 12px;
+        font-size: 11px;
         padding: 10px 0;
     }
 
@@ -701,19 +796,37 @@
 
 @media (max-width: 380px) {
     .dashboard-title {
-        font-size: 24px;
-    }
-
-    .stat-value {
         font-size: 22px;
     }
 
+
+/* Simple modal used for add/edit success and error messages */
+.simple-modal {
+    position: fixed;
+    left: 50%;
+    top: 16%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    padding: 14px 20px;
+    border-radius: 8px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.24);
+    font-family: var(--font-hanken), sans-serif;
+    font-size: 14px;
+    color: #fffdf7;
+}
+.simple-modal__content { padding: 4px 6px; }
+.simple-modal.modal-success { background: #2b7a2b; }
+.simple-modal.modal-error { background: #d9383a; }
+    .stat-value {
+        font-size: 20px;
+    }
+
     .stat-label {
-        font-size: 12px;
+        font-size: 10px;
     }
 
     .section-title {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .products-table th,

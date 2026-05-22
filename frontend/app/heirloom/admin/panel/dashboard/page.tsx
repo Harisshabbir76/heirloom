@@ -58,7 +58,7 @@ export default function Dashboard() {
         <div className="dashboard-container">
             <DashboardSidebar />
             <header className="dashboard-header">
-                <h1 className="dashboard-title">INVENTORY DASHBOARD</h1>
+                <h1 className="dashboard-title">Inventory Dashboard</h1>
                 <Link href="/heirloom/admin/panel/dashboard/add-product" className="add-btn">
                     + Add Product
                 </Link>
@@ -80,45 +80,83 @@ export default function Dashboard() {
             <section className="product-list-section">
                 <h2 className="section-title">Product Inventory</h2>
                 {loading ? (
-                    <div className="no-products">Loading products...</div>
+                    <div className="no-products">Loading products…</div>
                 ) : products.length === 0 ? (
                     <div className="no-products">No products found in the database.</div>
                 ) : (
                     <div className="products-table-wrapper">
-                        <table className="products-table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Variants</th>
-                                    <th>Price</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {products.map((product: any) => (
-                                    <tr key={product._id}>
-                                        <td className="product-cell">
-                                            <img 
-                                                src={product.images && product.images[0]?.url} 
-                                                alt={product.name} 
-                                                className="product-thumbnail"
-                                            />
-                                            {product.name}
-                                        </td>
-                                        <td>{product.variantGroups?.length || 0} variants</td>
-                                        <td>AED {getDefaultProductPrice(product)}</td>
-                                        <td>
-                                            <Link 
-                                                href={`/heirloom/admin/panel/dashboard/edit-product/${product._id}`}
-                                                className="edit-link"
-                                            >
-                                                Edit
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        {(() => {
+                            // Extract all unique priced variant option names across all products
+                            const allVariantOptions = new Set<string>();
+                            products.forEach((product: any) => {
+                                (product.variantGroups || []).forEach((group: any) => {
+                                    if (group.hasVariantPrice) {
+                                        (group.options || []).forEach((option: any) => {
+                                            if (option.name) allVariantOptions.add(option.name.toUpperCase());
+                                        });
+                                    }
+                                });
+                            });
+                            const variantOptionArray = Array.from(allVariantOptions).sort();
+
+                            return (
+                                <table className="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            {variantOptionArray.map((optionName) => (
+                                                <th key={optionName}>{optionName}</th>
+                                            ))}
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {products.map((product: any) => {
+                                            // Build a map of option name -> price for this product
+                                            const optionPriceMap = new Map<string, number>();
+                                            (product.variantGroups || []).forEach((group: any) => {
+                                                if (group.hasVariantPrice) {
+                                                    (group.options || []).forEach((option: any) => {
+                                                        if (option.name && option.price != null) {
+                                                            optionPriceMap.set(option.name.toUpperCase(), Number(option.price));
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+                                            return (
+                                                <tr key={product._id}>
+                                                    <td className="product-cell">
+                                                        <img
+                                                            src={product.images && product.images[0]?.url}
+                                                            alt={product.name}
+                                                            className="product-thumbnail"
+                                                        />
+                                                        {product.name}
+                                                    </td>
+                                                    {variantOptionArray.map((optionName) => {
+                                                        const price = optionPriceMap.get(optionName);
+                                                        return (
+                                                            <td key={`${product._id}-${optionName}`}>
+                                                                {price !== undefined ? `AED ${price}` : '-'}
+                                                            </td>
+                                                        );
+                                                    })}
+                                                    <td>
+                                                        <Link
+                                                            href={`/heirloom/admin/panel/dashboard/edit-product/${product._id}`}
+                                                            className="edit-link"
+                                                        >
+                                                            Edit
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            );
+                        })()}
                     </div>
                 )}
             </section>

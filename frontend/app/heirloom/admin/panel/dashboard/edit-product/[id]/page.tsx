@@ -3,8 +3,9 @@
 import React, { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import '../.../../../../../../../styles/AddProduct.css';
+import '../../../../../../styles/AddProduct.css';
 import '../../../../../../styles/Dashboard.css';
+import '../../../../../../styles/contact.css';
 import { hasDashboardAccess } from '../../../../../../lib/dashboardAuth';
 import DashboardSidebar from '../../../../../../components/DashboardSidebar';
 
@@ -45,6 +46,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const [newProductPreviews, setNewProductPreviews] = useState<string[]>([]);
     const [mainNewImageIndex, setMainNewImageIndex] = useState<number | null>(null);
     const [variantGroups, setVariantGroups] = useState<VariantGroup[]>([]);
+    const [modal, setModal] = useState<{ show: boolean; message: string; success: boolean }>({ show: false, message: '', success: false });
 
     useEffect(() => {
         hasDashboardAccess().then((allowed) => {
@@ -64,7 +66,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     setFormData({
                         name: p.name,
                         description: p.description,
-                        basePrice: p.basePrice.toString(),
+                        basePrice: p.basePrice != null ? String(p.basePrice) : '',
                         stock: p.stock ? p.stock.toString() : '',
                     });
                     setExistingImages(p.images || []);
@@ -87,7 +89,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         return (
             <div className="add-product-container">
                 <DashboardSidebar />
-                <p style={{ color: 'var(--text-light)', marginTop: '40px' }}>Loading product data…</p>
+                <p className="dashboard-kicker" style={{ marginTop: '40px' }}>Loading product data…</p>
             </div>
         );
     }
@@ -265,15 +267,20 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                 body: data,
             });
             const result = await response.json();
-            if (result.success) {
-                alert('Product updated successfully!');
-                router.push('/heirloom/admin/panel/dashboard');
-            } else {
-                alert('Error: ' + result.message);
-            }
+                if (result.success) {
+                    setModal({ show: true, message: 'Product updated successfully!', success: true });
+                    setTimeout(() => {
+                        setModal({ show: false, message: '', success: true });
+                        router.push('/heirloom/admin/panel/dashboard');
+                    }, 2500);
+                } else {
+                    setModal({ show: true, message: 'Failed to update product', success: false });
+                    setTimeout(() => setModal({ show: false, message: '', success: false }), 2500);
+                }
         } catch (error) {
             console.error('Update Error:', error);
-            alert('Failed to update product');
+            setModal({ show: true, message: 'Failed to update product', success: false });
+            setTimeout(() => setModal({ show: false, message: '', success: false }), 2500);
         } finally {
             setSaving(false);
         }
@@ -288,7 +295,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
             <Link href="/heirloom/admin/panel/dashboard" className="back-link">← Back to Dashboard</Link>
 
             <div className="form-card">
-                <h1 className="dashboard-title" style={{ marginBottom: '32px' }}>Edit Product</h1>
+                <h1 className="dashboard-title form-page-title">Edit Product</h1>
 
                 <form onSubmit={handleSubmit} className="form-grid">
 
@@ -352,7 +359,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                 onChange={handleNewImageChange}
                                 style={{ position: 'absolute', opacity: 0, inset: 0, cursor: 'pointer' }}
                             />
-                            <p style={{ margin: 0, color: 'var(--text-light)', fontSize: '14px' }}>
+                            <p className="dashboard-kicker" style={{ margin: 0 }}>
                                 Click to add more photos
                             </p>
                         </div>
@@ -423,7 +430,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                             disabled={pricedGroupIndex !== -1 && pricedGroupIndex !== gIdx}
                                             onChange={() => toggleVariantPricing(gIdx)}
                                         />
-                                        <span style={{ fontSize: '14px', color: '#333' }}>
+                                        <span className="dashboard-kicker" style={{ textTransform: 'none', letterSpacing: 0 }}>
                                             Enable variant pricing for this group
                                         </span>
                                     </label>
@@ -433,7 +440,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                     {group.options.map((opt, oIdx) => (
                                         <div key={oIdx} className="variant-card" style={{ background: '#fafafa', marginBottom: '10px' }}>
                                             <div className="variant-header">
-                                                <span style={{ fontSize: '13px', color: 'var(--text-light)', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                                                <span className="order-card__id">
                                                     Option {oIdx + 1}
                                                 </span>
                                                 <button type="button" onClick={() => removeOption(gIdx, oIdx)} className="remove-btn" style={{ background: '#eee', color: '#888' }}>×</button>
@@ -531,6 +538,30 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                         {saving ? 'Updating…' : 'Update Product'}
                     </button>
                 </form>
+                {modal.show && (
+                    <div className="modal-overlay" onClick={() => setModal({ show: false, message: '', success: modal.success })}>
+                        <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+                            <div className={`modal-icon ${modal.success ? 'modal-icon-success' : 'modal-icon-error'}`}>
+                                {modal.success ? '✓' : '✗'}
+                            </div>
+                            <h3 className="modal-title">
+                                {modal.success ? 'Success!' : 'Error!'}
+                            </h3>
+                            <p className="modal-message">
+                                {modal.message}
+                            </p>
+                            <button
+                                className="modal-button"
+                                onClick={() => {
+                                    setModal({ show: false, message: '', success: modal.success });
+                                    if (modal.success) router.push('/heirloom/admin/panel/dashboard');
+                                }}
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
