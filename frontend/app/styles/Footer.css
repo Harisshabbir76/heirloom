@@ -45,6 +45,8 @@
   margin: 0;
   text-align: center;
   width: 100%;
+  margin-left: -20px;
+  margin-top: 10px;
 }
 
 .cta-card p {
@@ -57,6 +59,7 @@
   text-align: center;
   width: 100%;
   margin-top: -10px;
+  margin-left: -20px;
 }
 
 .buy-now-btn {
@@ -70,6 +73,7 @@
   cursor: pointer;
   text-transform: uppercase;
   transition: transform 0.2s ease;
+  margin-left: -20px;
 }
 
 .buy-now-btn:hover {
@@ -228,6 +232,7 @@
   .cta-card {
     width: 80%;
   }
+
   
   .footer-links {
     gap: 20px;
@@ -271,12 +276,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
   }
 
   .cta-card h2 {
     font-size: 27px;
-    margin: 0;
-    padding: 0;
+    margin-top: 20px;
     text-align: center;
     width: 100%;
   }
@@ -285,14 +290,15 @@
     font-size: 8px;
     line-height: 13px;
     margin: 5px 0 15px;
-    padding: 0;
+    margin-top: -12px;
     text-align: center;
     width: 100%;
   }
 
   .buy-now-btn {
-    margin: 0;
     padding: 5px 22px;
+    margin-top: -32px;
+    margin-left: -15px;
   }
 
   .buy-now-link {
@@ -347,6 +353,8 @@
     margin: 0;
     padding: 0;
     text-align: center;
+    margin-top: 25px;
+    margin-left: -15px;
   }
 
   .cta-card p {
@@ -355,12 +363,15 @@
     margin: 5px 0 12px;
     padding: 0;
     text-align: center;
+    margin-top: -10px;
+    margin-left: -15px;
   }
 
   .buy-now-btn {
-    margin: 0;
+    margin-left: -15px;
     padding: 4px 18px;
     font-size: 8px;
+    margin-bottom: 20px;
   }
   
   .footer-links {

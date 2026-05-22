@@ -245,7 +245,7 @@ function OrderPageContent() {
       <div className="checkout-grid">
         <section className="checkout-form-section" aria-label="Checkout form">
           <div className="checkout-form-inner">
-            <h1 className="checkout-desktop-title">Heirloom By SK</h1>
+            <h1 className="checkout-desktop-title">HEIRLOOM BY SK</h1>
 
             <div className="express-checkout">
               <p className="express-checkout__title">Express checkout</p>
@@ -266,7 +266,7 @@ function OrderPageContent() {
             <form ref={formRef} onSubmit={handlePlaceOrder} className="checkout-form">
               <div className="checkout-section">
                 <div className="checkout-section__header">
-                  <h2>Contact</h2>
+                  <h2>Email</h2>
                   <a href="/login" className="checkout-link">Sign in</a>
                 </div>
                 <div className="form-group">
