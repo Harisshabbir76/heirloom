@@ -25,6 +25,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://heirloom-two-lake.vercel.app",
+      "https://heirloombysk.ae"
     ],
     credentials: true,
   })

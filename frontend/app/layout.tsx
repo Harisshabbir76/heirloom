@@ -3,7 +3,6 @@ import { Cormorant_Garamond, Hanken_Grotesk, Pinyon_Script } from "next/font/goo
 import "./globals.css";
 import LayoutShell from "./components/LayoutShell";
 
-
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
@@ -23,12 +22,11 @@ const pinyonScript = Pinyon_Script({
   weight: ["400"],
 });
 
+// The recommended Next.js configuration: completely leave out the "icons" object 
+// if your icon file is placed directly inside the app/ directory as 'icon.png'.
 export const metadata: Metadata = {
   title: "Heirloom By SK",
   description: "Heirloom By SK – Timeless pieces, crafted for generations.",
-  icons: {
-    icon: "/images/hero_logo.png",
-  },
 };
 
 export default function RootLayout({
