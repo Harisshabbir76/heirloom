@@ -50,10 +50,16 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const [confirmModal, setConfirmModal] = useState<{ show: boolean; groupIndex: number | null; groupName: string }>({ show: false, groupIndex: null, groupName: '' });
 
     useEffect(() => {
-        hasDashboardAccess().then((allowed) => {
-            if (!allowed) router.replace('/404');
-            setIsAuthorized(allowed);
-        });
+        const checkAuth = async () => {
+            const result = await hasDashboardAccess();
+            if (!result.allowed) {
+                router.replace('/404');
+                setIsAuthorized(false);
+            } else {
+                setIsAuthorized(true);
+            }
+        };
+        checkAuth();
     }, [router]);
 
     useEffect(() => {
@@ -179,7 +185,6 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         setVariantGroups(newGroups);
     };
 
-    // Updated removeGroup to show confirmation modal instead of direct removal
     const confirmRemoveGroup = (gIdx: number, groupName: string) => {
         setConfirmModal({ show: true, groupIndex: gIdx, groupName: groupName || 'this group' });
     };
@@ -280,16 +285,16 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                 body: data,
             });
             const result = await response.json();
-                if (result.success) {
-                    setModal({ show: true, message: 'Product updated successfully!', success: true });
-                    setTimeout(() => {
-                        setModal({ show: false, message: '', success: true });
-                        router.push('/heirloom/admin/panel/dashboard');
-                    }, 2500);
-                } else {
-                    setModal({ show: true, message: 'Failed to update product', success: false });
-                    setTimeout(() => setModal({ show: false, message: '', success: false }), 2500);
-                }
+            if (result.success) {
+                setModal({ show: true, message: 'Product updated successfully!', success: true });
+                setTimeout(() => {
+                    setModal({ show: false, message: '', success: true });
+                    router.push('/heirloom/admin/panel/dashboard');
+                }, 2500);
+            } else {
+                setModal({ show: true, message: 'Failed to update product', success: false });
+                setTimeout(() => setModal({ show: false, message: '', success: false }), 2500);
+            }
         } catch (error) {
             console.error('Update Error:', error);
             setModal({ show: true, message: 'Failed to update product', success: false });
