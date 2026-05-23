@@ -22,8 +22,10 @@ export default function Dashboard() {
 
     useEffect(() => {
         const authorizeAndFetchProducts = async () => {
-            const allowed = await hasDashboardAccess();
+            const { allowed, error } = await hasDashboardAccess();
+            console.log('[Dashboard] Auth check result:', { allowed, error });
             if (!allowed) {
+                console.warn('[Dashboard] Access denied, redirecting to /login. Reason:', error);
                 router.replace('/login');
                 setIsAuthorized(false);
                 setLoading(false);

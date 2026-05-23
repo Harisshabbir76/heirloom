@@ -56,7 +56,6 @@ export default function LoginPage() {
       } else {
         router.push('/');
       }
-      router.refresh();
     } catch (err) {
       let message = 'Login failed';
       if (err instanceof Error) message = err.message;

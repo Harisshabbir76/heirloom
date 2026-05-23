@@ -37,6 +37,10 @@ function OrderPageContent() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [orderData, setOrderData] = useState<OrderSummaryData | null>(null);
   const [billingSame, setBillingSame] = useState(true);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountType: string; discountValue: number } | null>(null);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -66,6 +70,79 @@ function OrderPageContent() {
   }, []);
 
   const total = useMemo(() => subtotal, [subtotal]);
+
+  const couponDiscount = useMemo(() => {
+    if (!appliedCoupon) return 0;
+
+    let applicableItems = items;
+    if (!appliedCoupon.appliesToAllProducts && appliedCoupon.productIds && appliedCoupon.productIds.length > 0) {
+      applicableItems = items.filter(item =>
+        appliedCoupon.productIds.some((pid: string) => pid === item.productId)
+      );
+    }
+
+    if (applicableItems.length === 0) return 0;
+
+    const applicableSubtotal = applicableItems.reduce((sum, item) => sum + (item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, 0);
+
+    if (appliedCoupon.discountType === 'percentage') {
+      return (applicableSubtotal * appliedCoupon.discountValue) / 100;
+    } else {
+      return Math.min(appliedCoupon.discountValue, applicableSubtotal);
+    }
+  }, [appliedCoupon, items]);
+
+  const discountedTotal = useMemo(() => Math.max(0, subtotal - couponDiscount), [subtotal, couponDiscount]);
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+
+    setCouponLoading(true);
+    setCouponError('');
+
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
+
+      const cartProductIds = items.map(item => item.productId);
+
+      const response = await fetch(`${normalizedBase}/api/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          cartProductIds,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setAppliedCoupon({
+          code: data.data.code,
+          discountType: data.data.discountType,
+          discountValue: data.data.discountValue,
+          appliesToAllProducts: data.data.appliesToAllProducts,
+          productIds: data.data.productIds,
+        });
+        setCouponError('');
+      } else {
+        setCouponError(data.message || 'Invalid coupon code');
+        setAppliedCoupon(null);
+      }
+    } catch {
+      setCouponError('Failed to apply coupon');
+      setAppliedCoupon(null);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponCode('');
+    setAppliedCoupon(null);
+    setCouponError('');
+  };
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
@@ -125,7 +202,9 @@ function OrderPageContent() {
         body: JSON.stringify({
             items: items.map(item => ({ ...item, giftWrap: item.giftWrap ?? false })),
             subtotal,
-            total: subtotal,
+            total: discountedTotal,
+            couponCode: appliedCoupon ? appliedCoupon.code : null,
+            couponDiscount: couponDiscount,
             currency: currency ?? 'AED',
             contact,
             operation_id,
@@ -466,16 +545,96 @@ function OrderPageContent() {
                 <span>Subtotal</span>
                 <span className="summary-val">{formatMoney(subtotal, currency)}</span>
               </div>
+
+              {appliedCoupon && (
+                <>
+                  <div className="summary-row" style={{ color: '#2d8a2d' }}>
+                    <span>Coupon ({appliedCoupon.code})</span>
+                    <span className="summary-val">-{formatMoney(couponDiscount, currency)}</span>
+                  </div>
+                </>
+              )}
+
               <div className="summary-divider" />
 
               <div className="summary-row summary-row--total">
-                <span className="total-label">Total</span>
+                <span className="total-label">{appliedCoupon ? 'Total After Discount' : 'Total'}</span>
                 <span className="total-val">
                   <span className="total-currency">{currency ?? 'AED'}</span>
-                  {total.toFixed(2)}
+                  {discountedTotal.toFixed(2)}
                 </span>
               </div>
             </div>
+
+            {!isEmpty && !appliedCoupon && (
+              <div className="coupon-section" style={{ marginTop: '16px', padding: '12px', borderTop: '1px solid #eee' }}>
+                <div className="coupon-input-group" style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    placeholder="Coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={applyCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    style={{
+                      padding: '10px 16px',
+                      background: '#350008',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontSize: '14px',
+                      cursor: couponLoading || !couponCode.trim() ? 'not-allowed' : 'pointer',
+                      opacity: couponLoading || !couponCode.trim() ? 0.6 : 1,
+                    }}
+                  >
+                    {couponLoading ? 'Applying...' : 'Apply'}
+                  </button>
+                </div>
+                {couponError && (
+                  <p style={{ color: '#d9383a', fontSize: '12px', marginTop: '6px' }}>{couponError}</p>
+                )}
+              </div>
+            )}
+
+            {appliedCoupon && (
+              <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #eee' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '13px', color: '#2d8a2d' }}>
+                    Coupon applied: <strong>{appliedCoupon.code}</strong>
+                    <br />
+                    <span style={{ fontSize: '11px' }}>
+                      {appliedCoupon.discountType === 'percentage'
+                        ? `${appliedCoupon.discountValue}% off`
+                        : `${formatMoney(appliedCoupon.discountValue, currency)} off`}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={removeCoupon}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#d9383a',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </aside>
       </div>

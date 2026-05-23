@@ -208,8 +208,12 @@ exports.login = async (req, res) => {
 exports.dashboardAccess = async (req, res) => {
   try {
     const payload = getUserFromRequest(req);
-    if (!payload || !isAdminEmail(payload.email)) {
-      return res.status(404).json({ success: false, message: 'Not found' });
+    if (!payload) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    if (!isAdminEmail(payload.email)) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
     }
 
     return res.status(200).json({

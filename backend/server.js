@@ -11,6 +11,7 @@ const siteContentRoutes = require('./routes/siteContentRoutes');
 const cookieParser = require('cookie-parser');
 const checkoutRoutes = require('./routes/checkoutRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
+const couponRoutes = require('./routes/couponRoutes');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/site-content', siteContentRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/webhooks', webhookRoutes);
+app.use('/api/coupons', couponRoutes);
 
 // Error Handler (Simple)
 

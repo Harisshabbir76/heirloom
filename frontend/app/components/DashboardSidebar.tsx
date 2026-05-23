@@ -12,6 +12,7 @@ const links = [
     { href: '/heirloom/admin/panel/dashboard/faq', label: 'FAQ' },
     { href: '/heirloom/admin/panel/dashboard/policies', label: 'Policies' },
     { href: '/heirloom/admin/panel/dashboard/story-memories-shop', label: 'Story Memories Shop' },
+    { href: '/heirloom/admin/panel/dashboard/coupons', label: 'Coupons' },
 ];
 
 export default function DashboardSidebar() {
