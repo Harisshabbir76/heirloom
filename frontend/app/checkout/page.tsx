@@ -11,7 +11,13 @@ function formatMoney(amount: number, currency?: string) {
   return `${cur} ${amount.toFixed(2)}`;
 }
 
-// Shipping charges removed — totals are derived from cart subtotal only
+type AppliedCoupon = {
+  code: string;
+  discountType: string;
+  discountValue: number;
+  appliesToAllProducts: boolean;
+  productIds: string[];
+};
 
 type OrderSummaryData = {
   items: CartItem[];
@@ -38,7 +44,7 @@ function OrderPageContent() {
   const [orderData, setOrderData] = useState<OrderSummaryData | null>(null);
   const [billingSame, setBillingSame] = useState(true);
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountType: string; discountValue: number } | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
 
@@ -83,7 +89,10 @@ function OrderPageContent() {
 
     if (applicableItems.length === 0) return 0;
 
-    const applicableSubtotal = applicableItems.reduce((sum, item) => sum + (item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, 0);
+    const applicableSubtotal = applicableItems.reduce(
+      (sum, item) => sum + (item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity,
+      0
+    );
 
     if (appliedCoupon.discountType === 'percentage') {
       return (applicableSubtotal * appliedCoupon.discountValue) / 100;
@@ -123,7 +132,7 @@ function OrderPageContent() {
           discountType: data.data.discountType,
           discountValue: data.data.discountValue,
           appliesToAllProducts: data.data.appliesToAllProducts,
-          productIds: data.data.productIds,
+          productIds: data.data.productIds ?? [],
         });
         setCouponError('');
       } else {
@@ -187,28 +196,28 @@ function OrderPageContent() {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
 
-      // Generate a unique client-side UUID as the operation_id (with safe browser fallback)
-      const operation_id = (typeof self !== 'undefined' && self.crypto && typeof self.crypto.randomUUID === 'function')
-        ? self.crypto.randomUUID()
-        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-          });
+      const operation_id =
+        typeof self !== 'undefined' && self.crypto && typeof self.crypto.randomUUID === 'function'
+          ? self.crypto.randomUUID()
+          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+              const r = (Math.random() * 16) | 0;
+              const v = c === 'x' ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
+            });
 
       const response = await fetch(`${normalizedBase}/api/checkout/create-intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            items: items.map(item => ({ ...item, giftWrap: item.giftWrap ?? false })),
-            subtotal,
-            total: discountedTotal,
-            couponCode: appliedCoupon ? appliedCoupon.code : null,
-            couponDiscount: couponDiscount,
-            currency: currency ?? 'AED',
-            contact,
-            operation_id,
-          }),
+          items: items.map(item => ({ ...item, giftWrap: item.giftWrap ?? false })),
+          subtotal,
+          total: discountedTotal,
+          couponCode: appliedCoupon ? appliedCoupon.code : null,
+          couponDiscount: couponDiscount,
+          currency: currency ?? 'AED',
+          contact,
+          operation_id,
+        }),
       });
 
       const data = await response.json().catch(() => null);
@@ -216,7 +225,6 @@ function OrderPageContent() {
         throw new Error(data?.message || 'Unable to start payment');
       }
 
-      // Execute browser redirect directly to Ziina hosted checkout
       if (data.redirect_url) {
         window.location.href = data.redirect_url;
       } else {
@@ -238,7 +246,8 @@ function OrderPageContent() {
           <div className="checkout-success-header">
             <h1 className="checkout-success__title">Thank You For Your Order!</h1>
             <p className="checkout-success__body">
-              Your order has been securely processed. You will receive an email confirmation shortly at <strong>{orderData.contact.email}</strong>.
+              Your order has been securely processed. You will receive an email confirmation shortly at{' '}
+              <strong>{orderData.contact.email}</strong>.
             </p>
           </div>
 
@@ -249,10 +258,13 @@ function OrderPageContent() {
                 <div>
                   <strong>Shipping Address</strong>
                   <p>
-                    {orderData.contact.firstName} {orderData.contact.lastName}<br />
-                    {orderData.contact.address}<br />
+                    {orderData.contact.firstName} {orderData.contact.lastName}
+                    <br />
+                    {orderData.contact.address}
+                    <br />
                     {orderData.contact.apartment && <>{orderData.contact.apartment}<br /></>}
-                    {orderData.contact.city}, {orderData.contact.emirate}<br />
+                    {orderData.contact.city}, {orderData.contact.emirate}
+                    <br />
                     United Arab Emirates
                   </p>
                 </div>
@@ -272,12 +284,10 @@ function OrderPageContent() {
                     </div>
                     <div className="checkout-item__main">
                       <div className="checkout-item__name">{item.productName}</div>
-                      {(item.variantSelections.length > 0 || item.giftWrap) ? (
+                      {item.variantSelections.length > 0 || item.giftWrap ? (
                         <div className="checkout-item__variants">
                           {item.variantSelections.map((v) => (
-                            <span key={`${item.id}-${v.groupName}`}>
-                              {v.optionName}
-                            </span>
+                            <span key={`${item.id}-${v.groupName}`}>{v.optionName}</span>
                           ))}
                           {item.giftWrap && <span>Gift Wrapping (+50 AED)</span>}
                         </div>
@@ -307,7 +317,11 @@ function OrderPageContent() {
             </div>
           </div>
 
-          <button className="place-order-btn" style={{ marginTop: '32px' }} onClick={() => window.location.href = '/'}>
+          <button
+            className="place-order-btn"
+            style={{ marginTop: '32px' }}
+            onClick={() => (window.location.href = '/')}
+          >
             Continue Shopping
           </button>
         </div>
@@ -334,7 +348,11 @@ function OrderPageContent() {
                 type="button"
                 disabled={isEmpty || placingOrder}
               >
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay" height="20" />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg"
+                  alt="Google Pay"
+                  height="20"
+                />
               </button>
             </div>
 
@@ -408,15 +426,32 @@ function OrderPageContent() {
                   <div className="payment-box__header">
                     <span className="payment-box__title">Credit card</span>
                     <div className="payment-icons">
-                      <img src="https://cdn.shopify.com/s/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg" alt="Visa" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="Amex" />
+                      <img
+                        src="https://cdn.shopify.com/s/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg"
+                        alt="Visa"
+                      />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                        alt="Mastercard"
+                      />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg"
+                        alt="Amex"
+                      />
                     </div>
                   </div>
                   <div className="payment-box__body">
                     <div className="form-group">
                       <input required type="text" name="cardNumber" placeholder="Card number" />
-                      <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        className="input-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                       </svg>
@@ -427,7 +462,15 @@ function OrderPageContent() {
                       </div>
                       <div className="form-group">
                         <input required type="text" name="securityCode" placeholder="Security code" />
-                        <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                          className="input-icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <circle cx="12" cy="12" r="10"></circle>
                           <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                           <line x1="12" y1="17" x2="12.01" y2="17"></line>
@@ -440,7 +483,10 @@ function OrderPageContent() {
                   </div>
                 </div>
 
-                <label className="checkbox-label" style={{ marginTop: '16px', marginBottom: billingSame ? '0' : '16px' }}>
+                <label
+                  className="checkbox-label"
+                  style={{ marginTop: '16px', marginBottom: billingSame ? '0' : '16px' }}
+                >
                   <input
                     type="checkbox"
                     name="billingSame"
@@ -452,7 +498,9 @@ function OrderPageContent() {
 
                 {!billingSame && (
                   <div className="billing-address-section">
-                    <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#350008' }}>Billing address</h3>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#350008' }}>
+                      Billing address
+                    </h3>
                     <div className="form-group">
                       <select required name="billingCountry">
                         <option value="UAE">United Arab Emirates</option>
@@ -499,8 +547,6 @@ function OrderPageContent() {
               >
                 {isEmpty ? 'Add items to checkout' : placingOrder ? 'Processing...' : 'Pay now'}
               </button>
-
-              
             </form>
           </div>
         </section>
@@ -521,12 +567,10 @@ function OrderPageContent() {
                     </div>
                     <div className="checkout-item__main">
                       <div className="checkout-item__name">{item.productName}</div>
-                      {(item.variantSelections.length > 0 || item.giftWrap) ? (
+                      {item.variantSelections.length > 0 || item.giftWrap ? (
                         <div className="checkout-item__variants">
                           {item.variantSelections.map((v) => (
-                            <span key={`${item.id}-${v.groupName}`}>
-                              {v.optionName}
-                            </span>
+                            <span key={`${item.id}-${v.groupName}`}>{v.optionName}</span>
                           ))}
                           {item.giftWrap && <span>Gift Wrapping (+50 AED)</span>}
                         </div>
@@ -547,12 +591,10 @@ function OrderPageContent() {
               </div>
 
               {appliedCoupon && (
-                <>
-                  <div className="summary-row" style={{ color: '#2d8a2d' }}>
-                    <span>Coupon ({appliedCoupon.code})</span>
-                    <span className="summary-val">-{formatMoney(couponDiscount, currency)}</span>
-                  </div>
-                </>
+                <div className="summary-row" style={{ color: '#2d8a2d' }}>
+                  <span>Coupon ({appliedCoupon.code})</span>
+                  <span className="summary-val">-{formatMoney(couponDiscount, currency)}</span>
+                </div>
               )}
 
               <div className="summary-divider" />
