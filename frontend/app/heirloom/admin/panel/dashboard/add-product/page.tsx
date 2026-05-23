@@ -34,7 +34,9 @@ export default function AddProduct() {
     const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
     useEffect(() => {
-        hasDashboardAccess().then((allowed) => {
+        hasDashboardAccess().then((result) => {
+            // hasDashboardAccess may return a boolean or { allowed: boolean }
+            const allowed = typeof result === 'boolean' ? result : Boolean(result?.allowed);
             if (!allowed) router.replace('/404');
             setIsAuthorized(allowed);
         });
@@ -410,6 +412,7 @@ export default function AddProduct() {
                         {loading ? 'Saving...' : 'Save Product'}
                     </button>
                 </form>
+
                 {modal.show && (
                     <div className="modal-overlay" onClick={() => setModal({ show: false, message: '', success: modal.success })}>
                         <div className="modal-container" onClick={(e) => e.stopPropagation()}>
