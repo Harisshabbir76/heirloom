@@ -110,6 +110,30 @@ exports.handleZiinaWebhook = async (req, res) => {
           return res.status(404).json({ success: false, message: 'Order not found.' });
         }
 
+        const Product = require('../models/Product');
+
+        // Decrease stock based on purchased quantities (never below 0)
+        await Promise.all(
+          (order.items || []).map(async (item) => {
+            if (!item?.productId) return;
+            const qty = Number(item.quantity) || 0;
+            if (qty <= 0) return;
+
+            // Atomically decrease stock
+            await Product.findOneAndUpdate(
+              { _id: item.productId },
+              { $inc: { stock: -qty } },
+              { new: true }
+            );
+
+            // Clamp to 0 if it went negative
+            await Product.updateOne(
+              { _id: item.productId, stock: { $lt: 0 } },
+              { $set: { stock: 0 } }
+            );
+          })
+        );
+
         order.paymentStatus = 'paid';
         await order.save();
 

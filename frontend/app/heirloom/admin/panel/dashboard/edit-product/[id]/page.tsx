@@ -35,6 +35,12 @@ interface VariantGroup {
 
 export default function EditProduct({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
+    // Defensive: if someone navigates with a trailing slash, Next may still render this page in some cases
+    // but middleware/guard can treat it as a different route.
+    // Keeping this page strict is safer than relying on trailing-slash behavior.
+    if (typeof window !== 'undefined') {
+        // no-op (client-only routes); real redirect is handled by router below
+    }
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -74,7 +80,8 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                         name: p.name,
                         description: p.description,
                         basePrice: p.basePrice != null ? String(p.basePrice) : '',
-                        stock: p.stock ? p.stock.toString() : '',
+                    stock: p.stock != null ? p.stock.toString() : '',
+
                     });
                     setExistingImages(p.images || []);
                     setVariantGroups(p.variantGroups || []);
@@ -255,7 +262,9 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
         data.append('name', formData.name);
         data.append('description', formData.description);
         data.append('basePrice', formData.basePrice);
-        data.append('stock', formData.stock);
+        const normalizedStock = formData.stock === '' ? '' : String(Math.max(0, Number(formData.stock) || 0));
+        data.append('stock', normalizedStock);
+
         data.append('existingImages', JSON.stringify(existingImages));
         if (mainNewImageIndex !== null) data.append('mainNewImageIndex', String(mainNewImageIndex));
 
@@ -334,7 +343,8 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     </div>
                     <div className="form-group">
                         <label>Stock</label>
-                        <input type="number" name="stock" value={formData.stock} onChange={handleProductChange} />
+                        <input type="number" name="stock" min={0} value={formData.stock} onChange={handleProductChange} />
+
                     </div>
 
                     {/* ── Existing images ── */}

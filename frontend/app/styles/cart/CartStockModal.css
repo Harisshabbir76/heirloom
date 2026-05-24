@@ -1,0 +1,206 @@
+.heirloom-cart-stock-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2500;
+}
+
+.heirloom-cart-stock-modal__overlay.is-open {
+  display: flex;
+}
+
+.heirloom-cart-stock-modal {
+  width: min(420px, 92vw);
+  background: #fffdf7;
+  border: 1px solid rgba(53, 0, 8, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 18px 16px;
+}
+
+.heirloom-cart-stock-modal__title {
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #350008;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.heirloom-cart-stock-modal__message {
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 13px;
+  color: #350008;
+  opacity: 0.9;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* Out of stock list styles */
+.heirloom-cart-stock-modal__out-of-stock-list {
+  margin: 16px 0 0 0;
+  text-align: left;
+  padding: 0;
+}
+
+.heirloom-cart-stock-modal__list-title {
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #350008;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.heirloom-cart-stock-modal__out-of-stock-list ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.heirloom-cart-stock-modal__out-of-stock-list li {
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 11px;
+  margin: 6px 0;
+  color: #d9383a;
+  font-weight: 500;
+}
+
+/* Button container for two-button layout */
+.heirloom-cart-stock-modal__buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Cancel button (secondary) */
+.heirloom-cart-stock-modal__cancel {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(53, 0, 8, 0.25);
+  padding: 10px 16px;
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  color: #350008;
+}
+
+.heirloom-cart-stock-modal__cancel:hover {
+  background: rgba(53, 0, 8, 0.05);
+  border-color: #350008;
+}
+
+/* Remove & Proceed button (primary action) */
+.heirloom-cart-stock-modal__remove-and-proceed {
+  flex: 1;
+  background: #350008;
+  color: #fffdf7;
+  border: none;
+  padding: 10px 16px;
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.heirloom-cart-stock-modal__remove-and-proceed:hover {
+  background: #5a0012;
+  transform: scale(1.02);
+}
+
+.heirloom-cart-stock-modal__remove-and-proceed:active {
+  transform: scale(0.98);
+}
+
+/* Close button (single button layout) */
+.heirloom-cart-stock-modal__close {
+  width: 100%;
+  height: 40px;
+  background: #350008;
+  color: #fffdf7;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Hanken Grotesk', var(--font-hanken), sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  margin-top: 20px;
+}
+
+.heirloom-cart-stock-modal__close:hover {
+  background: #5a0012;
+  transform: scale(1.02);
+}
+
+.heirloom-cart-stock-modal__close:active {
+  transform: scale(0.98);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .heirloom-cart-stock-modal {
+    padding: 16px 14px;
+  }
+  
+  .heirloom-cart-stock-modal__title {
+    font-size: 11px;
+  }
+  
+  .heirloom-cart-stock-modal__message {
+    font-size: 12px;
+  }
+  
+  .heirloom-cart-stock-modal__list-title {
+    font-size: 10px;
+  }
+  
+  .heirloom-cart-stock-modal__out-of-stock-list li {
+    font-size: 10px;
+  }
+  
+  .heirloom-cart-stock-modal__cancel,
+  .heirloom-cart-stock-modal__remove-and-proceed {
+    font-size: 9px;
+    padding: 8px 12px;
+  }
+  
+  .heirloom-cart-stock-modal__buttons {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .heirloom-cart-stock-modal {
+    padding: 14px 12px;
+  }
+  
+  .heirloom-cart-stock-modal__title {
+    font-size: 10px;
+  }
+  
+  .heirloom-cart-stock-modal__message {
+    font-size: 11px;
+  }
+  
+  .heirloom-cart-stock-modal__cancel,
+  .heirloom-cart-stock-modal__remove-and-proceed {
+    font-size: 8px;
+    padding: 7px 10px;
+  }
+}

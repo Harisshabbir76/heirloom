@@ -49,15 +49,26 @@ export function getCartSubtotal(): number {
   return getCartItems().reduce((sum, item) => sum + (item.unitPrice + (item.giftWrap ? 50 : 0)) * item.quantity, 0);
 }
 
-export function addToCart(input: Omit<CartItem, 'id'>): CartItem {
+export function addToCart(input: (Omit<CartItem, 'id'> & { stock?: number })): CartItem {
+  if (typeof input.stock === 'number' && input.stock <= 0) {
+    const snapshot = readCart();
+    const id = createItemId(input.productId, input.variantSelections, input.giftWrap);
+    return snapshot.items.find((i) => i.id === id)!;
+  }
+
   const snapshot = readCart();
   const id = createItemId(input.productId, input.variantSelections, input.giftWrap);
 
+  const qtyToAdd = Math.max(0, Math.floor(input.quantity));
+  if (qtyToAdd <= 0) {
+    return snapshot.items.find((i) => i.id === id)!;
+  }
+
   const existing = snapshot.items.find((i) => i.id === id);
   if (existing) {
-    existing.quantity += input.quantity;
+    existing.quantity = Math.max(0, existing.quantity + qtyToAdd);
   } else {
-    snapshot.items.push({ ...input, id });
+    snapshot.items.push({ ...input, quantity: qtyToAdd, id });
   }
 
   writeCart(snapshot);
@@ -67,6 +78,7 @@ export function addToCart(input: Omit<CartItem, 'id'>): CartItem {
 
   return snapshot.items.find((i) => i.id === id)!;
 }
+
 
 export function setCartItemQuantity(id: string, quantity: number) {
   const snapshot = readCart();

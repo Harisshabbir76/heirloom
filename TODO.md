@@ -1,9 +1,8 @@
-- [x] Update backend/controllers/orderController.js to email new order details (customer + products + quantities) to process.env.EMAIL_USER
-- [x] Update backend/controllers/checkoutController.js to email new order details (customer + products + quantities) to process.env.EMAIL_USER
-- [x] Ensure email content does NOT include payment status
+# TODO
 
-- [x] Keep changes minimal; do not modify frontend
-- [x] Quick run: start backend server / sanity check endpoints
-
-
+## Cart out-of-stock validation
+- [ ] Add out-of-stock check + cleanup to `frontend/app/components/cart/CartSidebar.tsx` when cart sidebar opens
+- [ ] Add pop modal UI in `CartSidebar` showing product name(s) are out of stock and removed
+- [ ] Update styles if needed (likely `frontend/app/styles/cart/CartSidebar.css`)
+- [ ] Verify TypeScript build/lint and do a quick manual test flow
 

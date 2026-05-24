@@ -684,3 +684,92 @@
         letter-spacing: 0.35px;
     }
 }
+
+
+/* Stock Status Badge - Top Left Corner of Product Image */
+.shop-stock-status {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    font-family: var(--font-hanken), sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 6px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(2px);
+}
+
+.shop-in-stock {
+    color: #4ade80;
+}
+
+.shop-out-of-stock {
+    color: #ef4444;
+}
+
+/* Ultra-wide screens (1600px+) */
+@media (min-width: 1600px) {
+    .shop-stock-status {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+}
+
+/* Desktop Large (1280px - 1600px) */
+@media (min-width: 1280px) and (max-width: 1600px) {
+    .shop-stock-status {
+        font-size: 9px;
+        padding: 3px 6px;
+    }
+}
+
+/* Desktop (1024px - 1280px) */
+@media (min-width: 1024px) and (max-width: 1280px) {
+    .shop-stock-status {
+        font-size: 8px;
+        padding: 3px 5px;
+    }
+}
+
+/* Tablet Landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .shop-stock-status {
+        font-size: 8px;
+        padding: 2px 5px;
+    }
+}
+
+/* Tablet Portrait (640px - 768px) */
+@media (min-width: 640px) and (max-width: 768px) {
+    .shop-stock-status {
+        font-size: 7px;
+        padding: 2px 4px;
+    }
+}
+
+/* Mobile Landscape (480px - 640px) */
+@media (min-width: 480px) and (max-width: 640px) {
+    .shop-stock-status {
+        font-size: 7px;
+        padding: 2px 4px;
+    }
+}
+
+/* Mobile Small (320px - 480px) */
+@media (min-width: 320px) and (max-width: 480px) {
+    .shop-stock-status {
+        font-size: 6px;
+        padding: 2px 4px;
+    }
+}
+
+/* Mobile Extra Small (up to 320px) */
+@media (max-width: 320px) {
+    .shop-stock-status {
+        font-size: 6px;
+        padding: 2px 3px;
+    }
+}

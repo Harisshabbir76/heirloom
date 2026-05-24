@@ -116,6 +116,11 @@ export default function ShopPage() {
                         objectFit: "cover"
                     }}
                 />
+                
+                {/* Stock Status Badge - Top Left Corner */}
+                <div className={`shop-stock-status ${(product.stock !== undefined && product.stock !== null && product.stock > 0) ? 'shop-in-stock' : 'shop-out-of-stock'}`}>
+                    {(product.stock !== undefined && product.stock !== null && product.stock > 0) ? 'IN STOCK' : 'OUT OF STOCK'}
+                </div>
             </div>
 
             <h3 className="shop-product-name">
@@ -124,7 +129,7 @@ export default function ShopPage() {
 
             <p className="shop-product-price">
                 {getDefaultProductPrice(product)} AED
-              </p>
+            </p>
         </Link>
     );
 

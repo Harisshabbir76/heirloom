@@ -52,6 +52,9 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     const [giftWrap, setGiftWrap] = useState(false);
 
+    const productStock: number = (product as any).stock ?? 0;
+
+
     const sizeGroup = product.variantGroups?.find((group) =>
         group.name.toLowerCase().includes('size')
     );
@@ -63,6 +66,8 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
     };
 
     const handleAddToCart = () => {
+        if (productStock <= 0) return;
+
         const variantSelections = product.variantGroups
             ?.map((group) => {
                 if (selectedOptions[group.name]) {
@@ -82,6 +87,8 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         import('./cart/cartStore').then(({ addToCart }) => {
             addToCart({
+                stock: productStock,
+
                 productId: product._id,
                 productName: product.name,
                 imageUrl,
@@ -151,6 +158,37 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
 
                     {product.description && (
                         <p className="product-detail-top__description">{product.description}</p>
+                    )}
+
+                    {(product as any).stock !== undefined && (product as any).stock !== null ? (
+
+                        <p
+                            style={{
+                                margin: '10px 0 0',
+                                fontSize: '13px',
+                                fontWeight: 800,
+                                color: productStock > 0 ? '#0b7a2a' : '#d9383a',
+
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.06em',
+                            }}
+                        >
+                            {productStock > 0 ? 'IN STOCK' : 'OUT OF STOCK'}
+
+                        </p>
+                    ) : (
+                        <p
+                            style={{
+                                margin: '10px 0 0',
+                                fontSize: '13px',
+                                fontWeight: 800,
+                                color: '#d9383a',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.06em',
+                            }}
+                        >
+                            OUT OF STOCK
+                        </p>
                     )}
 
                     {sizeText && (
@@ -277,8 +315,10 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
                             className="product-detail-top__add"
                             type="button"
                             onClick={handleAddToCart}
+                            disabled={productStock <= 0}
+                            aria-disabled={productStock <= 0}
                         >
-                            ADD TO BAG
+                            {(product as any).stock !== undefined && (product as any).stock !== null && (product as any).stock > 0 ? 'ADD TO BAG' : 'OUT OF STOCK'}
                         </button>
                     </div>
                 </div>
