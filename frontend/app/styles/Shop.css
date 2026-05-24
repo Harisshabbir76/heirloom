@@ -698,16 +698,16 @@
     letter-spacing: 0.5px;
     text-transform: uppercase;
     padding: 3px 6px;
-    background: rgba(0, 0, 0, 0.8);
+    background: #350008;
     backdrop-filter: blur(2px);
 }
 
 .shop-in-stock {
-    color: #4ade80;
+    color: #ffffff;
 }
 
 .shop-out-of-stock {
-    color: #ef4444;
+    color: #ffffff;
 }
 
 /* Ultra-wide screens (1600px+) */
