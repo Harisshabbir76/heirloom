@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import Image from 'next/image'; // 1. Imported the optimized Next.js Image component
 import type { Product, ProductVariantOption } from '../shop/[id]/page';
 import { getProductPrice } from '../lib/productPricing';
 import '../styles/ProductDetailTop.css';
@@ -98,9 +99,17 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
             <div className="product-detail-top__inner">
                 {/* ── Gallery ── */}
                 <div className="product-detail-top__gallery">
-                    <div className="product-detail-top__main-image">
+                    {/* Added relative positioning inline here to safely anchor the 'fill' child asset if your CSS doesn't have it explicitly */}
+                    <div className="product-detail-top__main-image" style={{ position: 'relative', overflow: 'hidden' }}>
                         {mainImage ? (
-                            <img src={mainImage} alt={product.name} />
+                            <Image 
+                                src={mainImage} 
+                                alt={product.name}
+                                fill
+                                priority={true} // Forces the main product luxury showcase image to load immediately above-the-fold
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                                style={{ objectFit: 'cover' }}
+                            />
                         ) : (
                             <div className="product-detail-top__image-fallback">HEIRLOOM BY SK</div>
                         )}
@@ -117,8 +126,15 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
                                     type="button"
                                     onClick={() => setMainImage(image.url)}
                                     aria-label={`View ${product.name} image`}
+                                    style={{ position: 'relative', overflow: 'hidden' }}
                                 >
-                                    <img src={image.url} alt="" />
+                                    <Image 
+                                        src={image.url} 
+                                        alt="" 
+                                        fill
+                                        sizes="100px" // Small footprint layout sizes hint for optimization
+                                        style={{ objectFit: 'cover' }}
+                                    />
                                 </button>
                             ))}
                         </div>
@@ -166,9 +182,16 @@ const ProductDetailTop: React.FC<ProductDetailTopProps> = ({ product }) => {
                                             onClick={() => selectOption(group.name, option)}
                                             title={option.name}
                                             aria-label={option.name}
+                                            style={{ position: 'relative', overflow: 'hidden' }}
                                         >
                                             {option.image?.url ? (
-                                                <img src={option.image.url} alt="" />
+                                                <Image 
+                                                    src={option.image.url} 
+                                                    alt="" 
+                                                    fill
+                                                    sizes="50px"
+                                                    style={{ objectFit: 'cover' }}
+                                                />
                                             ) : (
                                                 <span>{option.name.slice(0, 1)}</span>
                                             )}
