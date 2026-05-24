@@ -44,6 +44,15 @@ const storyMemoryImageSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const keyedImageSchema = new mongoose.Schema(
+  {
+    key: { type: String, required: true },
+    label: { type: String, required: true },
+    image: imageSchema,
+  },
+  { _id: false }
+);
+
 const siteContentSchema = new mongoose.Schema(
   {
     singletonKey: {
@@ -55,6 +64,7 @@ const siteContentSchema = new mongoose.Schema(
     faqs: [faqItemSchema],
     legalPolicies: [legalPolicySchema],
     storyMemoryShopImages: [storyMemoryImageSchema],
+    ourStoryImages: [keyedImageSchema],
   },
   { timestamps: true }
 );

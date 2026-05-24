@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Product = require('../models/Product');
 const nodemailer = require('nodemailer');
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
@@ -106,6 +107,33 @@ exports.createPaymentIntent = async (req, res) => {
 
     if (!operation_id) {
       return res.status(400).json({ success: false, message: 'Client operation ID (UUID) is required.' });
+    }
+
+    const requestedQuantities = items.reduce((map, item) => {
+      if (!item.productId) return map;
+      const productId = String(item.productId);
+      const quantity = Math.max(0, Math.floor(Number(item.quantity) || 0));
+      map.set(productId, (map.get(productId) || 0) + quantity);
+      return map;
+    }, new Map());
+
+    for (const [productId, quantity] of requestedQuantities.entries()) {
+      const product = await Product.findById(productId).select('name stock');
+      if (!product || typeof product.stock !== 'number' || product.stock <= 0) {
+        const item = items.find((cartItem) => String(cartItem.productId) === productId);
+        const productName = product?.name || item?.productName || 'This product';
+        return res.status(409).json({
+          success: false,
+          message: `${productName} is out of stock. Please remove it from your cart to proceed.`,
+        });
+      }
+
+      if (quantity > product.stock) {
+        return res.status(409).json({
+          success: false,
+          message: `${product.name} only has ${product.stock} in stock. Please update your cart to proceed.`,
+        });
+      }
     }
 
     const calculatedTotal = Number(total);

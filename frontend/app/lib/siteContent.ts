@@ -28,10 +28,20 @@ export interface StoryMemoryShopImage {
     };
 }
 
+export interface OurStoryImage {
+    key: string;
+    label: string;
+    image?: {
+        url: string;
+        cloudinaryId?: string;
+    };
+}
+
 export interface SiteContent {
     faqs: FaqItem[];
     legalPolicies: LegalPolicy[];
     storyMemoryShopImages: StoryMemoryShopImage[];
+    ourStoryImages: OurStoryImage[];
 }
 
 export const defaultFaqs: FaqItem[] = [
@@ -176,6 +186,26 @@ export const defaultStoryMemoryShopImages: StoryMemoryShopImage[] = Array.from({
     image: { url: `/images/memories${index + 1}.png` },
 }));
 
+export const ourStoryImageSlots: OurStoryImage[] = [
+    { key: 'hero', label: 'Our story hero image' },
+    { key: 'key', label: 'Replace key image' },
+    { key: 'box1', label: 'Box 1 image replace' },
+    { key: 'box2', label: 'Box 2 replace' },
+    { key: 'keychain', label: 'Replace key chain image' },
+    { key: 'ring', label: 'Replace ring image' },
+    { key: 'gloves', label: 'Gloves image replace' },
+    { key: 'bell', label: 'Bell image replace' },
+    { key: 'necklace', label: 'Necklace image' },
+    { key: 'memory1', label: '1' },
+    { key: 'memory2', label: '2' },
+    { key: 'memory3', label: '3' },
+    { key: 'memory4', label: '4' },
+    { key: 'memory5', label: '5' },
+    { key: 'memory6', label: '6' },
+];
+
+export const defaultOurStoryImages: OurStoryImage[] = ourStoryImageSlots.map((slot) => ({ ...slot }));
+
 export function getApiBase() {
     return (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/+$/u, '').replace(/\/api$/u, '');
 }
@@ -187,10 +217,11 @@ export async function fetchSiteContent(): Promise<SiteContent> {
             faqs: defaultFaqs,
             legalPolicies: defaultLegalPolicies,
             storyMemoryShopImages: defaultStoryMemoryShopImages,
+            ourStoryImages: defaultOurStoryImages,
         };
     }
 
-    const response = await fetch(`${base}/api/site-content`, { credentials: 'include' });
+    const response = await fetch(`${base}/api/site-content`, { credentials: 'include', cache: 'no-store' });
     const result = await response.json();
 
     if (!response.ok || !result.success) {
@@ -215,5 +246,12 @@ export async function fetchSiteContent(): Promise<SiteContent> {
         storyMemoryShopImages: result.data.storyMemoryShopImages?.length
             ? result.data.storyMemoryShopImages
             : defaultStoryMemoryShopImages,
+        ourStoryImages: result.data.ourStoryImages?.length
+            ? result.data.ourStoryImages
+            : defaultOurStoryImages,
     };
+}
+
+export function getOurStoryImageUrl(images: OurStoryImage[], key: string) {
+    return images.find((image) => image.key === key)?.image?.url;
 }

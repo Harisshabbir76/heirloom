@@ -21,7 +21,11 @@ const memories = [
     { src: memorySix, alt: "Gloved hand with a perfume bottle" },
 ];
 
-const StoryMemories: React.FC = () => {
+type StoryMemoriesProps = {
+    imageUrls?: Array<string | undefined>;
+};
+
+const StoryMemories: React.FC<StoryMemoriesProps> = ({ imageUrls = [] }) => {
     return (
         <section className="story-memories">
             
@@ -43,10 +47,10 @@ const StoryMemories: React.FC = () => {
                 </p>
 
                 <div className="story-memories__gallery" aria-label="Memory image collection">
-                    {memories.map((memory) => (
+                    {memories.map((memory, index) => (
                         <div className="story-memories__image-wrap" key={memory.alt}>
                             <Image
-                                src={memory.src}
+                                src={imageUrls[index] || memory.src}
                                 alt={memory.alt}
                                 className="story-memories__image"
                                 sizes="(max-width: 768px) 46vw, 156px"
@@ -60,4 +64,3 @@ const StoryMemories: React.FC = () => {
 };
 
 export default StoryMemories;
-

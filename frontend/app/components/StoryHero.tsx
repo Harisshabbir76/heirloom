@@ -1,9 +1,16 @@
 import React from 'react';
 import '../styles/StoryHero.css';
 
-const StoryHero = () => {
+type StoryHeroProps = {
+  imageUrl?: string;
+};
+
+const StoryHero = ({ imageUrl }: StoryHeroProps) => {
   return (
-    <section className="story-hero-section">
+    <section
+      className="story-hero-section"
+      style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
+    >
       <div className="story-hero-overlay"></div>
       <div className="story-hero-image-dim"></div>
       <div className="story-hero-content">

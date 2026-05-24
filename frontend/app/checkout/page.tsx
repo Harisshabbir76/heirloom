@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getCartItems, clearCart } from '../components/cart/cartStore';
+import { findCartStockIssue } from '../components/cart/stockValidation';
 import type { CartItem } from '../components/cart/cartTypes';
 import '../../app/styles/checkout/Checkout.css';
 
@@ -47,6 +48,7 @@ function OrderPageContent() {
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
+  const [stockModalMessage, setStockModalMessage] = useState<string | null>(null);
 
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -74,8 +76,6 @@ function OrderPageContent() {
     window.addEventListener('heirloom_cart_updated', sync);
     return () => window.removeEventListener('heirloom_cart_updated', sync);
   }, []);
-
-  const total = useMemo(() => subtotal, [subtotal]);
 
   const couponDiscount = useMemo(() => {
     if (!appliedCoupon) return 0;
@@ -177,68 +177,18 @@ function OrderPageContent() {
     verifyPayment();
   }, [searchParams]);
 
-  const [stockModal, setStockModal] = useState<{ show: boolean; message: string }>({ show: false, message: '' });
-
-  async function validateCartStockAndClean(): Promise<{ cleaned: boolean }> {
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
-    const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
-
-    const uniqueIds = Array.from(new Set(items.map((it) => it.productId)));
-    if (uniqueIds.length === 0) return { cleaned: false };
-
-    const response = await fetch(`${normalizedBase}/products`, { method: 'GET' });
-    if (!response.ok) return { cleaned: false };
-    const data = await response.json();
-
-    if (!(data && data.success && Array.isArray(data.data))) return { cleaned: false };
-
-    const stockById = new Map<string, number>();
-    (data.data as any[]).forEach((p) => {
-      stockById.set(String(p._id), (p.stock ?? 0) as number);
-    });
-
-    const stillInStock = items.filter((it) => {
-      const stock = stockById.get(String(it.productId));
-      return typeof stock === 'number' ? stock > 0 : true;
-    });
-
-    const removed = items.filter((it) => !stillInStock.some((x) => x.id === it.id));
-
-    if (removed.length > 0) {
-      setItems(stillInStock);
-      window.dispatchEvent(new Event('heirloom_cart_updated'));
-
-      // Remove from local cart as well
-      removed.forEach((r) => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { removeCartItem } = require('../components/cart/cartStore');
-        removeCartItem(r.id);
-      });
-
-      const names = Array.from(new Set(removed.map((r) => r.productName))).slice(0, 3);
-      setStockModal({
-        show: true,
-        message: `${names.join(', ')} ${names.length > 1 ? 'are' : 'is'} out of stock. Removed from your bag.`,
-      });
-      return { cleaned: true };
-    }
-
-    return { cleaned: false };
-  }
-
   async function handlePlaceOrder(e: React.FormEvent) {
     e.preventDefault();
     if (items.length === 0 || placingOrder) return;
 
-    const cleaned = await validateCartStockAndClean();
-    if (cleaned.cleaned) {
-      setPlacingOrder(false);
-      return;
-    }
-
-
     setPlacingOrder(true);
     try {
+      const stockIssue = await findCartStockIssue(items);
+      if (stockIssue) {
+        setStockModalMessage(stockIssue.message);
+        return;
+      }
+
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const email = formData.get('contact') as string || '';
       const firstName = formData.get('firstName') as string || '';
@@ -286,8 +236,8 @@ function OrderPageContent() {
       } else {
         throw new Error('Redirect URL not returned by payment gateway.');
       }
-    } catch (err: any) {
-      alert(err.message || 'An error occurred during checkout.');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'An error occurred during checkout.');
     } finally {
       setPlacingOrder(false);
     }
@@ -387,6 +337,18 @@ function OrderPageContent() {
 
   return (
     <main className="checkout-page">
+      {stockModalMessage && (
+        <div className="checkout-stock-modal__overlay" onClick={() => setStockModalMessage(null)}>
+          <div className="checkout-stock-modal__container" onClick={(e) => e.stopPropagation()}>
+            <div className="checkout-stock-modal__icon">!</div>
+            <h3 className="checkout-stock-modal__title">Out of Stock</h3>
+            <p className="checkout-stock-modal__message">{stockModalMessage}</p>
+            <button className="checkout-stock-modal__button" type="button" onClick={() => setStockModalMessage(null)}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
       <div className="checkout-header-mobile">
         <h1>Heirloom By SK</h1>
       </div>

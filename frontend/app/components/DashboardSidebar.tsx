@@ -9,6 +9,7 @@ const links = [
     { href: '/heirloom/admin/panel/dashboard', label: 'products' },
     { href: '/heirloom/admin/panel/dashboard/add-product', label: 'Add Products' },
     { href: '/heirloom/admin/panel/dashboard/orders', label: 'Orders' },
+    { href: '/heirloom/admin/panel/dashboard/our-story', label: 'Our Story' },
     { href: '/heirloom/admin/panel/dashboard/faq', label: 'FAQ' },
     { href: '/heirloom/admin/panel/dashboard/policies', label: 'Policies' },
 

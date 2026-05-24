@@ -9,7 +9,17 @@ import box2Image from "../images/story-box2.png";
 import keychainImage from "../images/keychain.png";
 import ringsImage from "../images/rings.jpg";
 
-const OurStory: React.FC = () => {
+type OurStoryProps = {
+    images?: {
+        key?: string;
+        box1?: string;
+        box2?: string;
+        keychain?: string;
+        ring?: string;
+    };
+};
+
+const OurStory: React.FC<OurStoryProps> = ({ images }) => {
     return (
         <section className="our-story">
             <div className="our-story__heading-block" id="story-intro">
@@ -29,7 +39,7 @@ const OurStory: React.FC = () => {
 
                 <div className="our-story__key-wrapper">
                     <Image
-                        src={keyImage}
+                        src={images?.key || keyImage}
                         alt="Decorative key"
                         className="our-story__key"
                         priority
@@ -41,7 +51,7 @@ const OurStory: React.FC = () => {
                 <div className="our-story__images-wrapper">
                     <div className="our-story__image-main">
                         <Image
-                            src={box1Image}
+                            src={images?.box1 || box1Image}
                             alt="Heirloom jewelry box"
                             className="our-story__box-image"
                             sizes="(max-width: 768px) 78vw, 410px"
@@ -51,7 +61,7 @@ const OurStory: React.FC = () => {
 
                     <div className="our-story__image-overlay">
                         <Image
-                            src={box2Image}
+                            src={images?.box2 || box2Image}
                             alt="Heirloom box held in hands"
                             className="our-story__box-image"
                             sizes="(max-width: 768px) 34vw, 122px"
@@ -87,7 +97,7 @@ const OurStory: React.FC = () => {
             <div className="our-story__craft-block">
                 <div className="our-story__craft-inner">
                     <Image
-                        src={keychainImage}
+                        src={images?.keychain || keychainImage}
                         alt="Keychain detail on velvet"
                         className="our-story__craft-image our-story__craft-image--keychain"
                         sizes="120px"
@@ -116,7 +126,7 @@ const OurStory: React.FC = () => {
                     </div>
 
                     <Image
-                        src={ringsImage}
+                        src={images?.ring || ringsImage}
                         alt="Rings resting in velvet"
                         className="our-story__craft-image our-story__craft-image--rings"
                         sizes="120px"

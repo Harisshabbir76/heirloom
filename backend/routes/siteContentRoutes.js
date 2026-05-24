@@ -6,6 +6,7 @@ const {
   updateFaqs,
   updateLegalPolicies,
   updateStoryMemoryShopImages,
+  updateOurStoryImages,
 } = require('../controllers/siteContentController');
 const { upload } = require('../config/cloudinary');
 
@@ -39,5 +40,6 @@ router.get('/', getSiteContent);
 router.put('/faqs', requireAdmin, updateFaqs);
 router.put('/legal', requireAdmin, updateLegalPolicies);
 router.put('/story-memory-shop', requireAdmin, upload.any(), updateStoryMemoryShopImages);
+router.put('/our-story', requireAdmin, upload.any(), updateOurStoryImages);
 
 module.exports = router;

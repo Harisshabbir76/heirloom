@@ -7,7 +7,15 @@ import bellImage from "../images/bell.jpg";
 import necklaceImage from "../images/necklace.jpg";
 import stripeImage from "../images/Stripe.jpg";
 
-const StoryDetails: React.FC = () => {
+type StoryDetailsProps = {
+    images?: {
+        gloves?: string;
+        bell?: string;
+        necklace?: string;
+    };
+};
+
+const StoryDetails: React.FC<StoryDetailsProps> = ({ images }) => {
     return (
         <section className="story-details">
             <Image
@@ -29,7 +37,7 @@ const StoryDetails: React.FC = () => {
                 <div className="story-details__gallery" aria-label="Jewelry detail images">
                     <div className="story-details__image-wrap story-details__image-wrap--side">
                         <Image
-                            src={glovesImage}
+                            src={images?.gloves || glovesImage}
                             alt="Jewelry arranged beside gloves"
                             className="story-details__image"
                             sizes="(max-width: 768px) 82vw, 210px"
@@ -38,7 +46,7 @@ const StoryDetails: React.FC = () => {
 
                     <div className="story-details__image-wrap story-details__image-wrap--center">
                         <Image
-                            src={bellImage}
+                            src={images?.bell || bellImage}
                             alt="Gloved hand touching a service bell"
                             className="story-details__image"
                             sizes="(max-width: 768px) 82vw, 280px"
@@ -47,7 +55,7 @@ const StoryDetails: React.FC = () => {
 
                     <div className="story-details__image-wrap story-details__image-wrap--side">
                         <Image
-                            src={necklaceImage}
+                            src={images?.necklace || necklaceImage}
                             alt="Pearl necklace detail"
                             className="story-details__image"
                             sizes="(max-width: 768px) 82vw, 210px"

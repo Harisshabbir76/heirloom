@@ -195,10 +195,31 @@ const defaultStoryMemoryShopImages = Array.from({ length: 6 }, (_, index) => ({
   label: `Image ${index + 1}`,
 }));
 
+const ourStoryImageSlots = [
+  { key: 'hero', label: 'Our story hero image' },
+  { key: 'key', label: 'Replace key image' },
+  { key: 'box1', label: 'Box 1 image replace' },
+  { key: 'box2', label: 'Box 2 replace' },
+  { key: 'keychain', label: 'Replace key chain image' },
+  { key: 'ring', label: 'Replace ring image' },
+  { key: 'gloves', label: 'Gloves image replace' },
+  { key: 'bell', label: 'Bell image replace' },
+  { key: 'necklace', label: 'Necklace image' },
+  { key: 'memory1', label: 'Story memories image 1' },
+  { key: 'memory2', label: 'Story memories image 2' },
+  { key: 'memory3', label: 'Story memories image 3' },
+  { key: 'memory4', label: 'Story memories image 4' },
+  { key: 'memory5', label: 'Story memories image 5' },
+  { key: 'memory6', label: 'Story memories image 6' },
+];
+
+const defaultOurStoryImages = ourStoryImageSlots.map((slot) => ({ ...slot }));
+
 const getDefaultContent = () => ({
   faqs: defaultFaqs,
   legalPolicies: defaultLegalPolicies,
   storyMemoryShopImages: defaultStoryMemoryShopImages,
+  ourStoryImages: defaultOurStoryImages,
 });
 
 const getOrCreateContent = async () => {
@@ -313,6 +334,55 @@ exports.updateStoryMemoryShopImages = async (req, res) => {
     content.storyMemoryShopImages = nextImages;
     await content.save();
     res.status(200).json({ success: true, data: content.storyMemoryShopImages });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+exports.updateOurStoryImages = async (req, res) => {
+  try {
+    const content = await getOrCreateContent();
+    const files = req.files || [];
+    const existingRaw = req.body.existingImages;
+    let existingImages = content.ourStoryImages || defaultOurStoryImages;
+
+    if (existingRaw) {
+      try {
+        existingImages = JSON.parse(existingRaw);
+      } catch (error) {
+        return res.status(400).json({ success: false, message: 'Invalid existingImages JSON format' });
+      }
+    }
+
+    const existingByKey = new Map(
+      existingImages.map((item) => [item.key, item])
+    );
+
+    const nextImages = ourStoryImageSlots.map((slot) => {
+      const file = files.find((item) => item.fieldname === slot.key);
+      if (file) {
+        return {
+          ...slot,
+          image: {
+            url: file.path,
+            cloudinaryId: file.filename,
+          },
+        };
+      }
+
+      const existing = existingByKey.get(slot.key);
+      const existingImage = existing && existing.image && existing.image.url && existing.image.cloudinaryId
+        ? existing.image
+        : undefined;
+      return {
+        ...slot,
+        image: existingImage,
+      };
+    });
+
+    content.ourStoryImages = nextImages;
+    await content.save();
+    res.status(200).json({ success: true, data: content.ourStoryImages });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
