@@ -66,8 +66,15 @@
 
 .shop-carousel .products-grid {
     margin-bottom: 0;
+    overflow: hidden;
 }
 
+/* Carousel smooth transition */
+.products-grid--carousel {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Carousel Button Styles with Centered Icons */
 .shop-carousel__button {
     width: 42px;
     height: 42px;
@@ -75,17 +82,50 @@
     background: transparent;
     color: #350008;
     border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
     font-family: var(--font-hanken), sans-serif;
     font-size: 18px;
     line-height: 1;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
 }
 
-.shop-carousel__button:hover {
+.shop-carousel__button svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.shop-carousel__button:hover:not(:disabled) {
     background: #350008;
     color: #fffdf7;
     border-color: #350008;
+    transform: scale(1.05);
+}
+
+.shop-carousel__button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.shop-carousel__button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Smooth carousel item transitions - no blinking */
+.shop-carousel-item {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    will-change: transform;
+}
+
+/* Subtle fade for new items */
+.products-grid--carousel {
+    will-change: transform;
 }
 
 .shop-product-card {
@@ -198,6 +238,11 @@
         padding: 120px 0;
         font-size: 11px;
     }
+
+    .shop-carousel__button svg {
+        width: 22px;
+        height: 22px;
+    }
 }
 
 /* Desktop Large (1280px - 1600px) */
@@ -304,6 +349,11 @@
         width: 38px;
         height: 38px;
     }
+
+    .shop-carousel__button svg {
+        width: 18px;
+        height: 18px;
+    }
     
     .shop-image-wrapper {
         width: 210px;
@@ -363,7 +413,11 @@
     .shop-carousel__button {
         width: 34px;
         height: 34px;
-        font-size: 16px;
+    }
+
+    .shop-carousel__button svg {
+        width: 16px;
+        height: 16px;
     }
     
     .shop-image-wrapper {
@@ -426,7 +480,11 @@
     .shop-carousel__button {
         width: 30px;
         height: 30px;
-        font-size: 14px;
+    }
+
+    .shop-carousel__button svg {
+        width: 14px;
+        height: 14px;
     }
 
     .products-grid--three .shop-image-wrapper {
@@ -496,7 +554,11 @@
     .shop-carousel__button {
         width: 28px;
         height: 28px;
-        font-size: 13px;
+    }
+
+    .shop-carousel__button svg {
+        width: 12px;
+        height: 12px;
     }
 
     .products-grid--three .shop-image-wrapper {
@@ -573,7 +635,11 @@
     .shop-carousel__button {
         width: 26px;
         height: 26px;
-        font-size: 12px;
+    }
+
+    .shop-carousel__button svg {
+        width: 12px;
+        height: 12px;
     }
 
     .products-grid--three .shop-image-wrapper {

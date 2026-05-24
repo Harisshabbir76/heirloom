@@ -1,9 +1,9 @@
-# TODO
+- [x] Update backend/controllers/orderController.js to email new order details (customer + products + quantities) to process.env.EMAIL_USER
+- [x] Update backend/controllers/checkoutController.js to email new order details (customer + products + quantities) to process.env.EMAIL_USER
+- [x] Ensure email content does NOT include payment status
 
-- [x] Replace cart sidebar "ADD TO CHECKOUT" redirect from `/order` to `/checkout`.
+- [x] Keep changes minimal; do not modify frontend
+- [x] Quick run: start backend server / sanity check endpoints
 
-- [x] Replace checkout cancel/failed redirects that go to `/order` with `/checkout` (or appropriate checkout flow) to ensure consistency.
 
-- [ ] Search for any remaining `/order` links used for checkout/proceed buttons and replace them with `/checkout`.
-- [ ] Run frontend typecheck/lint (if available) to ensure no broken imports/usage.
 

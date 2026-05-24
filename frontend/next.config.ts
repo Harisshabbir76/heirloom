@@ -1,16 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 1. DO NOT use output: "export". Let Next.js run its native server bundle.
+  // 1. Force the compiler to pack everything neatly into a dedicated standalone server file tree
+  output: "standalone",
   
-  // 2. Optimizes how image assets are served from the local /public folder on Hostinger
+  // 2. Disable asset optimization flags so Hostinger can read static assets directly
   images: {
-    unoptimized: true, 
+    unoptimized: true,
   },
   
-  // 3. Helps Hostinger's proxy map your frontend URLs cleanly to the right directories
   trailingSlash: true,
-  
   reactStrictMode: true,
 };
 

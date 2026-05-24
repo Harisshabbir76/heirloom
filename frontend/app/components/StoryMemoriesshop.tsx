@@ -1,29 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import "../styles/StoryMemoriesshop.css";
 import stripeImage from "../images/Stripe.jpg";
-import {
-    defaultStoryMemoryShopImages,
-    fetchSiteContent,
-    StoryMemoryShopImage,
-} from "../lib/siteContent";
 
 const StoryMemories: React.FC = () => {
-    const [memories, setMemories] = useState<StoryMemoryShopImage[]>(defaultStoryMemoryShopImages);
-
-    useEffect(() => {
-        fetchSiteContent()
-            .then((content) => {
-                const savedImages = content.storyMemoryShopImages.map((item, index) => ({
-                    label: item.label || `Image ${index + 1}`,
-                    image: item.image || defaultStoryMemoryShopImages[index]?.image,
-                }));
-                setMemories(savedImages.length ? savedImages : defaultStoryMemoryShopImages);
-            })
-            .catch(() => setMemories(defaultStoryMemoryShopImages));
-    }, []);
 
     return (
         <section className="story-memories">
@@ -48,17 +30,7 @@ const StoryMemories: React.FC = () => {
                     THIS IS WHERE YOUR MEMORIES BELONG.
                 </p>
 
-                <div className="story-memories__gallery" aria-label="Memory image collection">
-                    {memories.slice(0, 6).map((memory, index) => (
-                        <div className="story-memories__image-wrap" key={memory.label || index}>
-                            <img
-                                src={memory.image?.url || defaultStoryMemoryShopImages[index]?.image?.url}
-                                alt={memory.label || `Memory image ${index + 1}`}
-                                className="story-memories__image"
-                            />
-                        </div>
-                    ))}
-                </div>
+
             </div>
         </section>
     );

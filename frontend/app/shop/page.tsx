@@ -12,6 +12,7 @@ export default function ShopPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [carouselIndex, setCarouselIndex] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -38,23 +39,58 @@ export default function ShopPage() {
         setCarouselIndex(0);
     }, [products.length]);
 
+    // Create extended array for smooth infinite loop
+    const extendedProducts = useMemo(() => {
+        if (products.length <= 3) return products;
+        // Triple the array for seamless infinite scroll
+        return [...products, ...products, ...products];
+    }, [products]);
+
     const visibleProducts = useMemo(() => {
         if (products.length <= 3) return products;
-
+        
+        const startIndex = carouselIndex + products.length;
         return Array.from({ length: 3 }, (_, index) => (
-            products[(carouselIndex + index) % products.length]
+            extendedProducts[startIndex + index]
         ));
-    }, [carouselIndex, products]);
+    }, [carouselIndex, products, extendedProducts]);
 
     const showCarousel = products.length > 3;
 
     const showPreviousProducts = () => {
-        setCarouselIndex((current) => (current - 1 + products.length) % products.length);
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setCarouselIndex((current) => current - 1);
+        
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 500);
     };
 
     const showNextProducts = () => {
-        setCarouselIndex((current) => (current + 1) % products.length);
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setCarouselIndex((current) => current + 1);
+        
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 500);
     };
+
+    // Reset carousel index when it reaches boundaries for infinite loop
+    useEffect(() => {
+        if (products.length <= 3) return;
+        
+        if (carouselIndex <= -products.length) {
+            setTimeout(() => {
+                setCarouselIndex(0);
+            }, 0);
+        } else if (carouselIndex >= products.length) {
+            setTimeout(() => {
+                setCarouselIndex(0);
+            }, 0);
+        }
+    }, [carouselIndex, products.length]);
 
     const renderProduct = (product: Product) => (
         <Link
@@ -104,24 +140,37 @@ export default function ShopPage() {
                     <div className="shop-carousel" aria-label="Product carousel">
                         <button
                             type="button"
-                            className="shop-carousel__button"
+                            className="shop-carousel__button shop-carousel__button--prev"
                             onClick={showPreviousProducts}
                             aria-label="Show previous products"
+                            disabled={isTransitioning}
                         >
-                            &lt;
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
                         </button>
 
                         <div className="products-grid products-grid--three products-grid--carousel">
-                            {visibleProducts.map(renderProduct)}
+                            {visibleProducts.map((product, index) => (
+                                <div 
+                                    key={`${product._id}-${carouselIndex}-${index}`}
+                                    className="shop-carousel-item"
+                                >
+                                    {renderProduct(product)}
+                                </div>
+                            ))}
                         </div>
 
                         <button
                             type="button"
-                            className="shop-carousel__button"
+                            className="shop-carousel__button shop-carousel__button--next"
                             onClick={showNextProducts}
                             aria-label="Show next products"
+                            disabled={isTransitioning}
                         >
-                            &gt;
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
                         </button>
                     </div>
                 ) : (

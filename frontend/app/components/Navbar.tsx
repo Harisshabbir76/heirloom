@@ -109,7 +109,7 @@ export default function Navbar() {
               {/* Instagram Icon - hidden on mobile (shown in sidebar) */}
               {!isMobile && (
                 <a
-                  href="https://www.instagram.com"
+                  href="https://www.instagram.com/heirloombysk.ae"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="icon-link"

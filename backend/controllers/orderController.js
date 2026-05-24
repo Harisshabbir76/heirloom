@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Stripe = require('stripe');
+const nodemailer = require('nodemailer');
 const Order = require('../models/Order');
 
 function getStripe() {
@@ -11,12 +12,16 @@ function getStripe() {
 
 function isAdminRequest(req) {
   const token = req.cookies?.auth_token;
-  const adminEmail = String(process.env.DASHBOARD_ACCESS_ADMIN_EMAIL || '').trim().toLowerCase();
+  const adminEmail = String(process.env.DASHBOARD_ACCESS_ADMIN_EMAIL || '')
+    .trim()
+    .toLowerCase();
   if (!token || !adminEmail || !process.env.JWT_SECRET) return false;
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    return String(payload.email || '').trim().toLowerCase() === adminEmail;
+    return String(payload.email || '')
+      .trim()
+      .toLowerCase() === adminEmail;
   } catch {
     return false;
   }
@@ -26,6 +31,83 @@ function rejectNonAdmin(req, res) {
   if (isAdminRequest(req)) return false;
   res.status(404).json({ success: false, message: 'Not found' });
   return true;
+}
+
+function createMailTransporter() {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error('EMAIL_USER and EMAIL_PASS must be configured');
+  }
+
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+}
+
+function formatOrderEmail(order) {
+  const contact = order?.contact || {};
+  const fullName = [contact.firstName, contact.lastName].filter(Boolean).join(' ');
+
+  const productsText = (order.items || [])
+    .map((item, idx) => {
+      const name = item.productName || 'Product';
+      const qty = item.quantity ?? 0;
+      const unit = item.unitPrice ?? 0;
+      return `${idx + 1}. ${name} — Qty: ${qty} — Unit price: ${unit} ${order.currency || 'AED'}`;
+    })
+    .join('\n');
+
+  const addressParts = [contact.address, contact.apartment, contact.city, contact.emirate].filter(Boolean);
+  const addressLine = addressParts.length ? addressParts.join(', ') : 'N/A';
+
+  return {
+    subject: `New order received (ID: ${order._id.toString()})`,
+    text: [
+      'A new order has been placed.',
+      '',
+      `Order ID: ${order._id.toString()}`,
+      '',
+      `Customer: ${fullName || 'N/A'}`,
+      '',
+      `Email: ${contact.email || 'N/A'}`,
+      '',
+      `Address: ${addressLine}`,
+      '',
+      'Products:',
+      '',
+      productsText || 'N/A',
+      '',
+    ].join('\n'),
+    html: `
+      <h2>New Order Received</h2>
+      <p><strong>Order ID:</strong> ${order._id.toString()}</p>
+      <p><strong>Customer:</strong> ${fullName || 'N/A'}</p>
+      <p><strong>Email:</strong> ${contact.email || 'N/A'}</p>
+      <p><strong>Address:</strong> ${addressLine}</p>
+      <h3>Products</h3>
+      <pre style="white-space: pre-wrap; font-family: inherit;">${productsText || 'N/A'}</pre>
+    `,
+  };
+}
+
+async function sendNewOrderEmail(order) {
+  try {
+    const transporter = createMailTransporter();
+    const mail = formatOrderEmail(order);
+
+    await transporter.sendMail({
+      from: `"Heirloom By SK" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
+    });
+  } catch (emailError) {
+    console.error('Failed to send new order email:', emailError);
+  }
 }
 
 exports.createOrder = async (req, res) => {
@@ -44,6 +126,8 @@ exports.createOrder = async (req, res) => {
       currency: currency || 'AED',
       contact,
     });
+
+    await sendNewOrderEmail(order);
 
     return res.status(201).json({ success: true, data: order });
   } catch (error) {
@@ -94,6 +178,8 @@ exports.createCheckoutSession = async (req, res) => {
 
     order.stripeCheckoutSessionId = session.id;
     await order.save();
+
+    await sendNewOrderEmail(order);
 
     return res.status(200).json({ success: true, data: { url: session.url } });
   } catch (error) {
@@ -158,11 +244,7 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid status' });
     }
 
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
+    const order = await Order.findByIdAndUpdate(req.params.id, { status }, { new: true });
 
     if (!order) {
       return res.status(404).json({ success: false, message: 'Order not found' });
@@ -188,3 +270,4 @@ exports.deleteOrder = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
