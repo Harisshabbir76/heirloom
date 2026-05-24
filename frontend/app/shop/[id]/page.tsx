@@ -58,20 +58,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`),
                 ]);
 
+                if (!productResponse.ok || !productsResponse.ok) {
+                     throw new Error("One or more requests failed inside Detail initialization channels");
+                }
+
                 const productData = (await productResponse.json()) as ApiResponse<Product>;
                 const productsData = (await productsResponse.json()) as ApiResponse<Product[]>;
 
-                if (productData.success) {
+                if (productData && productData.success) {
                     setProduct(productData.data);
                 }
 
-                if (productsData.success) {
+                if (productsData && productsData.success && Array.isArray(productsData.data)) {
                     setRecommendedProducts(
                         productsData.data.filter((item) => item._id !== id).slice(0, 3)
                     );
                 }
             } catch (error) {
-                console.error('Error fetching product detail:', error);
+                console.error('Error fetching product detail elements safely:', error);
             } finally {
                 setLoading(false);
             }

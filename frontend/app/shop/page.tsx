@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import '../styles/Shop.css';
 import ProductFaqs from '../components/ProductFaqs';
 import StoryMemoriesshop from '../components/StoryMemoriesshop';
@@ -20,13 +21,21 @@ export default function ShopPage() {
                 const response = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/products`
                 );
+                
+                if (!response.ok) {
+                    throw new Error(`Shop API failure status: ${response.status}`);
+                }
+                
                 const data = await response.json();
 
-                if (data.success) {
+                if (data && data.success && Array.isArray(data.data)) {
                     setProducts(data.data);
+                } else {
+                    setProducts([]);
                 }
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching products inside ShopPage:', error);
+                setProducts([]);
             } finally {
                 setLoading(false);
             }
@@ -39,10 +48,8 @@ export default function ShopPage() {
         setCarouselIndex(0);
     }, [products.length]);
 
-    // Create extended array for smooth infinite loop
     const extendedProducts = useMemo(() => {
         if (products.length <= 3) return products;
-        // Triple the array for seamless infinite scroll
         return [...products, ...products, ...products];
     }, [products]);
 
@@ -77,7 +84,6 @@ export default function ShopPage() {
         }, 500);
     };
 
-    // Reset carousel index when it reaches boundaries for infinite loop
     useEffect(() => {
         if (products.length <= 3) return;
         
@@ -92,19 +98,23 @@ export default function ShopPage() {
         }
     }, [carouselIndex, products.length]);
 
-    const renderProduct = (product: Product) => (
+    const renderProduct = (product: Product, indexOffset: number = 0) => (
         <Link
-            key={product._id}
+            key={`${product._id}-render-${indexOffset}`}
             href={`/shop/${product._id}`}
             className="shop-product-card"
         >
-            <div className="shop-image-wrapper">
-                <img
-                    src={
-                        product.images?.[0]?.url ||
-                        '/placeholder-product.png'
-                    }
+            {/* Added relative anchor boxes with structural fill priority settings for smooth layout snapshots */}
+            <div className="shop-image-wrapper" style={{ position: 'relative', overflow: 'hidden' }}>
+                <Image
+                    src={product.images?.[0]?.url || '/placeholder-product.png'}
                     alt={product.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 33vw"
+                    priority={true}
+                    style={{
+                        objectFit: "cover"
+                    }}
                 />
             </div>
 
@@ -114,7 +124,7 @@ export default function ShopPage() {
 
             <p className="shop-product-price">
                 {getDefaultProductPrice(product)} AED
-            </p>
+              </p>
         </Link>
     );
 
@@ -156,7 +166,7 @@ export default function ShopPage() {
                                     key={`${product._id}-${carouselIndex}-${index}`}
                                     className="shop-carousel-item"
                                 >
-                                    {renderProduct(product)}
+                                    {renderProduct(product, index)}
                                 </div>
                             ))}
                         </div>
@@ -175,7 +185,7 @@ export default function ShopPage() {
                     </div>
                 ) : (
                     <div className={`products-grid ${products.length === 3 ? 'products-grid--three' : ''}`}>
-                        {products.map(renderProduct)}
+                        {products.map((p, i) => renderProduct(p, i))}
                     </div>
                 )}
             </div>

@@ -4,9 +4,14 @@ const nextConfig: NextConfig = {
   // 1. Force the compiler to pack everything neatly into a dedicated standalone server file tree
   output: "standalone",
   
-  // 2. Disable asset optimization flags so Hostinger can read static assets directly
+  // 2. Whitelist Cloudinary so Next.js can optimize your luxury imagery on the fly
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   
   trailingSlash: true,

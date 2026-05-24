@@ -62,15 +62,36 @@ app.use((err, req, res, next) => {
 });
 
 // A lightweight health check endpoint for UptimeRobot
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ 
-    status: "healthy", 
-    timestamp: new Date(),
-    uptime: process.uptime() // shows how many seconds the server has been running
-  });
+const mongoose = require('mongoose'); // or your native mongo client
+
+app.get('/api/health', async (req, res) => {
+  try {
+    // This forces Node.js to check if the database is responding instantly
+    if (mongoose.connection.readyState === 1) {
+      return res.status(200).json({ status: "healthy", database: "connected" });
+    } else {
+      throw new Error("Database disconnected");
+    }
+  } catch (error) {
+    res.status(500).json({ status: "unhealthy", error: error.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
+
+
+// Internal database heartbeat mechanism
+setInterval(async () => {
+    try {
+        const mongoose = require('mongoose');
+        if (mongoose.connection.readyState === 1) {
+            await mongoose.connection.db.admin().ping();
+            console.log('⚡ Active Production Database Heartbeat Sent.');
+        }
+    } catch (err) {
+        console.error('Database heartbeat check encountered an error:', err.message);
+    }
+}, 10 * 60 * 1000); // Internal background ping executes every 10 minutes
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

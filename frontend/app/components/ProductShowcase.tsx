@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { getDefaultProductPrice } from "../lib/productPricing";
 import "../styles/ProductShowcase.css";
 
@@ -16,13 +17,21 @@ const ProductShowcase: React.FC = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/products`
         );
 
+        if (!response.ok) {
+          throw new Error(`Showcase fetch failed with status: ${response.status}`);
+        }
+
         const data = await response.json();
 
-        if (data.success) {
+        if (data && data.success && Array.isArray(data.data)) {
           setProducts(data.data.slice(0, 2));
+        } else {
+          console.warn("Products showcase API returned unexpected structure:", data);
+          setProducts([]);
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products gracefully:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -64,13 +73,15 @@ const ProductShowcase: React.FC = () => {
               className="product-card"
               style={{ textDecoration: "none" }}
             >
-              <div className="product-image-wrapper">
-                <img
-                  src={product.images?.[0]?.url}
+              {/* Image Container upgraded to support responsive next/image layout fills */}
+              <div className="product-image-wrapper" style={{ position: "relative", overflow: "hidden" }}>
+                <Image
+                  src={product.images?.[0]?.url || '/placeholder-product.png'}
                   alt={product.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                  priority={true}
                   style={{
-                    width: "100%",
-                    height: "100%",
                     objectFit: "cover",
                   }}
                 />
