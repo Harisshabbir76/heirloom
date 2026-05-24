@@ -118,8 +118,8 @@ export default function ShopPage() {
                 />
                 
                 {/* Stock Status Badge - Top Left Corner */}
-                <div className={`shop-stock-status ${(product.stock !== undefined && product.stock !== null && product.stock > 0) ? 'shop-in-stock' : 'shop-out-of-stock'}`}>
-                    {(product.stock !== undefined && product.stock !== null && product.stock > 0) ? 'IN STOCK' : 'OUT OF STOCK'}
+                <div className={`shop-stock-status ${((product as any).stock !== undefined && (product as any).stock !== null && (product as any).stock > 0) ? 'shop-in-stock' : 'shop-out-of-stock'}`}>
+                    {((product as any).stock !== undefined && (product as any).stock !== null && (product as any).stock > 0) ? 'IN STOCK' : 'OUT OF STOCK'}
                 </div>
             </div>
 

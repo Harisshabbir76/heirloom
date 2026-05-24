@@ -121,10 +121,19 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   }
 
   async function handleCheckout() {
+    // Prevent multiple clicks
     if (isProcessingCheckout.current) return;
     isProcessingCheckout.current = true;
 
+    // Get fresh cart items
     const current = getCartItems();
+    
+    if (current.length === 0) {
+      isProcessingCheckout.current = false;
+      return;
+    }
+
+    // Check for out of stock items
     const outOfStockItems = await getOutOfStockItems(current);
 
     if (outOfStockItems.length > 0) {
@@ -163,10 +172,27 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     // Close modal
     setStockModal({ show: false, message: '', type: 'auto_remove', outOfStockItems: [] });
     
+    // Reset processing flag
+    isProcessingCheckout.current = false;
+    
     // Check if cart still has items
     const remainingItems = getCartItems();
     if (remainingItems.length === 0) {
       // Cart is empty, just close sidebar
+      return;
+    }
+    
+    // Double-check remaining items are in stock before proceeding
+    const stillOutOfStock = await getOutOfStockItems(remainingItems);
+    if (stillOutOfStock.length > 0) {
+      // If somehow there are still out of stock items, show modal again
+      const names = stillOutOfStock.map((item) => item.productName);
+      setStockModal({
+        show: true,
+        message: `${names.join(', ')} ${names.length > 1 ? 'are' : 'is'} out of stock. Please remove them to proceed.`,
+        type: 'checkout_block',
+        outOfStockItems: stillOutOfStock,
+      });
       return;
     }
     
@@ -203,6 +229,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           onClick={() => {
             if (stockModal.type !== 'checkout_block') {
               setStockModal({ show: false, message: '', type: 'auto_remove', outOfStockItems: [] });
+              isProcessingCheckout.current = false;
             }
           }}
         >
@@ -232,7 +259,10 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   <button
                     type="button"
                     className="heirloom-cart-stock-modal__cancel"
-                    onClick={() => setStockModal({ show: false, message: '', type: 'auto_remove', outOfStockItems: [] })}
+                    onClick={() => {
+                      setStockModal({ show: false, message: '', type: 'auto_remove', outOfStockItems: [] });
+                      isProcessingCheckout.current = false;
+                    }}
                   >
                     Cancel
                   </button>
@@ -248,7 +278,10 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                 <button
                   type="button"
                   className="heirloom-cart-stock-modal__close"
-                  onClick={() => setStockModal({ show: false, message: '', type: 'auto_remove', outOfStockItems: [] })}
+                  onClick={() => {
+                    setStockModal({ show: false, message: '', type: 'auto_remove', outOfStockItems: [] });
+                    isProcessingCheckout.current = false;
+                  }}
                 >
                   OK
                 </button>
