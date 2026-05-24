@@ -61,6 +61,15 @@ app.use((err, req, res, next) => {
   });
 });
 
+// A lightweight health check endpoint for UptimeRobot
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: "healthy", 
+    timestamp: new Date(),
+    uptime: process.uptime() // shows how many seconds the server has been running
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

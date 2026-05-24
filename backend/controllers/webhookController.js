@@ -113,6 +113,68 @@ exports.handleZiinaWebhook = async (req, res) => {
         order.paymentStatus = 'paid';
         await order.save();
 
+        // Send email to EMAIL_USER with customer and product details (no payment status)
+        try {
+          const nodemailer = require('nodemailer');
+          if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            throw new Error('EMAIL_USER and EMAIL_PASS must be configured');
+          }
+
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+          });
+
+          const contact = order?.contact || {};
+          const fullName = [contact.firstName, contact.lastName].filter(Boolean).join(' ');
+          const addressParts = [contact.address, contact.apartment, contact.city, contact.emirate].filter(Boolean);
+          const addressLine = addressParts.length ? addressParts.join(', ') : 'N/A';
+
+          const productsText = (order.items || [])
+            .map((item, idx) => {
+              const name = item.productName || 'Product';
+              const qty = item.quantity ?? 0;
+              const unit = item.unitPrice ?? 0;
+              return `${idx + 1}. ${name} — Qty: ${qty} — Unit price: ${unit} ${order.currency || 'AED'}`;
+            })
+            .join('\n');
+
+          const mail = {
+            from: `"Heirloom By SK" <${process.env.EMAIL_USER}>`,
+            to: process.env.EMAIL_USER,
+            subject: `New order processed (ID: ${order._id.toString()})`,
+            text: [
+              'An order has been successfully paid.',
+              '',
+              `Order ID: ${order._id.toString()}`,
+              '',
+              `Customer: ${fullName || 'N/A'}`,
+              '',
+              `Email: ${contact.email || 'N/A'}`,
+              '',
+              `Address: ${addressLine}`,
+              '',
+              'Products:',
+              '',
+              productsText || 'N/A',
+              '',
+            ].join('\n'),
+            html: `
+              <h2>New Order Processed</h2>
+              <p><strong>Order ID:</strong> ${order._id.toString()}</p>
+              <p><strong>Customer:</strong> ${fullName || 'N/A'}</p>
+              <p><strong>Email:</strong> ${contact.email || 'N/A'}</p>
+              <p><strong>Address:</strong> ${addressLine}</p>
+              <h3>Products</h3>
+              <pre style="white-space: pre-wrap; font-family: inherit;">${productsText || 'N/A'}</pre>
+            `,
+          };
+
+          await transporter.sendMail(mail);
+        } catch (emailError) {
+          console.error('Failed to send paid-order email:', emailError);
+        }
+
         console.log(`Order ${order._id.toString()} successfully marked as Paid/Fulfillable.`);
         return res.status(200).json({ success: true, message: 'Order marked as paid.' });
       } else if (paymentStatus === 'failed') {

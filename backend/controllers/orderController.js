@@ -94,6 +94,7 @@ function formatOrderEmail(order) {
 }
 
 async function sendNewOrderEmail(order) {
+
   try {
     const transporter = createMailTransporter();
     const mail = formatOrderEmail(order);
@@ -127,7 +128,7 @@ exports.createOrder = async (req, res) => {
       contact,
     });
 
-    await sendNewOrderEmail(order);
+    // email sending handled after successful payment
 
     return res.status(201).json({ success: true, data: order });
   } catch (error) {
@@ -179,7 +180,7 @@ exports.createCheckoutSession = async (req, res) => {
     order.stripeCheckoutSessionId = session.id;
     await order.save();
 
-    await sendNewOrderEmail(order);
+    // email sending handled after successful payment
 
     return res.status(200).json({ success: true, data: { url: session.url } });
   } catch (error) {
