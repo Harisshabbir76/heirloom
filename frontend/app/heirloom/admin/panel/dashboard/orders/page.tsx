@@ -11,6 +11,7 @@ type OrderStatus = 'new' | 'in-process' | 'delivered';
 type Order = {
     _id?: string;
     status?: OrderStatus;
+    paymentStatus?: 'pending' | 'paid' | 'failed';
     subtotal?: number;
     shipping?: number;
     total?: number;
@@ -19,6 +20,7 @@ type Order = {
     contact?: {
         firstName?: string;
         lastName?: string;
+        phone?: string;
         email?: string;
         address?: string;
         apartment?: string;
@@ -93,7 +95,6 @@ function CalendarDropdown({
     const dropdownRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
 
-    // Calculate dropdown position when opening
     useEffect(() => {
         if (open && triggerRef.current) {
             const rect = triggerRef.current.getBoundingClientRect();
@@ -108,7 +109,6 @@ function CalendarDropdown({
         }
     }, [open]);
 
-    // Close on outside click
     useEffect(() => {
         function handleClick(e: MouseEvent) {
             if (
@@ -126,7 +126,6 @@ function CalendarDropdown({
         return () => document.removeEventListener('mousedown', handleClick);
     }, [open]);
 
-    // Sync external values when they change
     useEffect(() => {
         setTempFrom(from);
         setTempTo(to);
@@ -718,17 +717,11 @@ export default function DashboardOrdersPage() {
 
                 const url = `${normalizedBase}/api/orders?${params.toString()}`;
 
-                console.log('FETCHING:', url);
-
                 const response = await fetch(url, {
                     credentials: 'include',
                 });
 
-                console.log('STATUS:', response.status);
-
                 const rawText = await response.text();
-
-                console.log('RAW RESPONSE:', rawText);
 
                 let data: any;
 
@@ -740,13 +733,8 @@ export default function DashboardOrdersPage() {
                     return;
                 }
 
-                console.log('PARSED DATA:', data);
-
                 if (data?.success && Array.isArray(data?.data)) {
                     const safeOrders = data.data.filter(Boolean);
-
-                    console.log('SAFE ORDERS:', safeOrders);
-
                     setOrders(safeOrders);
                 } else {
                     console.error('Invalid API Response Structure');
@@ -965,9 +953,7 @@ export default function DashboardOrdersPage() {
             </header>
 
             <section className="dashboard-panel">
-                {/* ── Toolbar: status tabs left | date filters right ── */}
                 <div className="orders-toolbar">
-                    {/* Left side: status tabs */}
                     <div className="orders-tabs">
                         {statuses.map((item) => (
                             <button
@@ -985,7 +971,6 @@ export default function DashboardOrdersPage() {
                         ))}
                     </div>
 
-                    {/* Right side: quick filters + calendar */}
                     <div className="orders-filters">
                         <button
                             type="button"
@@ -1080,6 +1065,9 @@ export default function DashboardOrdersPage() {
                                                 order?.currency
                                             )}
                                         </strong>
+                                        <span className="order-payment-status">
+                                            Payment: {order?.paymentStatus || 'paid'}
+                                        </span>
                                     </div>
 
                                     <div className="order-card__actions">
@@ -1160,6 +1148,7 @@ export default function DashboardOrdersPage() {
 
                         <p className="dashboard-kicker">
                             {formatStatus(selectedOrder?.status)} ·{' '}
+                            Payment: {selectedOrder?.paymentStatus || 'paid'} ·{' '}
                             {selectedOrder?.createdAt
                                 ? new Date(
                                       selectedOrder.createdAt
@@ -1172,53 +1161,31 @@ export default function DashboardOrdersPage() {
                                 <h3>Customer</h3>
 
                                 <p>
-                                    {
-                                        selectedOrder?.contact
-                                            ?.firstName
-                                    }{' '}
-                                    {
-                                        selectedOrder?.contact
-                                            ?.lastName
-                                    }
+                                    {selectedOrder?.contact?.firstName || ''}{' '}
+                                    {selectedOrder?.contact?.lastName || ''}
                                 </p>
 
                                 <p>
-                                    {
-                                        selectedOrder?.contact
-                                            ?.email
-                                    }
+                                    <strong>Email:</strong> {selectedOrder?.contact?.email || 'N/A'}
                                 </p>
 
                                 <p>
-                                    {
-                                        selectedOrder?.contact
-                                            ?.address
-                                    }
+                                    <strong>Phone:</strong> {selectedOrder?.contact?.phone || 'Not provided'}
+                                </p>
 
+                                <p>
+                                    <strong>Address:</strong><br />
+                                    {selectedOrder?.contact?.address || 'N/A'}
                                     <br />
-
-                                    {selectedOrder?.contact
-                                        ?.apartment ? (
+                                    {selectedOrder?.contact?.apartment ? (
                                         <>
-                                            {
-                                                selectedOrder
-                                                    ?.contact
-                                                    ?.apartment
-                                            }
-
+                                            {selectedOrder?.contact?.apartment}
                                             <br />
                                         </>
                                     ) : null}
-
-                                    {
-                                        selectedOrder?.contact
-                                            ?.city
-                                    }
-                                    ,{' '}
-                                    {
-                                        selectedOrder?.contact
-                                            ?.emirate
-                                    }
+                                    {selectedOrder?.contact?.city || ''}, {selectedOrder?.contact?.emirate || ''}
+                                    <br />
+                                    United Arab Emirates
                                 </p>
                             </section>
 
@@ -1242,7 +1209,7 @@ export default function DashboardOrdersPage() {
                                 </p>
 
                                 <p>
-                                    Total:{' '}
+                                    <strong>Total:</strong>{' '}
                                     {formatMoney(
                                         selectedOrder?.total,
                                         selectedOrder?.currency

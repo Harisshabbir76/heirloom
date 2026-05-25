@@ -1,6 +1,6 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
-const nodemailer = require('nodemailer');
+const { finalizePaidOrder } = require('../utils/paidOrderFinalizer');
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 
@@ -88,6 +88,31 @@ function getZiinaToken() {
     throw new Error('ZIINA_ACCESS_TOKEN is not configured in backend environment variables');
   }
   return token;
+}
+
+async function getZiinaPaymentIntent(paymentIntentId) {
+  const token = getZiinaToken();
+  const response = await fetch(`https://api-v2.ziina.com/api/payment_intent/${paymentIntentId}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    const error = new Error(data?.message || 'Unable to verify payment intent with Ziina.');
+    error.status = response.status || 502;
+    error.details = data;
+    throw error;
+  }
+
+  return data;
+}
+
+function isZiinaPaidStatus(status) {
+  return ['completed', 'paid', 'succeeded', 'success'].includes(String(status || '').toLowerCase());
 }
 
 /**
@@ -195,8 +220,6 @@ exports.createPaymentIntent = async (req, res) => {
     order.ziinaPaymentIntentId = data.id;
     await order.save();
 
-    await sendNewOrderEmail(order);
-
     // 6. Return generated ID and redirect URL to client frontend
     return res.status(201).json({
       success: true,
@@ -222,6 +245,37 @@ exports.getOrderByIntent = async (req, res) => {
     const order = await Order.findOne({ ziinaPaymentIntentId: intentId });
     if (!order) {
       return res.status(404).json({ success: false, message: 'Order not found for the specified intent.' });
+    }
+
+    if (order.paymentStatus !== 'paid') {
+      try {
+        const paymentIntent = await getZiinaPaymentIntent(intentId);
+        const ziinaStatus = paymentIntent?.status || paymentIntent?.data?.status;
+
+        if (isZiinaPaidStatus(ziinaStatus)) {
+          const finalized = await finalizePaidOrder(order);
+          return res.status(200).json({ success: true, data: finalized.order });
+        }
+
+        if (String(ziinaStatus || '').toLowerCase() === 'failed') {
+          order.paymentStatus = 'failed';
+          await order.save();
+          return res.status(402).json({ success: false, message: 'Payment was not successful.' });
+        }
+
+        return res.status(202).json({
+          success: false,
+          message: 'Payment is still being verified. Please wait a moment.',
+          paymentStatus: ziinaStatus || order.paymentStatus,
+        });
+      } catch (verifyError) {
+        console.error('Error verifying Ziina payment intent:', verifyError);
+        return res.status(202).json({
+          success: false,
+          message: 'Payment is still being verified. Please wait a moment.',
+          paymentStatus: order.paymentStatus,
+        });
+      }
     }
 
     return res.status(200).json({ success: true, data: order });

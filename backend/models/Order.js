@@ -38,6 +38,18 @@ const orderSchema = new mongoose.Schema(
       default: 'pending',
       index: true,
     },
+    paymentConfirmedAt: {
+      type: Date,
+      default: null,
+    },
+    stockDeductedAt: {
+      type: Date,
+      default: null,
+    },
+    paidOrderEmailSentAt: {
+      type: Date,
+      default: null,
+    },
     stripeCheckoutSessionId: {
       type: String,
       default: null,
@@ -51,6 +63,7 @@ const orderSchema = new mongoose.Schema(
     contact: {
       firstName: String,
       lastName: String,
+      phone: { type: String, default: '' }, // ✅ Added phone field
       address: String,
       apartment: String,
       city: String,

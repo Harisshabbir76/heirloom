@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState, Suspense } from 'react';
+import React, { useEffect, useMemo, useState, Suspense, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getCartItems, clearCart } from '../components/cart/cartStore';
 import { findCartStockIssue } from '../components/cart/stockValidation';
@@ -28,6 +28,7 @@ type OrderSummaryData = {
   contact: {
     firstName: string;
     lastName: string;
+    phone: string;
     address: string;
     apartment: string;
     city: string;
@@ -50,7 +51,7 @@ function OrderPageContent() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [stockModalMessage, setStockModalMessage] = useState<string | null>(null);
 
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleGPayClick = () => {
     if (formRef.current) {
@@ -177,8 +178,9 @@ function OrderPageContent() {
     verifyPayment();
   }, [searchParams]);
 
-  async function handlePlaceOrder(e: React.FormEvent) {
+  async function handlePlaceOrder(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    
     if (items.length === 0 || placingOrder) return;
 
     setPlacingOrder(true);
@@ -186,18 +188,26 @@ function OrderPageContent() {
       const stockIssue = await findCartStockIssue(items);
       if (stockIssue) {
         setStockModalMessage(stockIssue.message);
+        setPlacingOrder(false);
         return;
       }
 
-      const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const form = e.currentTarget || formRef.current;
+      if (!form) {
+        throw new Error('Form target reference could not be found.');
+      }
+      
+      const formData = new FormData(form);
+      
       const email = formData.get('contact') as string || '';
       const firstName = formData.get('firstName') as string || '';
       const lastName = formData.get('lastName') as string || '';
+      const phone = formData.get('phone') as string || '';
       const address = formData.get('address') as string || '';
       const apartment = formData.get('apartment') as string || '';
       const city = formData.get('city') as string || '';
       const emirate = formData.get('emirate') as string || '';
-      const contact = { firstName, lastName, address, apartment, city, emirate, email };
+      const contact = { firstName, lastName, phone, address, apartment, city, emirate, email };
 
       const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
@@ -265,6 +275,8 @@ function OrderPageContent() {
                   <strong>Shipping Address</strong>
                   <p>
                     {orderData.contact.firstName} {orderData.contact.lastName}
+                    <br />
+                    <strong>Phone:</strong> {orderData.contact.phone || 'Not provided'}
                     <br />
                     {orderData.contact.address}
                     <br />
@@ -385,7 +397,7 @@ function OrderPageContent() {
                   <a href="/login" className="checkout-link">Sign in</a>
                 </div>
                 <div className="form-group">
-                  <input required type="text" name="contact" placeholder="Enter your Email" />
+                  <input required type="email" name="contact" placeholder="Enter your Email" />
                 </div>
               </div>
 
@@ -405,6 +417,9 @@ function OrderPageContent() {
                   <div className="form-group">
                     <input required type="text" name="lastName" placeholder="Last name" />
                   </div>
+                </div>
+                <div className="form-group">
+                  <input required type="tel" name="phone" placeholder="Phone number" />
                 </div>
                 <div className="form-group">
                   <input required type="text" name="address" placeholder="Address" />
@@ -531,6 +546,9 @@ function OrderPageContent() {
                       <div className="form-group">
                         <input required type="text" name="billingLastName" placeholder="Last name" />
                       </div>
+                    </div>
+                    <div className="form-group">
+                      <input required type="tel" name="billingPhone" placeholder="Phone number" />
                     </div>
                     <div className="form-group">
                       <input required type="text" name="billingAddress" placeholder="Address" />

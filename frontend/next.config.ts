@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     ],
   },
   
-  trailingSlash: true,
+  trailingSlash: false,
   reactStrictMode: true,
 };
 

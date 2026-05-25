@@ -1,42 +1,9 @@
-const jwt = require('jsonwebtoken');
-const Stripe = require('stripe');
 const nodemailer = require('nodemailer');
-const Order = require('../models/Order');
-const { finalizePaidOrder } = require('../utils/paidOrderFinalizer');
-
-function getStripe() {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY is not configured');
-  }
-  return new Stripe(process.env.STRIPE_SECRET_KEY);
-}
-
-function isAdminRequest(req) {
-  const token = req.cookies?.auth_token;
-  const adminEmail = String(process.env.DASHBOARD_ACCESS_ADMIN_EMAIL || '')
-    .trim()
-    .toLowerCase();
-  if (!token || !adminEmail || !process.env.JWT_SECRET) return false;
-
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    return String(payload.email || '')
-      .trim()
-      .toLowerCase() === adminEmail;
-  } catch {
-    return false;
-  }
-}
-
-function rejectNonAdmin(req, res) {
-  if (isAdminRequest(req)) return false;
-  res.status(404).json({ success: false, message: 'Not found' });
-  return true;
-}
+const Product = require('../models/Product');
 
 function createMailTransporter() {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('EMAIL_USER and EMAIL_PASS must be configured');
+    throw new Error('EMAIL_USER and EMAIL_PASS must be configured in environment variables');
   }
 
   return nodemailer.createTransport({
@@ -51,6 +18,7 @@ function createMailTransporter() {
 function formatOrderEmail(order) {
   const contact = order?.contact || {};
   const fullName = [contact.firstName, contact.lastName].filter(Boolean).join(' ');
+  const paymentStatus = order.paymentStatus || 'paid';
 
   const productsHtml = (order.items || [])
     .map((item, idx) => {
@@ -377,179 +345,73 @@ function formatOrderEmail(order) {
   };
 }
 
-async function sendNewOrderEmail(order) {
-  try {
-    const transporter = createMailTransporter();
-    const mail = formatOrderEmail(order);
+async function sendPaidOrderEmail(order) {
+  const transporter = createMailTransporter();
+  const mail = formatOrderEmail(order);
 
-    await transporter.sendMail({
-      from: `"Heirloom by SK" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      subject: mail.subject,
-      text: mail.text,
-      html: mail.html,
-    });
-    
-    console.log(`✅ Order email sent for order ${order._id.toString()}`);
-  } catch (emailError) {
-    console.error('Failed to send new order email:', emailError);
-  }
+  await transporter.sendMail({
+    from: `"Heirloom by SK" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER,
+    subject: mail.subject,
+    text: mail.text,
+    html: mail.html,
+  });
 }
 
-exports.createOrder = async (req, res) => {
-  try {
-    const { items, subtotal, total, currency, contact } = req.body;
+async function deductStockOnce(order) {
+  if (order.stockDeductedAt) return;
 
-    if (!Array.isArray(items) || items.length === 0 || !contact?.email) {
-      return res.status(400).json({ success: false, message: 'Order items and email are required' });
-    }
+  await Promise.all(
+    (order.items || []).map(async (item) => {
+      if (!item?.productId) return;
+      const qty = Number(item.quantity) || 0;
+      if (qty <= 0) return;
 
-    const order = await Order.create({
-      items,
-      subtotal: Number(subtotal) || 0,
-      shipping: 0,
-      total: Number(total) || 0,
-      currency: currency || 'AED',
-      contact,
-    });
+      await Product.findOneAndUpdate(
+        { _id: item.productId },
+        { $inc: { stock: -qty } },
+        { new: true }
+      );
 
-    return res.status(201).json({ success: true, data: order });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+      await Product.updateOne(
+        { _id: item.productId, stock: { $lt: 0 } },
+        { $set: { stock: 0 } }
+      );
+    })
+  );
+
+  order.stockDeductedAt = new Date();
+}
+
+async function finalizePaidOrder(order) {
+  if (!order) return null;
+
+  const wasAlreadyPaid = order.paymentStatus === 'paid';
+  
+  order.paymentStatus = 'paid';
+  if (!order.paymentConfirmedAt) {
+    order.paymentConfirmedAt = new Date();
   }
-};
 
-exports.createCheckoutSession = async (req, res) => {
-  try {
-    const { items, subtotal, total, currency, contact, origin } = req.body;
+  await deductStockOnce(order);
+  
+  let savedOrder = await order.save();
 
-    if (!Array.isArray(items) || items.length === 0 || !contact?.email) {
-      return res.status(400).json({ success: false, message: 'Order items and email are required' });
+  if (!savedOrder.paidOrderEmailSentAt) {
+    try {
+      await sendPaidOrderEmail(savedOrder);
+      
+      savedOrder.paidOrderEmailSentAt = new Date();
+      savedOrder = await savedOrder.save();
+      console.log(`Email successfully delivered for order reference: ${savedOrder._id}`);
+    } catch (emailError) {
+      console.error('Failed to dispatch verification mailer securely:', emailError);
     }
-
-    const order = await Order.create({
-      items,
-      subtotal: Number(subtotal) || 0,
-      shipping: 0,
-      total: Number(total) || 0,
-      currency: currency || 'AED',
-      contact,
-      paymentStatus: 'pending',
-    });
-
-    const stripe = getStripe();
-    const checkoutOrigin = origin || 'http://localhost:3000';
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      customer_email: contact.email,
-      line_items: items.map((item) => ({
-        quantity: item.quantity,
-        price_data: {
-          currency: String(item.currency || currency || 'AED').toLowerCase(),
-          product_data: {
-            name: item.productName + (item.giftWrap ? ' (with Gift Wrapping)' : ''),
-            images: item.imageUrl ? [item.imageUrl] : undefined,
-          },
-          unit_amount: Math.round(Number((item.unitPrice || 0) + (item.giftWrap ? 50 : 0)) * 100),
-        },
-      })),
-      metadata: {
-        orderId: order._id.toString(),
-      },
-      success_url: `${checkoutOrigin}/order?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${checkoutOrigin}/order?payment=cancelled`,
-    });
-
-    order.stripeCheckoutSessionId = session.id;
-    await order.save();
-
-    return res.status(200).json({ success: true, data: { url: session.url } });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
   }
-};
 
-exports.verifyCheckoutSession = async (req, res) => {
-  try {
-    const { sessionId } = req.params;
-    if (!sessionId) {
-      return res.status(400).json({ success: false, message: 'Session id is required' });
-    }
+  return { order: savedOrder, wasAlreadyPaid };
+}
 
-    const stripe = getStripe();
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const order = await Order.findOne({ stripeCheckoutSessionId: sessionId });
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' });
-    }
-
-    if (session.payment_status === 'paid') {
-      await finalizePaidOrder(order);
-      // Send order email after successful payment
-      await sendNewOrderEmail(order);
-    }
-
-    return res.status(200).json({ success: true, data: order });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-exports.getOrders = async (req, res) => {
-  try {
-    if (rejectNonAdmin(req, res)) return;
-
-    const { status, from, to } = req.query;
-    const query = {};
-
-    if (status && status !== 'all') query.status = status;
-    if (from || to) {
-      query.createdAt = {};
-      if (from) query.createdAt.$gte = new Date(`${from}T00:00:00.000Z`);
-      if (to) query.createdAt.$lte = new Date(`${to}T23:59:59.999Z`);
-    }
-    query.paymentStatus = 'paid';
-
-    const orders = await Order.find(query).sort({ createdAt: -1 });
-    return res.status(200).json({ success: true, data: orders });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-exports.updateOrderStatus = async (req, res) => {
-  try {
-    if (rejectNonAdmin(req, res)) return;
-
-    const { status } = req.body;
-    if (!['new', 'in-process', 'delivered'].includes(status)) {
-      return res.status(400).json({ success: false, message: 'Invalid status' });
-    }
-
-    const order = await Order.findByIdAndUpdate(req.params.id, { status }, { new: true });
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' });
-    }
-
-    return res.status(200).json({ success: true, data: order });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-exports.deleteOrder = async (req, res) => {
-  try {
-    if (rejectNonAdmin(req, res)) return;
-
-    const order = await Order.findByIdAndDelete(req.params.id);
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' });
-    }
-
-    return res.status(200).json({ success: true, data: { id: req.params.id } });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
+module.exports = {
+  finalizePaidOrder,
 };

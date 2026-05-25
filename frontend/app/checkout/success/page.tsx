@@ -19,6 +19,7 @@ type OrderData = {
   contact: {
     firstName: string;
     lastName: string;
+    phone: string;
     address: string;
     apartment: string;
     city: string;
@@ -32,40 +33,68 @@ function SuccessPageContent() {
   const searchParams = useSearchParams();
   const paymentIntentId = searchParams.get('payment_intent_id');
   const [order, setOrder] = useState<OrderData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(Boolean(paymentIntentId));
+  const [error, setError] = useState<string | null>(
+    paymentIntentId ? null : 'No payment intent ID was found in your redirect URL.'
+  );
 
   useEffect(() => {
     if (!paymentIntentId) {
-      setError('No payment intent ID was found in your redirect URL.');
-      setLoading(false);
       return;
     }
 
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 12;
+
     const fetchOrder = async () => {
       try {
+        attempts += 1;
         const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
         const normalizedBase = apiBase.replace(/\/+$/u, '').replace(/\/api$/u, '');
         const response = await fetch(`${normalizedBase}/api/checkout/order-by-intent/${paymentIntentId}`);
         
         const data = await response.json();
 
-        if (response.ok && data.success && data.data) {
+        if (cancelled) return;
+
+        if (response.ok && data.success && data.data && data.data.paymentStatus === 'paid') {
           setOrder(data.data);
-          // Transaction verified successfully - clear local cart state
           clearCart();
+          setLoading(false);
+          return;
+        }
+
+        if (response.status === 202 && attempts < maxAttempts) {
+          window.setTimeout(fetchOrder, 2500);
+          return;
+        }
+
+        if (response.status === 402) {
+          setError(data.message || 'Payment was not successful.');
+        } else if (attempts >= maxAttempts) {
+          setError('Payment verification is taking longer than expected. If your payment was completed, your order will appear once Ziina confirms it.');
         } else {
           setError(data.message || 'We were unable to locate your order record.');
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        if (cancelled) return;
         console.error('Error fetching order details:', err);
+        if (attempts < maxAttempts) {
+          window.setTimeout(fetchOrder, 2500);
+          return;
+        }
         setError('A connection issue occurred while verifying your order.');
-      } finally {
-        setLoading(false);
       }
+
+      setLoading(false);
     };
 
     fetchOrder();
+
+    return () => {
+      cancelled = true;
+    };
   }, [paymentIntentId]);
 
   if (loading) {
@@ -92,7 +121,7 @@ function SuccessPageContent() {
             VERIFYING YOUR PAYMENT
           </h2>
           <p style={{ fontSize: '14px', color: 'rgba(53, 0, 8, 0.6)', marginTop: '8px' }}>
-            Connecting with Ziina Gateway to verify transaction status...
+            Confirming your paid order before we notify our team...
           </p>
         </div>
       </main>
@@ -135,6 +164,7 @@ function SuccessPageContent() {
                 <strong>Shipping Address</strong>
                 <p>
                   {order.contact.firstName} {order.contact.lastName}<br />
+                  <strong>Phone:</strong> {order.contact.phone || 'Not provided'}<br />
                   {order.contact.address}<br />
                   {order.contact.apartment && <>{order.contact.apartment}<br /></>}
                   {order.contact.city}, {order.contact.emirate}<br />
