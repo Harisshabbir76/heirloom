@@ -52,10 +52,11 @@ function formatOrderEmail(order) {
       'HEIRLOOM BY SK - NEW ORDER RECEIVED',
       '───────────────────────────────────',
       `Order ID: ${order._id.toString()}`,
+      `Payment status: ${paymentStatus}`,
       '',
       `Customer: ${fullName || 'N/A'}`,
       `Email: ${contact.email || 'N/A'}`,
-      `Phone: ${contact.phone || 'Not provided'}`,  // ✅ ADDED PHONE
+      `Phone: ${contact.phone || 'Not provided'}`,  // ✅ PHONE ADDED HERE
       `Address: ${addressLine}`,
       '',
       'Order Summary:',
@@ -294,7 +295,7 @@ function formatOrderEmail(order) {
                 <td class="value"><a href="mailto:${contact.email || ''}">${contact.email || 'N/A'}</a></td>
               </tr>
               <tr class="meta-row">
-                <td class="label">Phone</td>
+                <td class="label">Phone</td>  <!-- ✅ PHONE ROW ADDED HERE -->
                 <td class="value">${contact.phone || 'Not provided'}</td>
               </tr>
               <tr class="meta-row">
