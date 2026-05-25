@@ -20,6 +20,9 @@ function formatOrderEmail(order) {
   const fullName = [contact.firstName, contact.lastName].filter(Boolean).join(' ');
   const paymentStatus = order.paymentStatus || 'paid';
 
+  // Normalize phone across possible shapes
+  const phone = contact.phone || contact.mobile || order?.phone || order?.contact?.mobile || 'Not provided';
+
   const productsHtml = (order.items || [])
     .map((item, idx) => {
       const name = item.productName || 'Product';
@@ -56,7 +59,7 @@ function formatOrderEmail(order) {
       '',
       `Customer: ${fullName || 'N/A'}`,
       `Email: ${contact.email || 'N/A'}`,
-      `Phone: ${contact.phone || 'Not provided'}`,  // ✅ PHONE ADDED HERE
+      `Phone: ${phone}`,  // ✅ normalized phone
       `Address: ${addressLine}`,
       '',
       'Order Summary:',
@@ -296,7 +299,7 @@ function formatOrderEmail(order) {
               </tr>
               <tr class="meta-row">
                 <td class="label">Phone</td>  <!-- ✅ PHONE ROW ADDED HERE -->
-                <td class="value">${contact.phone || 'Not provided'}</td>
+                <td class="value">${phone}</td>
               </tr>
               <tr class="meta-row">
                 <td class="label">Shipping Address</td>
