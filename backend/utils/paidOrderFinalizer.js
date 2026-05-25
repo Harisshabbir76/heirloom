@@ -55,7 +55,7 @@ function formatOrderEmail(order) {
       '',
       `Customer: ${fullName || 'N/A'}`,
       `Email: ${contact.email || 'N/A'}`,
-      `Phone: ${contact.phone || 'Not provided'}`,
+      `Phone: ${contact.phone || 'Not provided'}`,  // ✅ ADDED PHONE
       `Address: ${addressLine}`,
       '',
       'Order Summary:',
