@@ -63,7 +63,7 @@ const orderSchema = new mongoose.Schema(
     contact: {
       firstName: String,
       lastName: String,
-      phone: { type: String, default: '' }, // ✅ Added phone field
+      phone: { type: String, default: '', required: true }, // ✅ Added phone field
       address: String,
       apartment: String,
       city: String,
